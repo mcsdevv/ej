@@ -40,7 +40,7 @@ defmodule OJAD do
       with {:ok, dirtyAll} <- Map.fetch(dirty, "all") do
         {:ok,
          dirtyAll
-         |> Enum.map(fn [hiragana | [y | _]] ->
+         |> Stream.map(fn [hiragana | [y | _]] ->
            extractConjugation(y, hiragana)
          end)}
       end
@@ -59,7 +59,7 @@ defmodule Yomi do
   end
 
   def extractYomi(dirty, downsteps) do
-    Enum.map(dirty, fn [audio, images] ->
+    Stream.map(dirty, fn [audio, images] ->
       %Yomi{audio: audio, accent: getAccent(images, downsteps)}
     end)
   end
