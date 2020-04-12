@@ -6,12 +6,26 @@ end
 defmodule Conjugation do
   defstruct [:hiragana, :html, :image, :male, :female]
 
-  def extractConjugation(dirty) do
+  def extractConjugation(dirty, hiragana) do
     with {:ok, image} <- Map.fetch(dirty, "image"),
          {:ok, male} <- Map.fetch(dirty, "male"),
          {:ok, female} <- Map.fetch(dirty, "female"),
-         {:ok, html} <- Map.fetch(dirty, "html") do
-      %Conjugation{image: image, male: male, female: female, html: html}
+         {:ok, html} <- Map.fetch(dirty, "html"),
+         [{_, _, list}] <- Floki.find(Floki.parse_fragment!(html), ".accent_top .inner .char") do
+      accent =
+        case list do
+          [] -> -1
+          [letter] -> String.length(List.first(String.split(hiragana, letter, parts: 2)))
+        end
+
+      %Conjugation{
+        image: image,
+        male: male,
+        female: female,
+        html: accent,
+        hiragana: hiragana
+        # Regex.named_captures(~r{accent_top mola_-(?<downStep>\d)}, html)
+      }
     end
   end
 end
@@ -23,7 +37,9 @@ defmodule OJAD do
 
   def extractOJAD(dirty) do
     Map.get(dirty, "all")
-    |> Enum.map(fn [hiragana, y] -> %Conjugation{extractConjugation(y) | hiragana: hiragana} end)
+    |> Enum.map(fn [hiragana, y] ->
+      extractConjugation(y, hiragana)
+    end)
   end
 end
 
