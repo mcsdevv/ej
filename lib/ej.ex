@@ -15,17 +15,20 @@ defmodule Ej do
       :world
 
   """
-  def extractRecord(record, notDownSteps) do
+  def extractRecord(record, downSteps) do
     with {:ok, dirtyNHK} <- Map.fetch(record, "nhk"),
-         {:ok, cleanNHK} <- extractNHK(dirtyNHK, notDownSteps) do
-      {:ok, %R{nhk: cleanNHK, ojad: Map.get(record, "ojad") |> extractOJAD()}}
+         {:ok, cleanNHK} <- extractNHK(dirtyNHK, downSteps),
+         {:ok, dirtyOJAD} <- Map.fetch(record, "ojad"),
+         {:ok, cleanOJAD} <- extractOJAD(dirtyOJAD) do
+      {:ok, %R{nhk: cleanNHK, ojad: cleanOJAD}}
     end
   end
 
   def hello do
-    with {:ok, f} <- File.read("./small.json"),
-         {:ok, notDownSteps} <- File.read("./notDownSteps.txt") do
-      Enum.map(Poison.decode!(f), &extractRecord(&1, String.split(notDownSteps, "\n")))
+    with {:ok, f} <- File.read("./dict.json"),
+         {:ok, downsteps} <- File.read("./downsteps.txt"),
+         clean <- String.split(downsteps, "\n") |> Enum.map(fn x -> {x, x} end) |> Map.new() do
+      Enum.map(Poison.decode!(f), &extractRecord(&1, clean))
     end
   end
 end
