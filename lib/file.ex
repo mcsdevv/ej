@@ -38,11 +38,10 @@ defmodule OJAD do
   def extractOJAD(dirty) do
     dirty &&
       with {:ok, dirtyAll} <- Map.fetch(dirty, "all") do
-        {:ok,
-         dirtyAll
-         |> Stream.map(fn [hiragana | [y | _]] ->
-           extractConjugation(y, hiragana)
-         end)}
+        dirtyAll
+        |> Stream.map(fn [hiragana | [y | _]] ->
+          extractConjugation(y, hiragana)
+        end)
       end
   end
 end
@@ -50,7 +49,6 @@ end
 defmodule Yomi do
   defstruct [:audio, :accent]
 
-  @spec getAccent([any], [any]) :: nil | non_neg_integer
   def getAccent(images, downsteps) do
     case Enum.find_index(images, fn image -> Map.has_key?(downsteps, image) end) do
       nil -> -1
@@ -79,15 +77,14 @@ defmodule NHK do
            {:ok, katakana} <- Map.fetch(dirty, "katakana"),
            {:ok, jishoWord} <- Map.fetch(dirty, "jishoWord"),
            {:ok, kanjiT} <- Map.fetch(dirty, "kanji") do
-        {:ok,
-         %NHK{
-           jisho: jishoT,
-           kanji: kanjiT,
-           kana: kana,
-           yomi: extractYomi(yomi, downsteps),
-           jishoWord: jishoWord,
-           katakana: katakana
-         }}
+        %NHK{
+          jisho: jishoT,
+          kanji: kanjiT,
+          kana: kana,
+          yomi: extractYomi(yomi, downsteps),
+          jishoWord: jishoWord,
+          katakana: katakana
+        }
       end
   end
 end

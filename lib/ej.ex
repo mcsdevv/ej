@@ -16,13 +16,13 @@ defmodule Ej do
 
   """
   def extractRecord(record, downSteps) do
-    with {:ok, freq} <- Map.fetch(record, "frequency"),
-         {:ok, hinshi} <- Map.fetch(record, "hinshi"),
-         {:ok, dirtyNHK} <- Map.fetch(record, "nhk"),
-         {:ok, cleanNHK} <- extractNHK(dirtyNHK, downSteps),
-         {:ok, dirtyOJAD} <- Map.fetch(record, "ojad"),
-         {:ok, cleanOJAD} <- extractOJAD(dirtyOJAD) do
-      {:ok, %R{nhk: cleanNHK, ojad: cleanOJAD, frequency: freq, hinshi: hinshi}}
+    with freq <- Map.get(record, "frequency"),
+         hinshi <- Map.get(record, "hinshi"),
+         dirtyNHK <- Map.get(record, "nhk"),
+         cleanNHK <- extractNHK(dirtyNHK, downSteps),
+         dirtyOJAD <- Map.get(record, "ojad"),
+         cleanOJAD <- extractOJAD(dirtyOJAD) do
+      %R{nhk: cleanNHK, ojad: cleanOJAD, frequency: freq, hinshi: hinshi}
     end
   end
 
@@ -35,13 +35,23 @@ defmodule Ej do
            |> Stream.map(fn x -> {x, x} end)
            |> Map.new() do
       decoded
-      # |> Stream.map(&extractRecord(&1, clean))
-
-      // TODO: Check which records are getting turned into null..
-
-      |> Stream.filter(fn x -> !x end)
+      # |> Stream.filter(fn x -> x && Map.get(x, "nhk") end)
+      |> Stream.map(fn x -> extractRecord(x, clean) end)
+      |> Stream.filter(fn x -> x && x.nhk end)
+      |> Stream.map(fn x ->
+        {x.nhk.kanji, x.nhk.kana, Enum.map(x.nhk.yomi, fn yomi -> yomi.accent end)}
+      end)
+      |> Enum.group_by(fn {_, [hiragana | _], _} -> hiragana == "はし" end)
       |> Enum.to_list()
-      |> length()
+
+      # |> length()
+
+      # |> Stream.filter_map(fn x -> !x end)
+      # |> Enum.to_list()
+      # |> List.first()
+
+      # |> Enum.to_list()
+      # |> length()
 
       # |> Stream.filter(fn x -> x && x.frequency end)
       # |> Stream.map(fn x -> {x.frequency, x.hinshi} end)
