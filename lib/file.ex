@@ -7,26 +7,22 @@ defmodule Conjugation do
   defstruct [:hiragana, :accent, :image, :male, :female]
 
   def extractConjugation(dirty, hiragana) do
-    with {:ok, image} <- Map.fetch(dirty, "image"),
-         {:ok, male} <- Map.fetch(dirty, "male"),
-         {:ok, female} <- Map.fetch(dirty, "female"),
-         {:ok, html} <- Map.fetch(dirty, "html"),
-         [{_, _, list}] <- Floki.find(Floki.parse_fragment!(html), ".accent_top .inner .char") do
-      accent =
-        case list do
-          [] -> -1
-          [letter] -> String.length(List.first(String.split(hiragana, letter, parts: 2)))
-        end
+    [{_, _, list}] =
+      Floki.find(Floki.parse_fragment!(Map.get(dirty, "html")), ".accent_top .inner .char")
 
-      %Conjugation{
-        image: image,
-        male: male,
-        female: female,
-        accent: accent,
-        hiragana: hiragana
-        # Regex.named_captures(~r{accent_top mola_-(?<downStep>\d)}, html)
-      }
-    end
+    accent =
+      case list do
+        [] -> -1
+        [letter] -> String.length(List.first(String.split(hiragana, letter, parts: 2)))
+      end
+
+    %Conjugation{
+      image: Map.get(dirty, "image"),
+      male: Map.get(dirty, "male"),
+      female: Map.get(dirty, "female"),
+      accent: accent,
+      hiragana: hiragana
+    }
   end
 end
 
@@ -36,13 +32,10 @@ defmodule OJAD do
   defstruct [:midashi, :conjugations]
 
   def extractOJAD(dirty) do
-    dirty &&
-      with {:ok, dirtyAll} <- Map.fetch(dirty, "all") do
-        dirtyAll
-        |> Stream.map(fn [hiragana | [y | _]] ->
-          extractConjugation(y, hiragana)
-        end)
-      end
+    Map.get(dirty, "all")
+    |> Stream.map(fn [hiragana | [y | _]] ->
+      extractConjugation(y, hiragana)
+    end)
   end
 end
 
@@ -68,23 +61,13 @@ defmodule NHK do
   defstruct [:jisho, :kanji, :kana, :yomi, :jishoWord, :katakana]
 
   def extractNHK(dirty, downsteps) do
-    dirty &&
-      with {:ok, jishoT} <- Map.fetch(dirty, "jisho"),
-           {:ok, kana} <- Map.fetch(dirty, "kana"),
-           {:ok, yomi} <- Map.fetch(dirty, "yomi"),
-           #  |> IO.inspect()
-
-           {:ok, katakana} <- Map.fetch(dirty, "katakana"),
-           {:ok, jishoWord} <- Map.fetch(dirty, "jishoWord"),
-           {:ok, kanjiT} <- Map.fetch(dirty, "kanji") do
-        %NHK{
-          jisho: jishoT,
-          kanji: kanjiT,
-          kana: kana,
-          yomi: extractYomi(yomi, downsteps),
-          jishoWord: jishoWord,
-          katakana: katakana
-        }
-      end
+    %NHK{
+      jisho: Map.get(dirty, "jisho"),
+      kanji: Map.get(dirty, "kanji"),
+      kana: Map.get(dirty, "kana"),
+      yomi: extractYomi(Map.get(dirty, "yomi"), downsteps),
+      jishoWord: Map.get(dirty, "jishoWord"),
+      katakana: Map.get(dirty, "katakana")
+    }
   end
 end

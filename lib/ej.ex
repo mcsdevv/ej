@@ -16,21 +16,20 @@ defmodule Ej do
 
   """
   def extractRecord(record, downSteps) do
-    with freq <- Map.get(record, "frequency"),
-         hinshi <- Map.get(record, "hinshi"),
-         dirtyNHK <- Map.get(record, "nhk"),
-         cleanNHK <- extractNHK(dirtyNHK, downSteps),
-         dirtyOJAD <- Map.get(record, "ojad"),
-         cleanOJAD <- extractOJAD(dirtyOJAD) do
-      %R{nhk: cleanNHK, ojad: cleanOJAD, frequency: freq, hinshi: hinshi}
-    end
+    freq = Map.get(record, "frequency")
+    hinshi = Map.get(record, "hinshi")
+    dirtyNHK = Map.get(record, "nhk")
+    cleanNHK = dirtyNHK && extractNHK(dirtyNHK, downSteps)
+    dirtyOJAD = Map.get(record, "ojad")
+    cleanOJAD = dirtyOJAD && extractOJAD(dirtyOJAD)
+    %R{nhk: cleanNHK, ojad: cleanOJAD, frequency: freq, hinshi: hinshi}
   end
 
   def hello do
     with {:ok, f} <- File.read("./dict.json"),
          {:ok, downsteps} <- File.read("./downsteps.txt"),
          decoded <- Poison.decode!(f),
-         clean <-
+         clean =
            String.split(downsteps, "\n")
            |> Stream.map(fn x -> {x, x} end)
            |> Map.new() do
