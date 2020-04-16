@@ -38,16 +38,15 @@ defmodule Ej do
       # |> Stream.filter(fn x -> x && Map.get(x, "nhk") end)
       |> Enum.map(fn x -> extractRecord(x, clean) end)
       |> Enum.filter(fn x -> x && (x.nhk || x.ojad) end)
+      |> Enum.map(fn x ->
+        case x do
+          %R{nhk: %NHK{kana: kana, kanji: kanji, yomi: yomi}} ->
+            %DBRow{hiragana: kana, kanji: kanji, downstep: yomi}
 
-      # |> Enum.map(fn x ->
-      #   case x do
-      #     %R{nhk: nil, ojad: %OJAD{conjugations: [head | _]}} ->
-      #       %DBRow{hiragana: head.hiragana, kanji: head.hiragana, downstep: [head.accent]}
-
-      #     %R{nhk: %NHK{kana: kana, kanji: kanji, yomi: yomi}} ->
-      #       %DBRow{hiragana: kana, kanji: kanji, downstep: yomi}
-      #   end
-      # end)
+          %R{ojad: %OJAD{conjugations: [%Conjugation{hiragana: hiragana, accent: accent} | _]}} ->
+            %DBRow{hiragana: hiragana, kanji: hiragana, downstep: [accent]}
+        end
+      end)
 
       #   {x.nhk.kanji, x.nhk.kana, Enum.map(x.nhk.yomi, fn yomi -> yomi.accent end)}
       # end)

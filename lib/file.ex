@@ -26,6 +26,8 @@ defmodule Conjugation do
         accent: accent,
         hiragana: hiragana
       }
+    else
+      _ -> nil
     end
   end
 end
@@ -36,10 +38,21 @@ defmodule OJAD do
   defstruct [:midashi, :conjugations]
 
   def extractOJAD(dirty) do
-    Map.get(dirty, "all")
-    |> Enum.map(fn [hiragana | [y | _]] ->
-      extractConjugation(y, hiragana)
-    end)
+    conj =
+      Map.get(dirty, "all")
+      |> Enum.map(fn [hiragana | [y | _]] -> extractConjugation(y, hiragana) end)
+      |> Enum.filter(fn x -> x && true end)
+
+    case conj do
+      [] ->
+        nil
+
+      _ ->
+        %OJAD{
+          conjugations: conj,
+          midashi: Map.get(dirty, "midashi")
+        }
+    end
   end
 end
 
