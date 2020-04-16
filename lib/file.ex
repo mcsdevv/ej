@@ -1,3 +1,7 @@
+defmodule DBRow do
+  defstruct [:hiragana, :kanji, :downstep]
+end
+
 defmodule R do
   @derive [Poison.Encoder]
   defstruct [:nhk, :ojad, :frequency, :hinshi]
@@ -7,22 +11,22 @@ defmodule Conjugation do
   defstruct [:hiragana, :accent, :image, :male, :female]
 
   def extractConjugation(dirty, hiragana) do
-    [{_, _, list}] =
-      Floki.find(Floki.parse_fragment!(Map.get(dirty, "html")), ".accent_top .inner .char")
+    with [{_, _, list}] <-
+           Floki.find(Floki.parse_fragment!(Map.get(dirty, "html")), ".accent_top .inner .char") do
+      accent =
+        case list do
+          [] -> -1
+          [letter] -> String.length(List.first(String.split(hiragana, letter, parts: 2)))
+        end
 
-    accent =
-      case list do
-        [] -> -1
-        [letter] -> String.length(List.first(String.split(hiragana, letter, parts: 2)))
-      end
-
-    %Conjugation{
-      image: Map.get(dirty, "image"),
-      male: Map.get(dirty, "male"),
-      female: Map.get(dirty, "female"),
-      accent: accent,
-      hiragana: hiragana
-    }
+      %Conjugation{
+        image: Map.get(dirty, "image"),
+        male: Map.get(dirty, "male"),
+        female: Map.get(dirty, "female"),
+        accent: accent,
+        hiragana: hiragana
+      }
+    end
   end
 end
 
@@ -33,7 +37,7 @@ defmodule OJAD do
 
   def extractOJAD(dirty) do
     Map.get(dirty, "all")
-    |> Stream.map(fn [hiragana | [y | _]] ->
+    |> Enum.map(fn [hiragana | [y | _]] ->
       extractConjugation(y, hiragana)
     end)
   end
@@ -50,7 +54,7 @@ defmodule Yomi do
   end
 
   def extractYomi(dirty, downsteps) do
-    Stream.map(dirty, fn [audio, images] ->
+    Enum.map(dirty, fn [audio, images] ->
       %Yomi{audio: audio, accent: getAccent(images, downsteps)}
     end)
   end

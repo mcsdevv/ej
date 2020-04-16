@@ -1,6 +1,7 @@
 defmodule Ej do
   import NHK
   import OJAD
+  import DBRow
 
   @moduledoc """
   Documentation for `Ej`.
@@ -35,13 +36,23 @@ defmodule Ej do
            |> Map.new() do
       decoded
       # |> Stream.filter(fn x -> x && Map.get(x, "nhk") end)
-      |> Stream.map(fn x -> extractRecord(x, clean) end)
-      |> Stream.filter(fn x -> x && x.nhk end)
-      |> Stream.map(fn x ->
-        {x.nhk.kanji, x.nhk.kana, Enum.map(x.nhk.yomi, fn yomi -> yomi.accent end)}
-      end)
-      |> Enum.group_by(fn {_, [hiragana | _], _} -> hiragana == "はし" end)
-      |> Enum.to_list()
+      |> Enum.map(fn x -> extractRecord(x, clean) end)
+      |> Enum.filter(fn x -> x && (x.nhk || x.ojad) end)
+
+      # |> Enum.map(fn x ->
+      #   case x do
+      #     %R{nhk: nil, ojad: %OJAD{conjugations: [head | _]}} ->
+      #       %DBRow{hiragana: head.hiragana, kanji: head.hiragana, downstep: [head.accent]}
+
+      #     %R{nhk: %NHK{kana: kana, kanji: kanji, yomi: yomi}} ->
+      #       %DBRow{hiragana: kana, kanji: kanji, downstep: yomi}
+      #   end
+      # end)
+
+      #   {x.nhk.kanji, x.nhk.kana, Enum.map(x.nhk.yomi, fn yomi -> yomi.accent end)}
+      # end)
+      # |> Enum.group_by(fn {_, [hiragana | _], _} -> hiragana == "はし" end)
+      # |> Enum.to_list()
 
       # |> length()
 
