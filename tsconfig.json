@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "types": [
-      "cypress"
-    ],
     "resolveJsonModule": true,
     "lib": [
       "es6",
