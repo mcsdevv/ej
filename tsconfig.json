@@ -9,6 +9,12 @@
       "dom",
       "es2017"
     ],
+    "baseUrl": "./",
+    "paths": {
+      "@backend/*": [
+        "src/backend/*"
+      ]
+    },
     /* Basic Options */
     // "incremental": true,     
     /* Enable incremental compilation */
