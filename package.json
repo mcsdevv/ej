@@ -1,0 +1,22 @@
+{
+	"name": "using-ts-aliases-in-cypress-tests",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "npx cypress open",
+		"cy:open": "cypress open",
+		"tsc": "tsc"
+	},
+	"devDependencies": {
+		"@bahmutov/add-typescript-to-cypress": "2.0.4",
+		"cypress": "3.2.0",
+		"parcel-bundler": "1.12.3",
+		"typescript": "^3.4.5",
+		"webpack": "4.31.0"
+	},
+	"dependencies": {
+		"@types/lodash": "^4.14.150",
+		"lodash": "^4.17.15"
+	}
+}
