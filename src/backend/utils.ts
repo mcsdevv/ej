@@ -17,26 +17,28 @@ type Reading = {
 	downstep: number
 }
 
-export const parseUntil = (word) => parseFile().find((x) => x.kanji.includes(word))
+export const findWordByKanji = (word: string, list: NHK[]): NHK | undefined => list.find((x) => x.kanji.includes(word))
 
-export const parseFile = () => {
-	return JSON.parse(readFileSync('dict.json').toString())
-		.filter((x: any) => x && x.nhk)
-		.map((x: any) => parseNHK(x.nhk))
+export const parseFile = (): NHK[] => {
+	return JSON.parse(readFileSync('dict.json').toString()).map((x) => parseNHK(x.nhk)).filter((x) => x)
 }
 export const parseNHK = (obj: any) => parseNHKObject(obj, downsteps)
 
 const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
 	try {
+		if (obj.kanji.includes('端')) {
+			console.log()
+		}
+
 		return {
 			jisho: obj.jisho,
 			kanji: obj.kanji,
 			hiragana: obj.kana,
 			jishoWord: obj.jishoWord,
 			katakana: obj.katakana,
-			readings: obj.yomi.map((x: any) => ({
+			readings: obj.yomi.map((x: string[][]) => ({
 				audioFile: head(x),
-				downstep: last<string[]>(x).findIndex((f: string) => downsteps.includes(f)),
+				downstep: last(x).findIndex((f: string) => downsteps.includes(f)),
 			})),
 		}
 	} catch (e) {
