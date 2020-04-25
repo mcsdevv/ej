@@ -1,4 +1,5 @@
-import { head, tail } from 'lodash'
+import { head, last, take } from 'lodash'
+import { readFileSync } from 'fs-extra'
 
 export const greeting = () => 'Hello World'
 
@@ -16,6 +17,13 @@ type Reading = {
 	downstep: number
 }
 
+export const parseUntil = (word) => parseFile().find((x) => x.kanji.includes(word))
+
+export const parseFile = () => {
+	return JSON.parse(readFileSync('dict.json').toString())
+		.filter((x: any) => x && x.nhk)
+		.map((x: any) => parseNHK(x.nhk))
+}
 export const parseNHK = (obj: any) => parseNHKObject(obj, downsteps)
 
 const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
@@ -24,9 +32,23 @@ const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
 	}
 
 	const readings = obj.yomi.map((x: any) => {
+		const filenames = last(x)
+
+		const index = filenames.findIndex((f: string) => downsteps.includes(f))
+
+		// console.log(index)
 		return {
 			audioFile: head(x),
-			downstep: tail(x).findIndex((filename: string) => downsteps.includes(filename)),
+			downstep: index,
+
+			// tail(x).findIndex((filenames: string[]) => {
+			// 	if (obj.kanji == '妹') {
+			// 		console.error(filenames)
+			// 	}
+
+			// 	return filenames.findIndex((f) => downsteps.includes(f))
+			// 	// return downsteps.includes(filename)
+			// }),
 		}
 	})
 
