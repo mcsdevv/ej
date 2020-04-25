@@ -27,38 +27,20 @@ export const parseFile = () => {
 export const parseNHK = (obj: any) => parseNHKObject(obj, downsteps)
 
 const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
-	if (!obj) {
-		return null
-	}
-
-	const readings = obj.yomi.map((x: any) => {
-		const filenames = last(x)
-
-		const index = filenames.findIndex((f: string) => downsteps.includes(f))
-
-		// console.log(index)
+	try {
 		return {
-			audioFile: head(x),
-			downstep: index,
-
-			// tail(x).findIndex((filenames: string[]) => {
-			// 	if (obj.kanji == '妹') {
-			// 		console.error(filenames)
-			// 	}
-
-			// 	return filenames.findIndex((f) => downsteps.includes(f))
-			// 	// return downsteps.includes(filename)
-			// }),
+			jisho: obj.jisho,
+			kanji: obj.kanji,
+			hiragana: obj.kana,
+			jishoWord: obj.jishoWord,
+			katakana: obj.katakana,
+			readings: obj.yomi.map((x: any) => ({
+				audioFile: head(x),
+				downstep: last<string[]>(x).findIndex((f: string) => downsteps.includes(f)),
+			})),
 		}
-	})
-
-	return {
-		jisho: obj.jisho,
-		kanji: obj.kanji,
-		hiragana: obj.kana,
-		readings: readings,
-		jishoWord: obj.jishoWord,
-		katakana: obj.katakana,
+	} catch (e) {
+		return null
 	}
 }
 
