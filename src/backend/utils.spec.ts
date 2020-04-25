@@ -1,5 +1,5 @@
 import { head } from 'lodash'
-import { parseNHK, parseFile, findWordByKanji } from './utils'
+import { parseNHK, parseFile, findWordByKanji, writeToDB } from './utils'
 import * as data from 'cypress/fixtures/small.json'
 
 describe('validation', () => {
@@ -25,7 +25,7 @@ describe('validation', () => {
 describe('correctness', () => {
 	const wordList = parseFile()
 
-	it('university', () => {
+	it('daigaku', () => {
 		const parsed: any = head(findWordByKanji('大学', wordList).readings)
 		expect(parsed.downstep).toEqual(-1)
 	})
@@ -49,12 +49,18 @@ describe('correctness', () => {
 	})
 
 	it('hashi - edge', () => {
-		expect(findWordByKanji('端', wordList).readings).toEqual([
+		const word = findWordByKanji('端', wordList)
+		expect(word.readings).toEqual([
 			{ audioFile: '端.yomi00094DEE_039E.wav', downstep: 0 },
 			{ audioFile: '端.yomi00094DF5_0212.wav', downstep: 0 },
 			{ audioFile: '端.yomi00094E05_0116.wav', downstep: -1 },
 			{ audioFile: '端.yomi00094E12_0152.wav', downstep: -1 },
 			{ audioFile: '端.yomi00094E1D_0696.wav', downstep: -1 },
 		])
+		// expect(word.jisho).toEqual('')
 	})
+})
+describe('db', () => {
+	// const wordList = parseFile()
+	// writeToDB(wordList)
 })

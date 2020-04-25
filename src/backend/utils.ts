@@ -1,20 +1,46 @@
-import { head, last, take } from 'lodash'
+import { head, last, take, chunk } from 'lodash'
 import { readFileSync } from 'fs-extra'
+import DB from 'better-sqlite3-helper'
 
 export const greeting = () => 'Hello World'
 
 type NHK = {
+	katakana: string[]
+	hiragana: string[]
 	jisho: string
-	kanji: string
-	hiragana: string
-	readings: Reading[]
 	jishoWord: string
-	katakana: string
+	kanji: string[]
+	readings: Reading[]
 }
 
 type Reading = {
 	audioFile: string
 	downstep: number
+}
+
+export const writeToDB = (words: NHK[]) => {
+	DB({ migrate: { force: 'last' } })
+	// take(words, 10)
+	words.forEach((nhk) => {
+		// console.log(nhk)
+		const wordId = DB().insert('word', { jisho: nhk.jisho })
+		// console.error(nhk.kanji)
+		nhk.kanji.forEach((kanji) => {
+			DB().insert('kanji', { wordId: wordId, kanji: kanji })
+		})
+		// console.error(nhk.hiragana)
+		nhk.hiragana.forEach((hiragana) => {
+			DB().insert('hiragana', { wordId: wordId, hiragana: hiragana })
+		})
+		// console.error(nhk.katakana)
+		nhk.katakana.forEach((katakana) => {
+			DB().insert('katakana', { wordId: wordId, katakana: katakana })
+		})
+		// console.error(nhk.readings)
+		nhk.readings.forEach((reading) => {
+			DB().insert('reading', { wordId: wordId, downstep: reading.downstep, audioFile: reading.audioFile })
+		})
+	})
 }
 
 export const findWordByKanji = (word: string, list: NHK[]): NHK | undefined => list.find((x) => x.kanji.includes(word))
@@ -26,15 +52,11 @@ export const parseNHK = (obj: any) => parseNHKObject(obj, downsteps)
 
 const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
 	try {
-		if (obj.kanji.includes('端')) {
-			console.log()
-		}
-
 		return {
+			jishoWord: obj.jishoWord,
 			jisho: obj.jisho,
 			kanji: obj.kanji,
 			hiragana: obj.kana,
-			jishoWord: obj.jishoWord,
 			katakana: obj.katakana,
 			readings: obj.yomi.map((x: string[][]) => ({
 				audioFile: head(x),

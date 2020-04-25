@@ -16,6 +16,7 @@
 		"jest": "^25.3.0",
 		"parcel-bundler": "1.12.3",
 		"ts-jest": "^25.4.0",
+		"ts-node": "^8.9.0",
 		"typescript": "^3.4.5",
 		"webpack": "4.31.0"
 	},
@@ -25,6 +26,7 @@
 		"@babel/preset-typescript": "^7.9.0",
 		"@types/lodash": "^4.14.150",
 		"babel-jest": "^25.3.0",
+		"better-sqlite3-helper": "^2.3.0",
 		"lodash": "^4.17.15"
 	}
 }
