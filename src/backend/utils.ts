@@ -23,7 +23,7 @@ export const writeToDB = (words: NHK[]) => {
 	// take(words, 10)
 	words.forEach((nhk) => {
 		// console.log(nhk)
-		const wordId = DB().insert('word', { jisho: nhk.jisho })
+		const wordId = DB().insert('word', { jisho: nhk.jisho, jishoWord: nhk.jishoWord })
 		// console.error(nhk.kanji)
 		nhk.kanji.forEach((kanji) => {
 			DB().insert('kanji', { wordId: wordId, kanji: kanji })

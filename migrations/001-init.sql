@@ -1,6 +1,6 @@
 -- Up 
 
-CREATE TABLE `Word` (id INTEGER PRIMARY KEY, jisho TEXT);
+CREATE TABLE `Word` (id INTEGER PRIMARY KEY, jisho TEXT, jishoWord TEXT);
 CREATE TABLE `Kanji` (id INTEGER PRIMARY KEY, kanji TEXT, wordId INTEGER, 
     CONSTRAINT kanji_word FOREIGN KEY (wordId)
         REFERENCES Word (id) 
