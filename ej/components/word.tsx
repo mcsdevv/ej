@@ -9,7 +9,7 @@ type Props = {
 	downStep: number
 }
 
-export default function Word({ hiragana, downStep }) {
+export default function Word({ hiragana, downStep }: Props) {
 	const deepEq = (a, b) => {
 		return JSON.stringify(a) === JSON.stringify(b)
 	}
