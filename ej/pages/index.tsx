@@ -1,11 +1,21 @@
 import ReactAudioPlayer from 'react-audio-player'
 import Word from '../components/word'
+import useSWR from 'swr'
 
 export default function Home() {
-	return (
+	const fetcher = (url) => fetch(url).then((r) => r.json())
+	let data
+	if (typeof window !== 'undefined') {
+		data = useSWR('/api/word', fetcher).data
+		console.log(data)
+	}
+
+	return data ? (
 		<div className='container'>
-			<ReactAudioPlayer src='audio/○×式.yomi00013273_004A.wav' autoPlay={true} controls={true} />
-			<Word hiragana={'はしが'} downStep={1} />
+			<ReactAudioPlayer src={`audio/${data.audioFile}`} autoPlay={true} controls={true} />
+			<Word hiragana={data.hiragana} downStep={data.downstep} />
 		</div>
+	) : (
+		'wait'
 	)
 }

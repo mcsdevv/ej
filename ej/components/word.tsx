@@ -39,16 +39,16 @@ export default function Word({ hiragana, downStep }: Props) {
 		copy[row][col] = true
 		setMatrix(copy)
 
-		console.log(answer, copy[0])
+		// console.log(answer, copy[0])
 
 		if (deepEq(answer, copy[0])) {
 			setCorrect(true)
-			console.log('HERE')
+			// console.log('HERE')
 		} else {
 			setCorrect(false)
 		}
 	}
-	console.log(correct)
+	// console.log(correct)
 
 	const middle = hiragana
 		.split('')
