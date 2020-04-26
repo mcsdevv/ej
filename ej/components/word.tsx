@@ -2,97 +2,88 @@ import { cloneDeep } from 'lodash'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { useState } from 'react'
+import Square from './square'
 
-export default function Word() {
-	const hiragana = 'まるばつしき'
+type Props = {
+	hiragana: string
+	downStep: number
+}
 
-	const [ state, setState ] = useState([
-		Array(hiragana.length).fill(false),
-		Array(hiragana.length).fill(true),
-		Array(hiragana.length).fill(false),
-	])
+export default function Word({ hiragana, downStep }) {
+	const deepEq = (a, b) => {
+		return JSON.stringify(a) === JSON.stringify(b)
+	}
+
+	const makeAnswer = (downStep) => {
+		if (downStep === -1) {
+			return [ false ].concat(Array(hiragana.length - 1).fill(true))
+		}
+		if (downStep === 0) {
+			return [ true ].concat(Array(hiragana.length - 1).fill(false))
+		}
+
+		return [ false ].concat(Array(downStep).fill(true)).concat(Array(hiragana.length - downStep - 1).fill(false))
+	}
+	const answer = makeAnswer(downStep)
+
+	const [ matrix, setMatrix ] = useState([ Array(hiragana.length).fill(false), Array(hiragana.length).fill(true) ])
+
+	const [ correct, setCorrect ] = useState(false)
 
 	const onClick = (row, col) => {
-		const copy = cloneDeep(state)
+		const copy = cloneDeep(matrix)
 
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 2; i++) {
 			copy[i][col] = false
 		}
 		copy[row][col] = true
-		setState(copy)
+		setMatrix(copy)
+
+		console.log(answer, copy[0])
+
+		if (deepEq(answer, copy[0])) {
+			setCorrect(true)
+			console.log('HERE')
+		} else {
+			setCorrect(false)
+		}
 	}
+	console.log(correct)
 
 	const middle = hiragana
 		.split('')
-		.map((x, i) => <Square onClick={() => onClick(1, i)} key={i} letter={x} display={state[1][i]} />)
+		.map((x, i) => (
+			<Square correct={correct} onClick={() => onClick(1, i)} key={i} letter={x} display={matrix[1][i]} />
+		))
 
 	const above = middle.map((x, i) => (
-		<Square {...x.props} onClick={() => onClick(0, i)} key={i} display={state[0][i]} />
-	))
-	const below = middle.map((x, i) => (
-		<Square {...x.props} onClick={() => onClick(2, i)} key={i} display={state[2][i]} />
+		<Square {...x.props} correct={correct} onClick={() => onClick(0, i)} key={i} display={matrix[0][i]} />
 	))
 
 	return (
 		<div className='container'>
 			THIS IS THE WORD
-			<SCon>
+			<SCon length={hiragana.length}>
 				{above}
 				{middle}
-				{below}
+				{/* {below} */}
 			</SCon>
 		</div>
 	)
 }
 
-function SCon({ children }) {
+function SCon({ length, children }) {
 	return (
 		<div className='sCon'>
 			{children}
 			<style jsx>
 				{`
 					.sCon {
-						width: 400px;
+						width: ${55 * length}px;
 						height: 150px;
 					}
 				`}
 			</style>
-		</div>
-	)
-}
-
-type Props = {
-	letter: string
-	display: boolean
-	onClick: any
-}
-
-function Square({ letter, display, onClick }: Props) {
-	return (
-		<div className='square'>
-			{!display ? (
-				<button onClick={onClick}>
-					<p />
-				</button>
-			) : (
-				<p>{letter}</p>
-			)}
-			<style jsx>{`
-				.square {
-					float: left;
-					display: table-cell;
-					width: 50px;
-					height: 50px;
-					border: 5px solid red;
-				}
-				button {
-					width: 100%;
-					height: 100%;
-				}
-				p {
-					text-align: center;
-				}
-			`}</style>
 		</div>
 	)
 }
