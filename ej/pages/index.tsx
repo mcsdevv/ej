@@ -1,10 +1,11 @@
 import ReactAudioPlayer from 'react-audio-player'
+import Word from '../components/word'
 
 export default function Home() {
 	return (
 		<div className='container'>
-			hfllo
-			<ReactAudioPlayer src='my_audio_file.ogg' autoPlay controls />
+			<ReactAudioPlayer src='audio/○×式.yomi00013273_004A.wav' autoPlay={true} controls={true} />
+			<Word />
 		</div>
 	)
 }
