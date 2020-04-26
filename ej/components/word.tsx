@@ -1,21 +1,44 @@
-// import {} from 'lodash'
+import { cloneDeep } from 'lodash'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
+import { useState } from 'react'
 
 export default function Word() {
 	const hiragana = 'まるばつしき'
 
-	const wordSquares = hiragana.split('').map((x, i) => <Square key={i} letter={x} />)
+	const [ state, setState ] = useState([
+		Array(hiragana.length).fill(false),
+		Array(hiragana.length).fill(true),
+		Array(hiragana.length).fill(false),
+	])
 
-	const above = wordSquares.map((x, i) => <Square key={i} />)
-	const below = wordSquares.map((x, i) => <Square key={i} />)
+	const onClick = (row, col) => {
+		const copy = cloneDeep(state)
+
+		for (let i = 0; i < 3; i++) {
+			copy[i][col] = false
+		}
+		copy[row][col] = true
+		setState(copy)
+	}
+
+	const middle = hiragana
+		.split('')
+		.map((x, i) => <Square onClick={() => onClick(1, i)} key={i} letter={x} display={state[1][i]} />)
+
+	const above = middle.map((x, i) => (
+		<Square {...x.props} onClick={() => onClick(0, i)} key={i} display={state[0][i]} />
+	))
+	const below = middle.map((x, i) => (
+		<Square {...x.props} onClick={() => onClick(2, i)} key={i} display={state[2][i]} />
+	))
 
 	return (
 		<div className='container'>
 			THIS IS THE WORD
 			<SCon>
 				{above}
-				{wordSquares}
+				{middle}
 				{below}
 			</SCon>
 		</div>
@@ -39,14 +62,16 @@ function SCon({ children }) {
 }
 
 type Props = {
-	letter?: string
+	letter: string
+	display: boolean
+	onClick: any
 }
 
-function Square({ letter }: Props) {
+function Square({ letter, display, onClick }: Props) {
 	return (
 		<div className='square'>
-			{!letter ? (
-				<button>
+			{!display ? (
+				<button onClick={onClick}>
 					<p />
 				</button>
 			) : (
