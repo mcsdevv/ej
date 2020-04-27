@@ -26,7 +26,7 @@ export default function Word({ hiragana, downStep }: Props) {
 	}
 	const answer = makeAnswer(downStep)
 
-	const [ matrix, setMatrix ] = useState([ Array(hiragana.length).fill(false), Array(hiragana.length).fill(true) ])
+	const [ matrix, setMatrix ] = useState([ Array(hiragana.length).fill(true), Array(hiragana.length).fill(false) ])
 
 	const [ correct, setCorrect ] = useState(false)
 
@@ -66,7 +66,6 @@ export default function Word({ hiragana, downStep }: Props) {
 			<SCon length={hiragana.length}>
 				{above}
 				{middle}
-				{/* {below} */}
 			</SCon>
 		</div>
 	)
