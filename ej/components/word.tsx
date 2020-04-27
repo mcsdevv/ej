@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Square from './square'
 
 type Props = {
@@ -9,46 +9,49 @@ type Props = {
 	downStep: number
 }
 
+const deepEq = (a, b) => {
+	return JSON.stringify(a) === JSON.stringify(b)
+}
+
+const makeAnswer = (downStep, hiragana) => {
+	if (downStep === -1) {
+		return [ false ].concat(Array(hiragana.length - 1).fill(true))
+	}
+	if (downStep === 0) {
+		return [ true ].concat(Array(hiragana.length - 1).fill(false))
+	}
+
+	return [ false ].concat(Array(downStep).fill(true)).concat(Array(hiragana.length - downStep - 1).fill(false))
+}
+
+const makeMatrix = (hiragana) => [ Array(hiragana.length).fill(true), Array(hiragana.length).fill(false) ]
+
 export default function Word({ hiragana, downStep }: Props) {
-	const deepEq = (a, b) => {
-		return JSON.stringify(a) === JSON.stringify(b)
-	}
+	const answer = makeAnswer(downStep, hiragana)
 
-	const makeAnswer = (downStep) => {
-		if (downStep === -1) {
-			return [ false ].concat(Array(hiragana.length - 1).fill(true))
-		}
-		if (downStep === 0) {
-			return [ true ].concat(Array(hiragana.length - 1).fill(false))
-		}
-
-		return [ false ].concat(Array(downStep).fill(true)).concat(Array(hiragana.length - downStep - 1).fill(false))
-	}
-	const answer = makeAnswer(downStep)
-
-	const [ matrix, setMatrix ] = useState([ Array(hiragana.length).fill(true), Array(hiragana.length).fill(false) ])
-
+	const [ matrix, setMatrix ] = useState(makeMatrix(hiragana))
 	const [ correct, setCorrect ] = useState(false)
+
+	useEffect(
+		() => {
+			setMatrix(makeMatrix(hiragana))
+			setCorrect(false)
+		},
+		[ hiragana ],
+	)
 
 	const onClick = (row, col) => {
 		const copy = cloneDeep(matrix)
-
-		for (let i = 0; i < 2; i++) {
-			copy[i][col] = false
-		}
+		copy[0][col] = false
+		copy[1][col] = false
 		copy[row][col] = true
 		setMatrix(copy)
-
-		// console.log(answer, copy[0])
-
 		if (deepEq(answer, copy[0])) {
 			setCorrect(true)
-			// console.log('HERE')
 		} else {
 			setCorrect(false)
 		}
 	}
-	// console.log(correct)
 
 	const middle = hiragana
 		.split('')
@@ -62,7 +65,6 @@ export default function Word({ hiragana, downStep }: Props) {
 
 	return (
 		<div className='container'>
-			THIS IS THE WORD
 			<SCon length={hiragana.length}>
 				{above}
 				{middle}
