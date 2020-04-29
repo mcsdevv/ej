@@ -1,10 +1,11 @@
 import { head } from 'lodash'
 import { parseNHK, parseFile, findWordByKanji, writeToDB } from './utils'
-import * as data from '../../fixtures/small.json'
+
+const wordList = parseFile()
 
 describe('validation', () => {
 	it('can parse correctly formed json', () => {
-		const parsed = parseNHK(data[0].nhk)
+		const parsed = findWordByKanji('有る', wordList)
 		expect(parsed.hiragana).toEqual([ 'ある' ])
 		expect(parsed.katakana).toEqual([ 'アル' ])
 		expect(parsed.kanji).toEqual([ '有る', '在る' ])
@@ -23,8 +24,6 @@ describe('validation', () => {
 })
 
 describe('correctness', () => {
-	const wordList = parseFile()
-
 	it('daigaku', () => {
 		const parsed: any = head(findWordByKanji('大学', wordList).readings)
 		expect(parsed.downstep).toEqual(-1)

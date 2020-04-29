@@ -10,8 +10,18 @@
 		"start": "next start"
 	},
 	"dependencies": {
+		"@babel/core": "^7.9.0",
+		"@babel/preset-env": "^7.9.5",
+		"@babel/preset-typescript": "^7.9.0",
+		"@types/jest": "^25.2.1",
+		"@types/lodash": "^4.14.150",
+		"@types/node": "^13.13.2",
+		"@types/react": "^16.9.34",
+		"babel-jest": "^25.3.0",
 		"better-sqlite3-helper": "^2.3.0",
+		"cypress": "3.2.0",
 		"isomorphic-unfetch": "^3.0.0",
+		"jest": "^25.3.0",
 		"lodash": "^4.17.15",
 		"next": "9.3.5",
 		"react": "16.13.1",
@@ -20,18 +30,8 @@
 		"react-dnd-html5-backend": "^10.0.2",
 		"react-dom": "16.13.1",
 		"swr": "^0.2.0",
-		"@types/jest": "^25.2.1",
-		"cypress": "3.2.0",
-		"jest": "^25.3.0",
 		"ts-node": "^8.9.0",
 		"typescript": "^3.4.5",
-		"webpack": "4.31.0",
-		"@babel/core": "^7.9.0",
-		"@babel/preset-env": "^7.9.5",
-		"@babel/preset-typescript": "^7.9.0",
-		"@types/lodash": "^4.14.150",
-		"babel-jest": "^25.3.0",
-		"@types/node": "^13.13.2",
-		"@types/react": "^16.9.34"
+		"webpack": "4.31.0"
 	}
 }
