@@ -1,5 +1,6 @@
 import ReactAudioPlayer from 'react-audio-player'
 import Word from '../components/word'
+import Container from '../components/accentWord/container'
 import useSWR, { mutate } from 'swr'
 import { useState } from 'react'
 
@@ -7,16 +8,16 @@ export default function Home() {
 	if (typeof window === 'undefined') {
 		return <div>hello from server</div>
 	}
-	const [ data, setData ] = useState(null)
+	const [ data, setData ] = useState({ hiragana: 'こんにちは', audioFile: 'blah', downstep: 3 })
 
-	useSWR('/api/word', (url) => {
-		fetch(url).then((res) => res.json()).then((json) => setData(json))
-	})
+	// useSWR('/api/word', (url) => {
+	// 	fetch(url).then((res) => res.json()).then((json) => setData(json))
+	// })
 
 	return data ? (
 		<div className='container'>
 			<ReactAudioPlayer src={`audio/${data.audioFile}`} autoPlay={true} controls={true} />
-			<Word hiragana={data.hiragana} downStep={data.downstep} />
+			<Container hiragana={data.hiragana} downStep={data.downstep} />
 			<button
 				onClick={() => {
 					mutate('/api/word')
