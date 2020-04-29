@@ -1,6 +1,6 @@
 import { head } from 'lodash'
 import { parseNHK, parseFile, findWordByKanji, writeToDB } from './utils'
-import * as data from 'cypress/fixtures/small.json'
+import * as data from '../../fixtures/small.json'
 
 describe('validation', () => {
 	it('can parse correctly formed json', () => {
