@@ -56,10 +56,8 @@ describe('correctness', () => {
 			{ audioFile: '端.yomi00094E12_0152.wav', downstep: -1 },
 			{ audioFile: '端.yomi00094E1D_0696.wav', downstep: -1 },
 		])
-		// expect(word.jisho).toEqual('')
 	})
 })
 describe('db', () => {
-	// const wordList = parseFile()
 	// writeToDB(wordList)
 })
