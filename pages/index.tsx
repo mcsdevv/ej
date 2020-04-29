@@ -10,9 +10,9 @@ export default function Home() {
 	}
 	const [ data, setData ] = useState({ hiragana: 'こんにちは', audioFile: 'blah', downstep: 3 })
 
-	// useSWR('/api/word', (url) => {
-	// 	fetch(url).then((res) => res.json()).then((json) => setData(json))
-	// })
+	useSWR('/api/word', (url) => {
+		fetch(url).then((res) => res.json()).then((json) => setData(json))
+	})
 
 	return data ? (
 		<div className='container'>
