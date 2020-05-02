@@ -1,6 +1,4 @@
 import { cloneDeep, tail, head, range } from 'lodash'
-import { DndProvider } from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 

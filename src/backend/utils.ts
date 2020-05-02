@@ -43,7 +43,7 @@ export const writeToDB = (words: NHK[]) => {
 	})
 }
 
-export const findWordByKanji = (word: string, list: NHK[]): NHK | undefined => list.find((x) => x.kanji.includes(word))
+export const findWordByKanji = (word: string, list: NHK[]): NHK[] => list.filter((x) => x.kanji.includes(word))
 
 export const parseFile = (): NHK[] => {
 	return JSON.parse(readFileSync('dict.json').toString()).map((x) => parseNHK(x.nhk)).filter((x) => x)
