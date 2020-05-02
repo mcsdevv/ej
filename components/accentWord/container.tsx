@@ -1,4 +1,4 @@
-import { cloneDeep, chunk, head, range } from 'lodash'
+import { cloneDeep, tail, head, range } from 'lodash'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { useState, useEffect } from 'react'
@@ -9,14 +9,16 @@ type Props = {
 }
 
 const sWidth = 3
+const radius = 40 - 2 * sWidth
+const wInterval = radius * 4
 
 const isCorrect = (downStep, array: boolean[]) => {
 	if (downStep === -1) {
-		return !head(array) && array.slice(1).every((x) => x)
+		return !head(array) && tail(array).every((x) => x)
 	}
 
 	if (downStep === 0) {
-		return head(array) && array.slice(1).every((x) => !x)
+		return head(array) && tail(array).every((x) => !x)
 	}
 
 	return (
@@ -30,15 +32,17 @@ const getColour = (downStep, array) => {
 	return isCorrect(downStep, array) ? 'green' : 'red'
 }
 
-export default function({ hiragana, downStep }: Props) {
+const getInitialArray = (length) => Array(length).fill(false)
+
+export default ({ hiragana, downStep }: Props) => {
 	const width = 800
 	const height = 240
 
-	const [ array, setArray ] = useState(Array(hiragana.length).fill(false))
+	const [ array, setArray ] = useState(getInitialArray(hiragana.length))
 
 	useEffect(
 		() => {
-			setArray(Array(hiragana.length).fill(false))
+			setArray(getInitialArray(hiragana.length))
 		},
 		[ hiragana ],
 	)
@@ -52,30 +56,11 @@ export default function({ hiragana, downStep }: Props) {
 	const columns = hiragana
 		.split('')
 		.map((x, i) => (
-			<Col
-				key={i}
-				letter={x}
-				index={i}
-				conHeight={height}
-				conWidth={width}
-				length={hiragana.length}
-				high={array[i]}
-				onClick={() => onClick(i)}
-			/>
+			<Col key={i} letter={x} index={i} conHeight={height} high={array[i]} onClick={() => onClick(i)} />
 		))
 
 	const lines = range(0, hiragana.length - 1).map((i) => {
-		return (
-			<Pair
-				key={i}
-				index={i}
-				conHeight={height}
-				conWidth={width}
-				length={hiragana.length}
-				high1={array[i]}
-				high2={array[i + 1]}
-			/>
-		)
+		return <Pair key={i} index={i} high1={array[i]} high2={array[i + 1]} />
 	})
 
 	return (
@@ -104,44 +89,25 @@ export default function({ hiragana, downStep }: Props) {
 	)
 }
 
-const caluclatePosition = (conWidth, conHeight, length, high) => {
-	// const radius = Math.min(conWidth / (length * 4), conHeight / 4) - 2 * sWidth
-	const radius = 40 - 2 * sWidth
-	// const wInterval = conWidth / length + radius / 2
-	const wInterval = radius * 4
-	const hInterval = high ? 2 * radius : conHeight - 2 * radius
-
-	return { radius, wInterval, hInterval, sWidth }
+const getHeight = (high: boolean) => {
+	return high ? 2 * radius : 4 * radius
 }
 
-const Pair = ({ index, conWidth, conHeight, length, high1, high2 }) => {
-	let { radius, wInterval, hInterval } = caluclatePosition(conWidth, conHeight, length, high1)
-	const hInterval1 = hInterval
-	const hInterval2 = caluclatePosition(conWidth, conHeight, length, high2).hInterval
+const getCircleX = (index) => radius + index * wInterval + sWidth
 
-	return (
-		<line
-			x1={radius + index * wInterval + sWidth}
-			x2={radius + (index + 1) * wInterval}
-			y1={hInterval1}
-			y2={hInterval2}
-			// style={{ stroke: 'green', strokeWidth: '10px' }}
-		/>
-	)
+const Pair = ({ index, high1, high2 }) => {
+	const hInterval1 = getHeight(high1)
+	const hInterval2 = getHeight(high2)
+
+	return <line x1={getCircleX(index)} x2={getCircleX(index + 1)} y1={hInterval1} y2={hInterval2} />
 }
 
-const Col = ({ letter, index, conWidth, conHeight, length, high, onClick }) => {
-	let { radius, wInterval, hInterval, sWidth } = caluclatePosition(conWidth, conHeight, length, high)
+const Col = ({ letter, index, conHeight, high, onClick }) => {
+	const hInterval = getHeight(high)
 	return (
 		<g onClick={onClick} style={{ pointerEvents: 'all' }}>
 			<g>
-				<circle
-					cy={hInterval}
-					cx={radius + index * wInterval + sWidth}
-					r={radius}
-					// fill='red'
-					// style={{ strokeWidth: `${sWidth}px`, stroke: 'blue' }}
-				/>
+				<circle cy={hInterval} cx={getCircleX(index)} r={radius} />
 				<text
 					width={radius * 2}
 					y={hInterval + radius / 2}
