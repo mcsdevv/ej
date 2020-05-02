@@ -53,6 +53,7 @@ export const parseNHK = (obj: any) => parseNHKObject(obj, downsteps)
 const parseNHKObject = (obj: any, downsteps: string[]): NHK | null => {
 	try {
 		return {
+			original: obj,
 			jishoWord: obj.jishoWord,
 			jisho: obj.jisho,
 			kanji: obj.kanji,

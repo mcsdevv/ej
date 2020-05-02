@@ -57,10 +57,9 @@ describe('correctness', () => {
 			{ audioFile: '端.yomi00094E1D_0696.wav', downstep: -1 },
 		])
 	})
-	it('is a wrod with more readings than hiraganas', () => {
-		const bad =
-			// wordList.filter((x) => x.hiragana.length > 1 && x.readings.length > x.hiragana.length)
-			wordList.filter((x) => x.hiragana.length === 1 && x.readings.length > 3)
+	it('is a word with more readings than hiraganas', () => {
+		const bad = wordList.filter((x) => x.hiragana.length > 1 && x.readings.length > x.hiragana.length)
+		// wordList.filter((x) => x.hiragana.length === 1 && x.readings.length > 3)
 		console.log(bad)
 	})
 })
