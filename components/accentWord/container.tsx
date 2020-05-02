@@ -2,15 +2,19 @@ import { cloneDeep, tail, head, range } from 'lodash'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 
 type Props = {
 	hiragana: string
 	downStep: number
 }
 
+const width = 800
+const height = 240
 const sWidth = 3
 const radius = 40 - 2 * sWidth
 const wInterval = radius * 4
+const colourDelay = '200ms'
 
 const isCorrect = (downStep, array: boolean[]) => {
 	if (downStep === -1) {
@@ -35,9 +39,6 @@ const getColour = (downStep, array) => {
 const getInitialArray = (length) => Array(length).fill(false)
 
 export default ({ hiragana, downStep }: Props) => {
-	const width = 800
-	const height = 240
-
 	const [ array, setArray ] = useState(getInitialArray(hiragana.length))
 
 	useEffect(
@@ -71,11 +72,13 @@ export default ({ hiragana, downStep }: Props) => {
 				{`
 					line {
 						stroke: ${getColour(downStep, array)};
+						transition: stroke ${colourDelay};
 						stroke-width: 5px;
 					}
 
 					circle {
 						fill: ${getColour(downStep, array)};
+						transition: fill ${colourDelay};
 						stroke-width: ${sWidth}px;
 						stroke: cornflowerblue;
 					}
@@ -96,10 +99,14 @@ const getHeight = (high: boolean) => {
 const getCircleX = (index) => radius + index * wInterval + sWidth
 
 const Pair = ({ index, high1, high2 }) => {
-	const hInterval1 = getHeight(high1)
-	const hInterval2 = getHeight(high2)
-
-	return <line x1={getCircleX(index)} x2={getCircleX(index + 1)} y1={hInterval1} y2={hInterval2} />
+	return (
+		<motion.line
+			initial={{ y1: getHeight(high1), y2: getHeight(high2) }}
+			animate={{ y1: getHeight(high1), y2: getHeight(high2) }}
+			x1={getCircleX(index)}
+			x2={getCircleX(index + 1)}
+		/>
+	)
 }
 
 const Col = ({ letter, index, conHeight, high, onClick }) => {
@@ -107,15 +114,21 @@ const Col = ({ letter, index, conHeight, high, onClick }) => {
 	return (
 		<g onClick={onClick} style={{ pointerEvents: 'all' }}>
 			<g>
-				<circle cy={hInterval} cx={getCircleX(index)} r={radius} />
-				<text
+				<motion.circle
+					initial={{ cy: getHeight(high) }}
+					animate={{ cy: getHeight(high) }}
+					cx={getCircleX(index)}
+					r={radius}
+				/>
+				<motion.text
 					width={radius * 2}
-					y={hInterval + radius / 2}
+					initial={{ y: hInterval + radius / 2 }}
+					animate={{ y: hInterval + radius / 2 }}
 					x={+index * wInterval + radius / 2}
 					style={{ fontSize: `${radius * 1.2}` }}
 				>
 					{letter}
-				</text>
+				</motion.text>
 			</g>
 			{/* The rectangle is invisible and is only here to make the g tag fill the entire column */}
 			<rect x={wInterval * index - radius} width={wInterval} height={conHeight} fill={'none'} />
