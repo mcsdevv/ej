@@ -1,2 +1,15 @@
-select kanji, jishoWord, jisho from Word w join Hiragana h on w.id = h.wordId
-join Kanji k on w.id = k.wordId where kanji != jishoWord
+select
+  katakana,
+  group_concat(audioFile),
+  nasal,
+  unVoiced,
+  downstep,
+  count(katakana) c
+from Reading
+group by
+  katakana,
+  nasal,
+  unVoiced,
+  downstep
+having
+  c > 1

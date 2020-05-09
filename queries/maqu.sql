@@ -1,21 +1,14 @@
-
-select group_concat(audioFile), part, count(part) c from
-
-(select 
-audioFile, 
-substr(audioFile, length(audioFile) - 8 ) part 
--- substr(audioFile, length(audioFile) - 16, 8 ) part 
-from Reading)
-
-
--- join
--- Kanji k on w.id = k.wordId
-
-
-group by part
--- where kanji = "円"
--- where 
-
-ORDER by c ASC
-
-
+select
+  group_concat(distinct katakana),
+  group_concat(distinct downstep),
+  group_concat(distinct audioFile) af
+from Reading
+where
+  length(downstep) < 2
+group by
+  katakana
+having
+  downstep != length(katakana) - 1
+  and length(group_concat(distinct downstep)) > 4
+order by
+  length(katakana) asc

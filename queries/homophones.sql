@@ -1,25 +1,19 @@
-
-select 
-*
--- count(*) 
-from
-
-    (select group_concat(jisho), hiragana, count(hiragana) numberOfWords, 
-    group_concat(distinct downstep) downStepPatterns, count (distinct downstep) c from
-
-        (select jisho, hiragana, downstep from Word w join Hiragana h on w.id = h.wordId
-                                                    join Reading r on w.id = r.wordId
-        group by jisho
-    )
-
-
-
-    group by hiragana
-    -- having
-    -- c > 2
-    order by length(downStepPatterns) desc)
-
-
-
-
-
+SELECT
+  id
+from (
+    select
+      katakana
+    from Reading
+    where
+      length(downstep) < 2
+    group by
+      katakana
+    having
+      downstep != length(katakana) - 1
+      and length(group_concat(distinct downstep)) > 4
+  ) l
+left join Reading r on l.katakana = r.katakana
+GROUP by
+  audioFile
+order by
+  length(r.katakana) asc

@@ -1,0 +1,117 @@
+import { head, last, initial } from 'lodash'
+import { readFileSync } from 'fs-extra'
+import { parentDir, normalizeStrings } from './common/wrapper'
+import { cleanImageFile, downsteps, cleanKatakana, Kana } from './img/wrapper'
+
+export interface NHK {
+    katakana: string[]
+    hiragana: string[]
+    jisho: string
+    jishoWord: string
+    kanji: string[]
+    readings: Reading[]
+    particleReading: ParticleReading[]
+}
+
+interface Reading {
+    kana: Kana
+    audioFile: string
+    downsteps: number[]
+}
+
+interface ParticleReading {
+    kana: Kana
+    audioFile: string
+    particle: string
+    downsteps: number[]
+}
+
+const cleanAudioFile = (audioFile: string) => {
+    const map: Record<string, string> = {
+        '４−Ｈクラブ.yomi000BAA8E_007E.wav':
+            '４－Ｈクラブ.yomi000BAA8E_007E.wav',
+        '４−Ｈクラブ.jyoshi00BAA93_0648.wav':
+            '４－Ｈクラブ.jyoshi00BAA93_0648.wav',
+    }
+
+    if (audioFile in map) {
+        return map[audioFile]
+    }
+    return audioFile
+}
+
+const getDownsteps = (fileList: string[]): number[] =>
+    fileList
+        .map((f) => cleanImageFile(f))
+        .map((f: string, index: number) => (downsteps.includes(f) ? index : ''))
+        .filter(String)
+        .map(Number)
+
+export const parseNHKObject = (obj: any): NHK | null => {
+    if (!obj) {
+        return null
+    }
+
+    const readings: Reading[] = obj.yomi.map((x: any) => {
+        const kana = cleanKatakana(last<string[]>(x)!)
+        const downsteps = getDownsteps(last<string[]>(x)!)
+
+        return {
+            kana: kana,
+            downsteps: downsteps,
+            audioFile: cleanAudioFile(head<string>(x)!),
+        }
+    })
+
+    const particleReading: ParticleReading[] = obj.jyoshi
+        ?.map((x: any) => {
+            const wP = {
+                particle: last<string>(last<string>(x))!,
+                kana: cleanKatakana(initial(last<string[]>(x))),
+                downsteps: getDownsteps(initial(last<string[]>(x))),
+                audioFile: cleanAudioFile(head<string>(x)!),
+            }
+
+            // For some readson sometimes the particle is multiple charactres
+            if (wP.particle.length !== 1) {
+                // last(wP.kana)!.special
+                if (
+                    last(wP.kana.nasal) === wP.kana.katakana.length - 1 ||
+                    last(wP.kana.unVoiced) === wP.kana.katakana.length - 1
+                ) {
+                    if (wP.particle.length !== 2) {
+                        throw new Error('expected there to be two characters')
+                    }
+                    wP.particle = last(wP.particle)!
+                } else {
+                    return null
+                }
+            }
+            return wP
+        })
+        .filter((x: ParticleReading | null) => x)
+
+    return {
+        jishoWord: obj.jishoWord,
+        jisho: obj.jisho,
+        kanji: obj.kanji,
+        hiragana: obj.kana,
+        katakana: obj.katakana,
+        readings: readings,
+        particleReading: particleReading || [],
+    }
+}
+
+export const parseFile = (): NHK[] => {
+    return JSON.parse(readFileSync(`${parentDir}/dict.json`).toString())
+        .filter((x: any) => x.nhk)
+        .map((x: any) => normalizeStrings(x.nhk))
+        .map((x: any) => parseNHKObject(x))
+        .filter((x: NHK | null) => x)
+}
+
+export const getReadingfileName = (r: Reading) =>
+    `${r.kana.katakana}|${r.downsteps}|${r.kana.nasal}|${r.kana.unVoiced}.wav`.normalize()
+
+export const getParticleReadingfileName = (r: ParticleReading) =>
+    `${r.kana.katakana}|${r.downsteps}|${r.kana.nasal}|${r.kana.unVoiced}|${r.particle}.wav`.normalize()
