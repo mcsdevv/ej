@@ -19,8 +19,8 @@ export default ({
         <g onClick={onClick} style={{ pointerEvents: 'all' }}>
             <g>
                 <motion.circle
-                    initial={{ cy: getHeight(high) }}
-                    animate={{ cy: getHeight(high) }}
+                    initial={{ cy: hInterval }}
+                    animate={{ cy: hInterval }}
                     cx={getCircleX(index)}
                     r={radius}
                 />
