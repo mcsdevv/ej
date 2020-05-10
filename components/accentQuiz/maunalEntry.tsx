@@ -11,6 +11,7 @@ type Props = {
 
 export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
     const a = new Audio(`audio/readings/${audioFile}`)
+    // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     const play = () => a.play().catch((e) => {})
     useEffect(() => {
