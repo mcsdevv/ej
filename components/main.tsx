@@ -7,6 +7,10 @@ interface Props {
 export default ({ children }: Props) => (
     <>
         <Head>
+            <script
+                src='https://kit.fontawesome.com/156885e294.js'
+                crossOrigin='anonymous'
+            ></script>
             <link
                 rel='stylesheet'
                 href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'

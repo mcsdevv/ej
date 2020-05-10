@@ -2,9 +2,18 @@ import ReactAudioPlayer from 'react-audio-player'
 import NoSSR from 'react-no-ssr'
 import Accent from '../components/accentWord/container'
 import useSWR from 'swr'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Container, Col, Row } from 'react-bootstrap'
 import Main from '../components/main'
+
+const playAudio = () => {
+    const aE = document.getElementsByClassName('audio-element')[0] as any
+    if (!aE) {
+        return
+    }
+    aE.load()
+    aE.play()
+}
 
 function between(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -51,49 +60,68 @@ export default function Home() {
 
     console.log(fromServer)
 
+    useEffect(() => {
+        playAudio()
+    })
+
     return (
         <Main>
             <NoSSR onSSR={<div>W8 M8</div>}>
                 {data && (
-                    <Container className='h-100'>
-                        <Row style={{ height: '15%' }}>
-                            <ReactAudioPlayer
-                                style={{ width: '100%' }}
-                                src={`audio/readings/${data.audioFile}`}
-                                autoPlay={true}
-                                controls={true}
-                            />
-                        </Row>
-
-                        <Row style={{ height: '65%' }}>
-                            <Accent
-                                kana={data.katakana}
-                                downStep={data.downstep}
-                            />
-                        </Row>
-
-                        <Row style={{ height: '20%' }}>
-                            <Button
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                                active={true}
-                                variant='primary'
-                                onClick={() => {
-                                    const temp = chooseId(id, ids)
-                                    setId(temp)
-                                }}
-                            >
-                                NEXT
-                            </Button>
-                        </Row>
-                    </Container>
+                    <Pure
+                        {...data}
+                        onClickNext={() => setId(chooseId(id, ids))}
+                    />
                 )}
                 {null}
             </NoSSR>
         </Main>
     )
 }
-// TODO fix server side rendering problem
+
+type Props = {
+    audioFile: string
+    katakana: string
+    downstep: number
+    onClickNext: () => void
+}
+
+const Pure = ({ audioFile, katakana, downstep, onClickNext }: Props) => {
+    return (
+        <Container className='h-100'>
+            <Row className='justify-content-center' style={{ height: '15%' }}>
+                <Button onClick={playAudio}>
+                    <i
+                        className='fas fa-volume-up'
+                        style={{ fontSize: '500%' }}
+                    ></i>
+                </Button>
+
+                <audio className='audio-element'>
+                    <source src={`audio/readings/${audioFile}`}></source>
+                </audio>
+            </Row>
+
+            <Row style={{ height: '65%' }}>
+                <Accent kana={katakana} downStep={downstep} />
+            </Row>
+
+            <Row style={{ height: '20%' }}>
+                <Button
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        fontSize: '500%',
+                    }}
+                    active={true}
+                    variant='primary'
+                    onClick={onClickNext}
+                >
+                    NEXT
+                </Button>
+            </Row>
+        </Container>
+    )
+}
+
 // TODO rename downstep to downStep
