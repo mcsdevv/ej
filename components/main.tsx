@@ -18,13 +18,13 @@ export default ({ children }: Props) => (
                 crossOrigin='anonymous'
             />
         </Head>
-        {children}
+        <div className='main'>{children}</div>
         <style global jsx>
             {`
                 html,
                 body,
                 #__next,
-                .container {
+                .main {
                     height: 100%;
                 }
             `}
