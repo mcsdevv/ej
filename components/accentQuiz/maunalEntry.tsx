@@ -11,7 +11,7 @@ type Props = {
 
 export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
     const a = new Audio(`audio/readings/${audioFile}`)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     const play = () => a.play().catch((e) => {})
     useEffect(() => {
         play()

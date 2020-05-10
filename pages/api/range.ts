@@ -5,7 +5,7 @@ DB()
 const query = readFileSync('./queries/homophones.sql').toString()
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const record = DB().query(query)
-    console.log(record)
+    // console.log(record)
     const payload = record.map((x) => x.id)
     res.status(200).json(payload)
 }

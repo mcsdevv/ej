@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Main from '../components/main'
 import Pure from '../components/accentQuiz/maunalEntry'
 import fetch from 'node-fetch'
+import { head } from 'rambda'
 
 function between(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -21,24 +22,24 @@ type Data = {
 }
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
-const defaultIds = [18760]
-
 export default function Home() {
-    const ids =
-        useSWR<number[], Error>(`/api/range`, fetcher)?.data || defaultIds
+    const ids = useSWR<number[], Error>(`/api/range`, fetcher)?.data
 
-    const [id, setId] = useState(defaultIds[0])
+    const [id, setId] = useState<number | null>(null)
 
-    const data = useSWR<Data, Error>(`/api/word/${id}`, fetcher)?.data
+    const pickrandomId = () => setId(chooseId(id!, ids!))
+
+    if (ids && !id) {
+        pickrandomId()
+    }
+
+    const { data } = useSWR<Data, Error>(id ? `/api/word/${id}` : null, fetcher)
 
     return (
         <Main>
             <NoSSR onSSR={<div>W8 M8</div>}>
-                {data && (
-                    <Pure
-                        {...data}
-                        onClickNext={() => setId(chooseId(id, ids))}
-                    />
+                {data && id && ids && (
+                    <Pure {...data} onClickNext={pickrandomId} />
                 )}
                 {null}
             </NoSSR>

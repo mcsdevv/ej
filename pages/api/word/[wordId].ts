@@ -3,6 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 DB()
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
+    console.error('DASDASDA')
+    console.error(req)
+
     const {
         query: { wordId },
     } = req
@@ -10,6 +13,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     const record = DB().query(`
         select katakana, audioFile, downstep from Reading where id = ${wordId};`)
 
-    console.log(record)
     res.status(200).json(record[0])
 }
