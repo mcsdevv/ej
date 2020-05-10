@@ -52,24 +52,27 @@ export default function Home() {
     return (
         <Main>
             {data && (
-                <Container>
-                    <Row className='justify-content-center'>
-                        <Col xs={6}>
-                            <Row className='h-10 justify-content-center'>
+                <div className='container h-100'>
+                    <Row className='justify-content-center h-100'>
+                        <Col md={6}>
+                            <div style={{ height: '10%' }}>
                                 <ReactAudioPlayer
+                                    style={{ width: '100%' }}
                                     src={`audio/readings/${data.audioFile}`}
                                     autoPlay={true}
                                     controls={true}
                                 />
-                            </Row>
-                            <Row className='h-60 justify-content-center'>
+                            </div>
+
+                            <div style={{ height: '70%' }}>
                                 <Accent
                                     kana={data.katakana}
                                     downStep={data.downstep}
                                 />
-                            </Row>
-                            <Row className='h-30 justify-content-center'>
+                            </div>
+                            <div style={{ height: '20%' }}>
                                 <Button
+                                    style={{ width: '100%', height: '100%' }}
                                     active={true}
                                     variant='primary'
                                     onClick={() => {
@@ -79,17 +82,10 @@ export default function Home() {
                                 >
                                     NEXT
                                 </Button>
-                                <style jsx>
-                                    {`
-                                        .button {
-                                            width: 100%;
-                                        }
-                                    `}
-                                </style>
-                            </Row>
+                            </div>
                         </Col>
                     </Row>
-                </Container>
+                </div>
             )}
         </Main>
     )
