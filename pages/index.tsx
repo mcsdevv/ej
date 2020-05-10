@@ -52,9 +52,9 @@ export default function Home() {
     return (
         <Main>
             {data && (
-                <div className='container h-100'>
+                <Container className='h-100'>
                     <Row className='justify-content-center h-100'>
-                        <Col md={6}>
+                        <Col md={8}>
                             <div style={{ height: '10%' }}>
                                 <ReactAudioPlayer
                                     style={{ width: '100%' }}
@@ -85,7 +85,7 @@ export default function Home() {
                             </div>
                         </Col>
                     </Row>
-                </div>
+                </Container>
             )}
         </Main>
     )
