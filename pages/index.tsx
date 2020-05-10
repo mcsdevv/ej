@@ -1,8 +1,8 @@
 import ReactAudioPlayer from 'react-audio-player'
-import Container from '../components/accentWord/container'
+import Accent from '../components/accentWord/container'
 import useSWR from 'swr'
 import { useState } from 'react'
-import Button from 'react-bootstrap/Button'
+import { Button, Container, Col, Row } from 'react-bootstrap'
 import Main from '../components/main'
 
 function between(min: number, max: number) {
@@ -52,31 +52,43 @@ export default function Home() {
     return (
         <Main>
             {data && (
-                <div className='container'>
-                    <ReactAudioPlayer
-                        src={`audio/readings/${data.audioFile}`}
-                        autoPlay={true}
-                        controls={true}
-                    />
-                    <Container kana={data.katakana} downStep={data.downstep} />
-                    <Button
-                        active={true}
-                        variant='primary'
-                        onClick={() => {
-                            let temp = chooseId()
-                            // console.error('temp', temp)
-                            while (temp === id) {
-                                // console.error('SAME')
-                                temp = chooseId()
-                            }
-                            // console.error('temp', temp)
-
-                            setId(temp)
-                        }}
-                    >
-                        NEXT
-                    </Button>
-                </div>
+                <Container>
+                    <Row className='justify-content-center'>
+                        <Col xs={3}>
+                            <Row>
+                                <ReactAudioPlayer
+                                    src={`audio/readings/${data.audioFile}`}
+                                    autoPlay={true}
+                                    controls={true}
+                                />
+                            </Row>
+                            <Row>
+                                <Accent
+                                    kana={data.katakana}
+                                    downStep={data.downstep}
+                                />
+                            </Row>
+                            <Row>
+                                <Button
+                                    active={true}
+                                    variant='primary'
+                                    onClick={() => {
+                                        const temp = chooseId()
+                                        // console.error('temp', temp)
+                                        // while (temp === id) {
+                                        //     // console.error('SAME')
+                                        //     temp = chooseId()
+                                        // }
+                                        // console.error('temp', temp)
+                                        setId(temp)
+                                    }}
+                                >
+                                    NEXT
+                                </Button>
+                            </Row>
+                        </Col>
+                    </Row>
+                </Container>
             )}
         </Main>
     )
