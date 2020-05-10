@@ -18,7 +18,9 @@ export default ({ children }: Props) => (
         <style global jsx>
             {`
                 html,
-                body {
+                body,
+                #__next,
+                .container {
                     height: 100%;
                 }
             `}

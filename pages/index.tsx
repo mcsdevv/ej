@@ -55,36 +55,37 @@ export default function Home() {
                 <Container>
                     <Row className='justify-content-center'>
                         <Col xs={6}>
-                            <Row>
+                            <Row className='h-10 justify-content-center'>
                                 <ReactAudioPlayer
                                     src={`audio/readings/${data.audioFile}`}
                                     autoPlay={true}
                                     controls={true}
                                 />
                             </Row>
-                            <Row className='h-100'>
+                            <Row className='h-60 justify-content-center'>
                                 <Accent
                                     kana={data.katakana}
                                     downStep={data.downstep}
                                 />
                             </Row>
-                            <Row>
+                            <Row className='h-30 justify-content-center'>
                                 <Button
                                     active={true}
                                     variant='primary'
                                     onClick={() => {
                                         const temp = chooseId()
-                                        // console.error('temp', temp)
-                                        // while (temp === id) {
-                                        //     // console.error('SAME')
-                                        //     temp = chooseId()
-                                        // }
-                                        // console.error('temp', temp)
                                         setId(temp)
                                     }}
                                 >
                                     NEXT
                                 </Button>
+                                <style jsx>
+                                    {`
+                                        .button {
+                                            width: 100%;
+                                        }
+                                    `}
+                                </style>
                             </Row>
                         </Col>
                     </Row>

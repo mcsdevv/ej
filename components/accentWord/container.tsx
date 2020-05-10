@@ -59,7 +59,7 @@ export default ({ kana, downStep }: Props): JSX.Element => {
 
     return (
         <svg
-            viewBox={`0 0 ${radius * 4 * kana.length} ${height}`}
+            viewBox={`${-radius} 0 ${radius * 4 * kana.length} ${height}`}
             width='100%'
             height='100%'
         >
