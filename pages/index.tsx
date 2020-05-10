@@ -1,4 +1,5 @@
 import ReactAudioPlayer from 'react-audio-player'
+import NoSSR from 'react-no-ssr'
 import Accent from '../components/accentWord/container'
 import useSWR from 'swr'
 import { useState } from 'react'
@@ -51,42 +52,48 @@ export default function Home() {
 
     return (
         <Main>
-            {data && (
-                <Container className='h-100'>
-                    <Row className='justify-content-center h-100'>
-                        <Col md={8}>
-                            <div style={{ height: '10%' }}>
-                                <ReactAudioPlayer
-                                    style={{ width: '100%' }}
-                                    src={`audio/readings/${data.audioFile}`}
-                                    autoPlay={true}
-                                    controls={true}
-                                />
-                            </div>
+            <NoSSR>
+                {data && (
+                    <Container className='h-100'>
+                        <Row className='justify-content-center h-100'>
+                            <Col md={8}>
+                                <div style={{ height: '10%' }}>
+                                    <ReactAudioPlayer
+                                        style={{ width: '100%' }}
+                                        src={`audio/readings/${data.audioFile}`}
+                                        autoPlay={true}
+                                        controls={true}
+                                    />
+                                </div>
 
-                            <div style={{ height: '70%' }}>
-                                <Accent
-                                    kana={data.katakana}
-                                    downStep={data.downstep}
-                                />
-                            </div>
-                            <div style={{ height: '20%' }}>
-                                <Button
-                                    style={{ width: '100%', height: '100%' }}
-                                    active={true}
-                                    variant='primary'
-                                    onClick={() => {
-                                        const temp = chooseId()
-                                        setId(temp)
-                                    }}
-                                >
-                                    NEXT
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            )}
+                                <div style={{ height: '70%' }}>
+                                    <Accent
+                                        kana={data.katakana}
+                                        downStep={data.downstep}
+                                    />
+                                </div>
+                                <div style={{ height: '20%' }}>
+                                    <Button
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                        }}
+                                        active={true}
+                                        variant='primary'
+                                        onClick={() => {
+                                            const temp = chooseId()
+                                            setId(temp)
+                                        }}
+                                    >
+                                        NEXT
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Container>
+                )}
+            </NoSSR>
         </Main>
     )
 }
+// TODO fix server side rendering problem
