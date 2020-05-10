@@ -38,7 +38,7 @@ export default ({
             <rect
                 x={wInterval * index - radius}
                 width={wInterval}
-                height={conHeight}
+                height={conHeight + radius}
                 fill={'none'}
             />
         </g>
