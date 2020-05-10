@@ -54,7 +54,7 @@ export default function Home() {
             {data && (
                 <Container>
                     <Row className='justify-content-center'>
-                        <Col xs={3}>
+                        <Col xs={6}>
                             <Row>
                                 <ReactAudioPlayer
                                     src={`audio/readings/${data.audioFile}`}
@@ -62,7 +62,7 @@ export default function Home() {
                                     controls={true}
                                 />
                             </Row>
-                            <Row>
+                            <Row className='h-100'>
                                 <Accent
                                     kana={data.katakana}
                                     downStep={data.downstep}

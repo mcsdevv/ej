@@ -15,5 +15,13 @@ export default ({ children }: Props) => (
             />
         </Head>
         {children}
+        <style global jsx>
+            {`
+                html,
+                body {
+                    height: 100%;
+                }
+            `}
+        </style>
     </>
 )

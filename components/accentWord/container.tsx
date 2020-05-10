@@ -3,17 +3,17 @@ import * as R from 'rambda'
 import { useEffect } from 'react'
 
 import { useImmer } from 'use-immer'
+
 import { isCorrect } from '../../src/common/wrapper'
 import Col from './col'
 import Line from './line'
-import { sWidth } from './utils'
+import { sWidth, radius } from './utils'
 
 type Props = {
     readonly kana: string
     readonly downStep: number | null
 }
 
-const width = 2000
 const height = 240
 const colourDelay = '200ms'
 
@@ -58,7 +58,11 @@ export default ({ kana, downStep }: Props): JSX.Element => {
     })
 
     return (
-        <svg width={width} height={height}>
+        <svg
+            viewBox={`0 0 ${radius * 4 * kana.length} ${height}`}
+            width='100%'
+            height='100%'
+        >
             {lines}
             {columns}
             <style global jsx>
