@@ -10,16 +10,19 @@ function between(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+const chooseId = (currentId: number, ids: number[]) => {
+    const filtered = ids.filter((x) => x !== currentId)
+    return filtered[between(0, filtered.length - 1)]
+}
+
+type Data = {
+    audioFile: string
+    downstep: number
+    katakana: string
+}
+
 export default function Home() {
-    if (typeof window === 'undefined') {
-        return <div>hello from server</div>
-    }
-
     const [ids, setRange] = useState([859])
-
-    const chooseId = () => {
-        return ids[between(0, ids.length - 1)]
-    }
 
     useSWR(`/api/range`, async (url) => {
         await fetch(url)
@@ -29,13 +32,9 @@ export default function Home() {
 
     // console.error(start, end)
 
-    const [data, setData] = useState({
-        katakana: 'こんにちは',
-        audioFile: 'blah',
-        downstep: 3,
-    })
+    const [data, setData] = useState<Data | undefined>(undefined)
 
-    const [id, setId] = useState(chooseId())
+    const [id, setId] = useState(chooseId(-1, ids))
 
     useSWR(`/api/word/${id}`, (url) => {
         fetch(url)
@@ -52,7 +51,7 @@ export default function Home() {
 
     return (
         <Main>
-            <NoSSR>
+            <NoSSR onSSR={<div>W8 M8</div>}>
                 {data && (
                     <Container className='h-100'>
                         <Row className='justify-content-center h-100'>
@@ -81,7 +80,7 @@ export default function Home() {
                                         active={true}
                                         variant='primary'
                                         onClick={() => {
-                                            const temp = chooseId()
+                                            const temp = chooseId(id, ids)
                                             setId(temp)
                                         }}
                                     >
@@ -92,8 +91,10 @@ export default function Home() {
                         </Row>
                     </Container>
                 )}
+                null
             </NoSSR>
         </Main>
     )
 }
 // TODO fix server side rendering problem
+// TODO rename downstep to downStep
