@@ -22,7 +22,7 @@ type Data = {
 }
 
 export default function Home() {
-    const [ids, setRange] = useState([859])
+    const [ids, setRange] = useState([])
 
     useSWR(`/api/range`, async (url) => {
         await fetch(url)
@@ -34,7 +34,9 @@ export default function Home() {
 
     const [data, setData] = useState<Data | undefined>(undefined)
 
-    const [id, setId] = useState(chooseId(-1, ids))
+    const [id, setId] = useState(1)
+
+    console.error(id)
 
     useSWR(`/api/word/${id}`, (url) => {
         fetch(url)
@@ -54,44 +56,41 @@ export default function Home() {
             <NoSSR onSSR={<div>W8 M8</div>}>
                 {data && (
                     <Container className='h-100'>
-                        <Row className='justify-content-center h-100'>
-                            <Col md={8}>
-                                <div style={{ height: '10%' }}>
-                                    <ReactAudioPlayer
-                                        style={{ width: '100%' }}
-                                        src={`audio/readings/${data.audioFile}`}
-                                        autoPlay={true}
-                                        controls={true}
-                                    />
-                                </div>
+                        <Row style={{ height: '15%' }}>
+                            <ReactAudioPlayer
+                                style={{ width: '100%' }}
+                                src={`audio/readings/${data.audioFile}`}
+                                autoPlay={true}
+                                controls={true}
+                            />
+                        </Row>
 
-                                <div style={{ height: '70%' }}>
-                                    <Accent
-                                        kana={data.katakana}
-                                        downStep={data.downstep}
-                                    />
-                                </div>
-                                <div style={{ height: '20%' }}>
-                                    <Button
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                        }}
-                                        active={true}
-                                        variant='primary'
-                                        onClick={() => {
-                                            const temp = chooseId(id, ids)
-                                            setId(temp)
-                                        }}
-                                    >
-                                        NEXT
-                                    </Button>
-                                </div>
-                            </Col>
+                        <Row style={{ height: '65%' }}>
+                            <Accent
+                                kana={data.katakana}
+                                downStep={data.downstep}
+                            />
+                        </Row>
+
+                        <Row style={{ height: '20%' }}>
+                            <Button
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                                active={true}
+                                variant='primary'
+                                onClick={() => {
+                                    const temp = chooseId(id, ids)
+                                    setId(temp)
+                                }}
+                            >
+                                NEXT
+                            </Button>
                         </Row>
                     </Container>
                 )}
-                null
+                {null}
             </NoSSR>
         </Main>
     )
