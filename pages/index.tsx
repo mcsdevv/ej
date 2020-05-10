@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Main from '../components/main'
 import Pure from '../components/accentQuiz/maunalEntry'
 import fetch from 'node-fetch'
-import { head } from 'rambda'
 
 function between(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -38,9 +37,7 @@ export default function Home() {
     return (
         <Main>
             <NoSSR onSSR={<div>W8 M8</div>}>
-                {data && id && ids && (
-                    <Pure {...data} onClickNext={pickrandomId} />
-                )}
+                {data && <Pure {...data} onClickNext={pickrandomId} />}
                 {null}
             </NoSSR>
         </Main>
