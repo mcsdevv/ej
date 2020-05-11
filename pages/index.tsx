@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Main from '../components/main'
 import Pure from '../components/accentQuiz/maunalEntry'
 import fetch from 'node-fetch'
+import Loader from 'react-loader-spinner'
+import { Container, Row } from 'react-bootstrap'
 
 function between(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -36,9 +38,18 @@ export default function Home() {
 
     return (
         <Main>
-            <NoSSR onSSR={<div>W8 M8</div>}>
+            <NoSSR onSSR={<Loader width={500} height={1000} type='Hearts' />}>
+                {!data && (
+                    <Container className='h-100'>
+                        <Row
+                            className='justify-content-center'
+                            style={{ height: '100%' }}
+                        >
+                            <Loader width={500} height={1000} type='Hearts' />
+                        </Row>
+                    </Container>
+                )}
                 {data && <Pure {...data} onClickNext={pickrandomId} />}
-                {null}
             </NoSSR>
         </Main>
     )
