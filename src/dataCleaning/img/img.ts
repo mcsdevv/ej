@@ -12,13 +12,11 @@ const unVoicedSound = 'c'
 export const specials = [nasalSound, unVoicedSound]
 
 export const parseDirty = (dirty: string): Kana => {
-    const clean = dirty
-        .split('')
-        .filter((char) => !specials.includes(char))
-        .join('')
+    const splitted = dirty.split('')
 
-    const sIndexes = dirty
-        .split('')
+    const clean = splitted.filter((char) => !specials.includes(char)).join('')
+
+    const sIndexes = splitted
         .map((char, i) => ({ s: char, index: i }))
         .filter(({ s }) => specials.includes(s))
 
