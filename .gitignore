@@ -31,6 +31,6 @@ yarn-error.log*
 
 node_modules/
 dist
-data
+data/
 
 audio
