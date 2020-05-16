@@ -1,4 +1,4 @@
-import { downStepToArray, isCorrect } from './common'
+import { downStepToArray, isCorrect, chooseId } from './common'
 
 describe('downstep to arrray', () => {
     it('downstep to array', () => {
@@ -41,5 +41,17 @@ describe('is correct', () => {
 
     it('downstep to array', () => {
         expect(isCorrect(null, [false, true, false])).toBeFalsy()
+    })
+})
+
+describe('choose id', () => {
+    it('returns undefined if the array is empty', () => {
+        expect(chooseId(5, [])).toBeUndefined()
+    })
+    it('returns undefined if the array is contains only the previous id', () => {
+        expect(chooseId(5, [5])).toBeUndefined()
+    })
+    it('doesnt return undefined if the array is contains elements other than the previous id', () => {
+        expect(chooseId(5, [5, 6])).not.toBeUndefined()
     })
 })

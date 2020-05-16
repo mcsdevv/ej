@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "test": "jest . --watch",
+        "test": "yarn run jest --watch  --watchPathIgnorePatterns=\"dataCleaning\"",
         "e2e": "npx cypress open",
         "dev": "next dev",
         "build": "next build",

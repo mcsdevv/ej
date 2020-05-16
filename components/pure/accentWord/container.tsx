@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { useImmer } from 'use-immer'
 
-import { isCorrect } from '../../src/common/wrapper'
+import { isCorrect } from '../../../src/common/wrapper'
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
@@ -21,7 +21,7 @@ const getColour = (
     downStep: number | null,
     array: readonly boolean[],
 ): string => {
-    return isCorrect(downStep, array) ? 'green' : 'red'
+    return isCorrect(downStep, array) ? 'yellow' : 'red'
 }
 
 const getInitialArray = (length: number): readonly boolean[] =>

@@ -1,4 +1,5 @@
 import * as R from 'rambda'
+import fetch from 'node-fetch'
 
 export const downStepToArray = (downStep: number | null, length: number) => {
     if (length <= 1) {
@@ -28,3 +29,17 @@ export const isCorrect = (
     )
 }
 
+const between = (min: number, max: number): number => {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export const chooseId = (
+    currentId: number,
+    ids: number[],
+): number | undefined => {
+    const filtered = ids.filter((x) => x !== currentId)
+    return filtered[between(0, filtered.length - 1)]
+}
+
+export const fetcher = (url: string): Promise<any> =>
+    fetch(url).then((r) => r.json())
