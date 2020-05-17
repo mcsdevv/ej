@@ -39,12 +39,17 @@ export default function ({ chunks }: Props) {
     })
 
     const nextWord = async () => {
-        updateState((draft) => {
-            const chunk = chunks[draft.chunkIndex]
-            const nextWordIndex = draft.wordIndex + 1
-            if (nextWordIndex < chunk.length) {
+        const chunk = chunks[state.chunkIndex]
+        const nextWordIndex = state.wordIndex + 1
+        if (nextWordIndex < chunk.length) {
+            updateState((draft) => {
                 draft.wordIndex = nextWordIndex
-            } else {
+            })
+        } else {
+            setWait(true)
+            await sleep(1000)
+            setWait(false)
+            updateState((draft) => {
                 draft.wordIndex = 0
                 draft.seenChunks.push(draft.chunkIndex)
                 const newChunkIndex = chooseId(
@@ -56,8 +61,8 @@ export default function ({ chunks }: Props) {
                 } else {
                     setFinished(true)
                 }
-            }
-        })
+            })
+        }
     }
 
     const word = chunks[state.chunkIndex][state.wordIndex]
@@ -69,26 +74,35 @@ export default function ({ chunks }: Props) {
 
     return (
         // <>hello</>
-        <NoSSR onSSR={<Loader width={500} height={1000} type='Hearts' />}>
+        <NoSSR
+            onSSR={
+                <Loader
+                    timeout={2000}
+                    width={500}
+                    height={1000}
+                    type='Hearts'
+                />
+            }
+        >
             {finished ? (
                 <div>FINISHED</div>
             ) : (
                 <>
-                    {!word ||
-                        (wait && (
-                            <Container className='h-100'>
-                                <Row
-                                    className='justify-content-center'
-                                    style={{ height: '100%' }}
-                                >
-                                    <Loader
-                                        width={500}
-                                        height={1000}
-                                        type='Hearts'
-                                    />
-                                </Row>
-                            </Container>
-                        ))}
+                    {(!word || wait) && (
+                        <Container className='h-100'>
+                            <Row
+                                className='justify-content-center'
+                                style={{ height: '100%' }}
+                            >
+                                <Loader
+                                    timeout={2000}
+                                    width={500}
+                                    height={1000}
+                                    type='Hearts'
+                                />
+                            </Row>
+                        </Container>
+                    )}
                     {word && <Pure {...word} onClickNext={nextWord} />}
                 </>
             )}
