@@ -3,6 +3,7 @@ import MultiLoad from '../components/dirty/multiLoad'
 
 import Main from '../components/pure/main'
 import { chunks } from './api/homophones/common'
+import AccentWord from '../components/pure/accentWord/container'
 
 export async function getStaticProps(context: any) {
     return {
@@ -13,7 +14,8 @@ export async function getStaticProps(context: any) {
 export default function Home({ chunks }: any) {
     return (
         <Main>
-            <MultiLoad chunks={chunks} />
+            {/* <MultiLoad chunks={chunks} /> */}
+            <AccentWord kana='ハチジョー' downStep={3} />
         </Main>
     )
 }

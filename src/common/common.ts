@@ -42,3 +42,43 @@ export const chooseId = (ids: number[]): number => {
 
 export const fetcher = (url: string): Promise<any> =>
     fetch(url).then((r) => r.json())
+
+export const getSmallCharacterIndexes = (katakana: string): number[] => {
+    const smalls = ['ョ', 'ャ', 'ュ', 'ィ', 'ゥ', 'ォ', 'ァ', 'ェ']
+    return katakana
+        .split('')
+        .map((x, i) => ({
+            x,
+            i,
+        }))
+        .filter(({ x }) => smalls.includes(x))
+        .map(({ i }) => i)
+}
+
+export const bundleCharacters = (katakana: string): string[] => {
+    const array = katakana.split('')
+    const smallindexes = getSmallCharacterIndexes(katakana)
+
+    if (smallindexes.length && R.head(smallindexes) === 0) {
+        throw new Error('Word cannot start with little character')
+    }
+
+    const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
+
+    const targetChars = array.filter((x, i) =>
+        R.flatten<number>([smallindexes, startIndexes]).includes(i),
+    )
+
+    const pairs = R.splitEvery(2, targetChars).map((x) => x.join(''))
+
+    const res = array
+        .map((x, i) => {
+            if (startIndexes.includes(i)) {
+                return pairs[startIndexes.findIndex((j) => j == i)]
+            }
+            return x
+        })
+        .filter((x, i) => !smallindexes.includes(i))
+
+    return res
+}
