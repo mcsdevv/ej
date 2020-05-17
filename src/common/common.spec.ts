@@ -88,8 +88,14 @@ describe('adjustDownstep', () => {
     it('should not change the downstep if its before the small character', () => {
         expect(adjustDownstep('ハチジョー', 2)).toEqual(2)
     })
-    it('should decrement the downstep if its on the character before the small', () => {
+    it('should decrement the downstep if its on the character just before the small', () => {
         expect(adjustDownstep('ハチジョー', 3)).toEqual(2)
+    })
+    it('decrement the downstep', () => {
+        expect(adjustDownstep('コーシャク', 4)).toEqual(3)
+    })
+    it('decrement the downstep', () => {
+        expect(adjustDownstep('オッチョコチョイ', 6)).toEqual(4)
     })
     it('should return nul if downstep is null', () => {
         expect(adjustDownstep('ハチジョー', null)).toEqual(null)

@@ -59,14 +59,9 @@ export const adjustDownstep = (katakana: string, downStep: number | null) => {
     if (downStep === null) {
         return null
     }
-
     const smallindexes = getSmallCharacterIndexes(katakana)
 
-    if (smallindexes.includes(downStep)) {
-        return downStep - 1
-    }
-
-    return downStep
+    return downStep - smallindexes.filter((x) => x <= downStep).length
 }
 
 export const bundleCharacters = (katakana: string): string[] => {
