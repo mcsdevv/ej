@@ -13,6 +13,12 @@ describe('homophone endpoint helpers', () => {
 
         expect(values).toEqual({})
     })
+
+    it('there are not heiban', () => {
+        const values = R.filter((x: Record) => x.downstep === null, flattened)
+
+        expect(values).toEqual([])
+    })
     it('chunks', () => {
         const grouped = R.values(
             R.groupBy((record: Record) => record.katakana, chunks[0]),
