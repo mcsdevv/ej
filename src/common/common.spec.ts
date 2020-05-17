@@ -4,6 +4,7 @@ import {
     chooseId,
     getSmallCharacterIndexes,
     bundleCharacters,
+    adjustDownstep,
 } from './common'
 
 describe('downstep to arrray', () => {
@@ -80,5 +81,14 @@ describe('bundleCharacters', () => {
     it('returns empty array if no small charters', () => {
         const res = bundleCharacters('オッチョコチョイ')
         expect(res).toEqual(['オ', 'ッ', 'チョ', 'コ', 'チョ', 'イ'])
+    })
+})
+
+describe('adjustDownstep', () => {
+    it('should not change the downstep if its before the small character', () => {
+        expect(adjustDownstep('ハチジョー', 2)).toEqual(2)
+    })
+    it('should decrement the downstep if its on the character before the small', () => {
+        expect(adjustDownstep('ハチジョー', 3)).toEqual(2)
     })
 })
