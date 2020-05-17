@@ -1,8 +1,7 @@
-import { getChunks, Record } from './common'
+import { chunks, Record } from './common'
 import * as R from 'rambda'
 
 describe('homophone endpoint helpers', () => {
-    const chunks = getChunks()
     it('chunks', () => {
         const grouped = R.values(
             R.groupBy((record: Record) => record.katakana, chunks[0]),

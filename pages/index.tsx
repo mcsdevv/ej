@@ -2,21 +2,18 @@ import SingleLoad from '../components/dirty/singleLoad'
 import MultiLoad from '../components/dirty/multiLoad'
 
 import Main from '../components/pure/main'
-import { getChunks } from './api/homophones/common'
+import { chunks } from './api/homophones/common'
 
 export async function getStaticProps(context: any) {
-    const chunks = { lists: getChunks() }
-    // getChunks()
-    console.log(chunks)
     return {
-        props: chunks,
+        props: { chunks },
     }
 }
 
-export default function Home({ lists }: any) {
+export default function Home({ chunks }: any) {
     return (
         <Main>
-            <MultiLoad chunks={lists} />
+            <MultiLoad chunks={chunks} />
         </Main>
     )
 }
