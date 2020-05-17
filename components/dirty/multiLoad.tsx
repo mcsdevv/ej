@@ -1,6 +1,6 @@
 import NoSSR from 'react-no-ssr'
 import { useState } from 'react'
-import Pure from '../pure/accentQuiz/maunalEntry'
+import Accent from '../pure/accentQuiz/multipleChoice'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
@@ -33,7 +33,7 @@ export default function ({ chunks }: Props) {
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
-        chunkIndex: chooseId(R.range(0, chunks.length - 1)),
+        chunkIndex: chooseId(R.range(0, chunks.length)),
         notSeenChunks: chunks.map((x, i) => i),
     })
 
@@ -76,7 +76,7 @@ export default function ({ chunks }: Props) {
                 <div>FINISHED</div>
             ) : (
                 <Loader wait={wait}>
-                    <Pure {...word} onClickNext={nextWord} />
+                    <Accent {...word} onClickNext={nextWord} />
                 </Loader>
             )}
         </NoSSR>

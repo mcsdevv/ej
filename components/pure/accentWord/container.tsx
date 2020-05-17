@@ -8,6 +8,7 @@ import {
     isCorrect,
     bundleCharacters,
     adjustDownstep,
+    downStepToArray,
 } from '../../../src/common/wrapper'
 import Col from './col'
 import Line from './line'
@@ -16,28 +17,32 @@ import { sWidth, radius } from './utils'
 type Props = {
     readonly kana: string
     readonly downStep: number | null
+    interactive: boolean
 }
 
 const height = 240
 const colourDelay = '200ms'
 
-const getColour = (
-    downStep: number | null,
-    array: readonly boolean[],
-): string => {
-    return isCorrect(downStep, array) ? 'yellow' : 'red'
-}
-
-const getInitialArray = (length: number): readonly boolean[] =>
-    R.repeat(false, length)
-
-export default ({ kana, downStep }: Props): JSX.Element => {
+export default ({ kana, downStep, interactive }: Props): JSX.Element => {
     const bundled = bundleCharacters(kana)
     const cleanDS = adjustDownstep(kana, downStep)
-    const [array, updateArray] = useImmer(getInitialArray(bundled.length))
+
+    const getInitialArray = (): readonly boolean[] =>
+        interactive
+            ? R.repeat(false, bundled.length)
+            : downStepToArray(cleanDS, bundled.length)
+
+    const [array, updateArray] = useImmer(getInitialArray())
+
+    const getColour = (): string => {
+        if (interactive) {
+            return isCorrect(downStep, array) ? 'yellow' : 'red'
+        }
+        return 'cornflowerblue'
+    }
 
     useEffect(() => {
-        updateArray(() => getInitialArray(bundled.length))
+        updateArray(() => getInitialArray())
     }, [kana, cleanDS])
 
     const onClick = (index: number) => {
@@ -54,6 +59,7 @@ export default ({ kana, downStep }: Props): JSX.Element => {
             conHeight={height}
             high={array[i]}
             onClick={() => onClick(i)}
+            interactive={interactive}
         />
     ))
 
@@ -72,13 +78,13 @@ export default ({ kana, downStep }: Props): JSX.Element => {
             <style global jsx>
                 {`
                     line {
-                        stroke: ${getColour(cleanDS, array)};
+                        stroke: ${getColour()};
                         transition: stroke ${colourDelay};
                         stroke-width: 5px;
                     }
 
                     circle {
-                        fill: ${getColour(cleanDS, array)};
+                        fill: ${getColour()};
                         transition: fill ${colourDelay};
                         stroke-width: ${sWidth}px;
                         stroke: cornflowerblue;

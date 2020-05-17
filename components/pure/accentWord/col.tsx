@@ -1,23 +1,30 @@
 import { motion } from 'framer-motion'
 import { getHeight, getCircleX, radius, wInterval } from './utils'
 
+type Props = {
+    letter: string
+    index: number
+    conHeight: number
+    high: boolean
+    onClick: (e: any) => void
+    interactive: boolean
+}
+
 export default ({
     letter,
     index,
     conHeight,
     high,
     onClick,
-}: {
-    readonly letter: string
-    readonly index: number
-    readonly conHeight: number
-    readonly high: boolean
-    readonly onClick: () => void
-}) => {
+    interactive,
+}: Props) => {
     const hInterval = getHeight(high)
 
     return (
-        <g onClick={onClick} style={{ pointerEvents: 'all' }}>
+        <g
+            onClick={onClick}
+            style={{ pointerEvents: interactive ? 'all' : 'none' }}
+        >
             <g>
                 <motion.circle
                     initial={{ cy: hInterval }}

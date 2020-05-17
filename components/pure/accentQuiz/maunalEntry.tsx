@@ -33,7 +33,11 @@ export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
             </Row>
 
             <Row style={{ height: '65%' }}>
-                <Accent kana={katakana} downStep={downstep} />
+                <Accent
+                    kana={katakana}
+                    downStep={downstep}
+                    interactive={true}
+                />
             </Row>
 
             <Row style={{ height: '20%' }}>
