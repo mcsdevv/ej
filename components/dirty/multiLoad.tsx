@@ -64,10 +64,11 @@ export default function ({ chunks }: Props) {
             setWait(false)
         }
     }
-    console.log(chunks)
-    console.log(state)
+    // console.log(chunks)
+    // console.log(state)
 
     const word = chunks[state.chunkIndex][state.wordIndex]
+    console.log(word.audioFile)
 
     return (
         <NoSSR onSSR={<Loader wait={true} />}>

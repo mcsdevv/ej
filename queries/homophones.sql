@@ -11,6 +11,7 @@ where
         from Reading
         where
           length(downstep) < 2
+          and downstep NOTNULL
         group by
           katakana
         having
@@ -19,7 +20,7 @@ where
       ) l
     left join Reading r on l.katakana = r.katakana
     GROUP by
-      audioFile
+      r.downstep || r.katakana
     order by
       length(r.katakana) asc
   )
