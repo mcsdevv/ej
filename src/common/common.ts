@@ -33,12 +33,19 @@ const between = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-export const chooseId = (
-    seenIds: number[],
-    ids: number[],
-): number | undefined => {
-    const filtered = ids.filter((x) => !seenIds.includes(x))
-    return filtered[between(0, filtered.length - 1)]
+// export const chooseId = (
+//     seenIds: number[],
+//     ids: number[],
+// ): number | undefined => {
+//     const filtered = ids.filter((x) => !seenIds.includes(x))
+//     return filtered[between(0, filtered.length - 1)]
+// }
+
+export const chooseId = (ids: number[]): number => {
+    if (!ids.length) {
+        return 0
+    }
+    return ids[between(0, ids.length - 1)]
 }
 
 export const fetcher = (url: string): Promise<any> =>

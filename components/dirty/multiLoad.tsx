@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner'
 import { Container, Row } from 'react-bootstrap'
 
 import { useImmer } from 'use-immer'
-import { chooseId, fetcher } from '../../src/common/wrapper'
+import { chooseId } from '../../src/common/wrapper'
 import * as R from 'rambda'
 
 function sleep(ms: number) {
@@ -25,7 +25,7 @@ type Props = {
 type State = {
     chunkIndex: number
     wordIndex: number
-    seenChunks: number[]
+    notSeenChunks: number[]
 }
 
 export default function ({ chunks }: Props) {
@@ -34,8 +34,8 @@ export default function ({ chunks }: Props) {
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
-        chunkIndex: 0,
-        seenChunks: [],
+        chunkIndex: chooseId(R.range(0, chunks.length - 1)),
+        notSeenChunks: chunks.map((x, i) => i),
     })
 
     const nextWord = async () => {
@@ -48,29 +48,27 @@ export default function ({ chunks }: Props) {
         } else {
             setWait(true)
             await sleep(1000)
-            setWait(false)
+
             updateState((draft) => {
                 draft.wordIndex = 0
-                draft.seenChunks.push(draft.chunkIndex)
-                const newChunkIndex = chooseId(
-                    draft.seenChunks,
-                    R.range(0, chunks.length - 1),
+                draft.notSeenChunks = R.without(
+                    [draft.chunkIndex],
+                    draft.notSeenChunks,
                 )
-                if (newChunkIndex) {
-                    draft.chunkIndex = newChunkIndex
-                } else {
+
+                if (!draft.notSeenChunks.length) {
                     setFinished(true)
+                } else {
+                    draft.chunkIndex = chooseId(draft.notSeenChunks)
                 }
             })
+            setWait(false)
         }
     }
-
-    const word = chunks[state.chunkIndex][state.wordIndex]
-
     console.log(chunks)
     console.log(state)
-    console.log(word)
-    console.log(finished)
+
+    const word = chunks[state.chunkIndex][state.wordIndex]
 
     return (
         // <>hello</>
@@ -88,7 +86,7 @@ export default function ({ chunks }: Props) {
                 <div>FINISHED</div>
             ) : (
                 <>
-                    {(!word || wait) && (
+                    {wait && (
                         <Container className='h-100'>
                             <Row
                                 className='justify-content-center'
@@ -103,7 +101,7 @@ export default function ({ chunks }: Props) {
                             </Row>
                         </Container>
                     )}
-                    {word && <Pure {...word} onClickNext={nextWord} />}
+                    {!wait && <Pure {...word} onClickNext={nextWord} />}
                 </>
             )}
         </NoSSR>
