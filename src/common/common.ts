@@ -34,10 +34,10 @@ const between = (min: number, max: number): number => {
 }
 
 export const chooseId = (
-    currentId: number,
+    seenIds: number[],
     ids: number[],
 ): number | undefined => {
-    const filtered = ids.filter((x) => x !== currentId)
+    const filtered = ids.filter((x) => !seenIds.includes(x))
     return filtered[between(0, filtered.length - 1)]
 }
 

@@ -3,6 +3,8 @@ import { useState } from 'react'
 import Pure from '../pure/accentQuiz/maunalEntry'
 import Loader from 'react-loader-spinner'
 import { Container, Row } from 'react-bootstrap'
+
+import { useImmer } from 'use-immer'
 import { chooseId, fetcher } from '../../src/common/wrapper'
 import * as R from 'rambda'
 
@@ -20,62 +22,75 @@ type Props = {
     chunks: Record[][]
 }
 
+type State = {
+    chunkIndex: number
+    wordIndex: number
+    seenChunks: number[]
+}
+
 export default function ({ chunks }: Props) {
-    const seenChunks = []
+    const [wait, setWait] = useState<boolean>(false)
+    const [finished, setFinished] = useState<boolean>(false)
 
-    // const ids = useSWR<number[], Error>(`/api/homophones/range`, fetcher)?.data
+    const [state, updateState] = useImmer<State>({
+        wordIndex: 0,
+        chunkIndex: 0,
+        seenChunks: [],
+    })
 
-    // console.log(ids)
+    const nextWord = async () => {
+        updateState((draft) => {
+            const chunk = chunks[draft.chunkIndex]
+            const nextWordIndex = draft.wordIndex + 1
+            if (nextWordIndex < chunk.length) {
+                draft.wordIndex = nextWordIndex
+            } else {
+                draft.wordIndex = 0
+                draft.seenChunks.push(draft.chunkIndex)
+                const newChunkIndex = chooseId(
+                    draft.seenChunks,
+                    R.range(0, chunks.length - 1),
+                )
+                if (newChunkIndex) {
+                    draft.chunkIndex = newChunkIndex
+                } else {
+                    setFinished(true)
+                }
+            }
+        })
+    }
 
-    const [id, setId] = useState<number>(0)
+    const word = chunks[state.chunkIndex][state.wordIndex]
 
-    // const pickrandomId = () => {
-    //     const nextId = chooseId(id, R.range(0, chunks.length - 1))
-    //     if (nextId) {
-    //         setId(nextId)
-    //     }
-    // }
-
-    const words = chunks[id]
-
-    // const words = useSWR<Record[], Error>(
-    //     id ? `/api/homophones/chunks/${id}` : null,
-    //     fetcher,
-    // )?.data
-    // console.log(words)
-
-    const [wordId, setWordId] = useState<number>(0)
-    const word = words[wordId]
+    console.log(chunks)
+    console.log(state)
+    console.log(word)
+    console.log(finished)
 
     return (
         // <>hello</>
         <NoSSR onSSR={<Loader width={500} height={1000} type='Hearts' />}>
-            {!word && (
-                <Container className='h-100'>
-                    <Row
-                        className='justify-content-center'
-                        style={{ height: '100%' }}
-                    >
-                        <Loader width={500} height={1000} type='Hearts' />
-                    </Row>
-                </Container>
-            )}
-            {word && (
-                <Pure
-                    {...word}
-                    onClickNext={async () => {
-                        const nextId = wordId + 1
-
-                        if (nextId < words.length) {
-                            setWordId(nextId)
-                        } else {
-                            setWordId(-1)
-                            await sleep(5000)
-                            setId(id + 1)
-                            setWordId(0)
-                        }
-                    }}
-                />
+            {finished ? (
+                <div>FINISHED</div>
+            ) : (
+                <>
+                    {!word ||
+                        (wait && (
+                            <Container className='h-100'>
+                                <Row
+                                    className='justify-content-center'
+                                    style={{ height: '100%' }}
+                                >
+                                    <Loader
+                                        width={500}
+                                        height={1000}
+                                        type='Hearts'
+                                    />
+                                </Row>
+                            </Container>
+                        ))}
+                    {word && <Pure {...word} onClickNext={nextWord} />}
+                </>
             )}
         </NoSSR>
     )

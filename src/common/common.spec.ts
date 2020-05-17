@@ -46,12 +46,12 @@ describe('is correct', () => {
 
 describe('choose id', () => {
     it('returns undefined if the array is empty', () => {
-        expect(chooseId(5, [])).toBeUndefined()
+        expect(chooseId([5], [])).toBeUndefined()
     })
     it('returns undefined if the array is contains only the previous id', () => {
-        expect(chooseId(5, [5])).toBeUndefined()
+        expect(chooseId([5], [5])).toBeUndefined()
     })
     it('doesnt return undefined if the array is contains elements other than the previous id', () => {
-        expect(chooseId(5, [5, 6])).not.toBeUndefined()
+        expect(chooseId([5], [5, 6])).toEqual(6)
     })
 })

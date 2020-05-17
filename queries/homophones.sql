@@ -14,7 +14,7 @@ where
         group by
           katakana
         having
-          downstep != length(katakana) - 1
+          downstep NOTNULL
           and length(group_concat(distinct downstep)) > 4
       ) l
     left join Reading r on l.katakana = r.katakana
