@@ -34,10 +34,10 @@ const getInitialArray = (length: number): readonly boolean[] =>
 export default ({ kana, downStep }: Props): JSX.Element => {
     const bundled = bundleCharacters(kana)
     const cleanDS = adjustDownstep(kana, downStep)
-    const [array, updateArray] = useImmer(getInitialArray(kana.length))
+    const [array, updateArray] = useImmer(getInitialArray(bundled.length))
 
     useEffect(() => {
-        updateArray(() => getInitialArray(kana.length))
+        updateArray(() => getInitialArray(bundled.length))
     }, [kana, cleanDS])
 
     const onClick = (index: number) => {
@@ -63,7 +63,7 @@ export default ({ kana, downStep }: Props): JSX.Element => {
 
     return (
         <svg
-            viewBox={`${-radius} 0 ${radius * 4 * kana.length} ${height}`}
+            viewBox={`${-radius} 0 ${radius * 4 * bundled.length} ${height}`}
             width='100%'
             height='100%'
         >

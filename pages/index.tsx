@@ -14,8 +14,8 @@ export async function getStaticProps(context: any) {
 export default function Home({ chunks }: any) {
     return (
         <Main>
-            {/* <MultiLoad chunks={chunks} /> */}
-            <AccentWord kana='ハチジョー' downStep={3} />
+            <MultiLoad chunks={chunks} />
+            {/* <AccentWord kana='ハチジョー' downStep={3} /> */}
         </Main>
     )
 }
