@@ -55,7 +55,11 @@ export const getSmallCharacterIndexes = (katakana: string): number[] => {
         .map(({ i }) => i)
 }
 
-export const adjustDownstep = (katakana: string, downStep) => {
+export const adjustDownstep = (katakana: string, downStep: number | null) => {
+    if (downStep === null) {
+        return null
+    }
+
     const smallindexes = getSmallCharacterIndexes(katakana)
 
     if (smallindexes.includes(downStep)) {

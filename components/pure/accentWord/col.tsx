@@ -15,6 +15,7 @@ export default ({
     readonly onClick: () => void
 }) => {
     const hInterval = getHeight(high)
+
     return (
         <g onClick={onClick} style={{ pointerEvents: 'all' }}>
             <g>
@@ -26,10 +27,28 @@ export default ({
                 />
                 <motion.text
                     width={radius * 2}
-                    initial={{ y: hInterval + radius / 2 }}
-                    animate={{ y: hInterval + radius / 2 }}
-                    x={+index * wInterval + radius / 2}
-                    style={{ fontSize: `${radius * 1.2}` }}
+                    initial={{
+                        y:
+                            letter.length === 1
+                                ? hInterval + radius / 2
+                                : hInterval + radius / 3,
+                    }}
+                    animate={{
+                        y:
+                            letter.length === 1
+                                ? hInterval + radius / 2
+                                : hInterval + radius / 3,
+                    }}
+                    x={
+                        letter.length === 1
+                            ? +index * wInterval + radius / 2
+                            : +index * wInterval + radius / 3
+                    }
+                    style={{
+                        fontSize: `${
+                            letter.length === 1 ? radius * 1.2 : radius * 0.8
+                        }`,
+                    }}
                 >
                     {letter}
                 </motion.text>

@@ -91,4 +91,7 @@ describe('adjustDownstep', () => {
     it('should decrement the downstep if its on the character before the small', () => {
         expect(adjustDownstep('ハチジョー', 3)).toEqual(2)
     })
+    it('should return nul if downstep is null', () => {
+        expect(adjustDownstep('ハチジョー', null)).toEqual(null)
+    })
 })

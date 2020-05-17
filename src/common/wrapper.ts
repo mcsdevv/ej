@@ -1,2 +1,16 @@
-import { downStepToArray, isCorrect, fetcher, chooseId } from './common'
-export { downStepToArray, isCorrect, fetcher, chooseId }
+import {
+    downStepToArray,
+    isCorrect,
+    fetcher,
+    chooseId,
+    adjustDownstep,
+    bundleCharacters,
+} from './common'
+export {
+    downStepToArray,
+    isCorrect,
+    fetcher,
+    chooseId,
+    adjustDownstep,
+    bundleCharacters,
+}
