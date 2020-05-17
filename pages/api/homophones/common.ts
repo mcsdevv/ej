@@ -14,6 +14,6 @@ export const chunks = R.pipe(
     (query: string): Record[] => DB().query(query),
     R.groupBy((record: Record) => record.katakana),
     R.values,
-    R.splitEvery(1),
+    R.splitEvery(3),
     R.map((x) => R.flatten(x)),
 )('./queries/homophones.sql')

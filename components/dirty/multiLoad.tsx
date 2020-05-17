@@ -2,7 +2,6 @@ import NoSSR from 'react-no-ssr'
 import { useState } from 'react'
 import Pure from '../pure/accentQuiz/maunalEntry'
 import Loader from '../pure/general/loader'
-import { Container, Row } from 'react-bootstrap'
 
 import { useImmer } from 'use-immer'
 import { chooseId } from '../../src/common/wrapper'
@@ -71,7 +70,6 @@ export default function ({ chunks }: Props) {
     const word = chunks[state.chunkIndex][state.wordIndex]
 
     return (
-        // <>hello</>
         <NoSSR onSSR={<Loader wait={true} />}>
             {finished ? (
                 <div>FINISHED</div>
