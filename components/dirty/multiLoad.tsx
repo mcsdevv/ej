@@ -1,7 +1,7 @@
 import NoSSR from 'react-no-ssr'
 import { useState } from 'react'
 import Pure from '../pure/accentQuiz/maunalEntry'
-import Loader from 'react-loader-spinner'
+import Loader from '../pure/general/loader'
 import { Container, Row } from 'react-bootstrap'
 
 import { useImmer } from 'use-immer'
@@ -72,37 +72,13 @@ export default function ({ chunks }: Props) {
 
     return (
         // <>hello</>
-        <NoSSR
-            onSSR={
-                <Loader
-                    timeout={2000}
-                    width={500}
-                    height={1000}
-                    type='Hearts'
-                />
-            }
-        >
+        <NoSSR onSSR={<Loader wait={true} />}>
             {finished ? (
                 <div>FINISHED</div>
             ) : (
-                <>
-                    {wait && (
-                        <Container className='h-100'>
-                            <Row
-                                className='justify-content-center'
-                                style={{ height: '100%' }}
-                            >
-                                <Loader
-                                    timeout={2000}
-                                    width={500}
-                                    height={1000}
-                                    type='Hearts'
-                                />
-                            </Row>
-                        </Container>
-                    )}
-                    {!wait && <Pure {...word} onClickNext={nextWord} />}
-                </>
+                <Loader wait={wait}>
+                    <Pure {...word} onClickNext={nextWord} />
+                </Loader>
             )}
         </NoSSR>
     )
