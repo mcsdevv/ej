@@ -1,6 +1,6 @@
 import Accent from '../accentWord/container'
 import { Button, Container, Row, Col } from 'react-bootstrap'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import * as R from 'rambda'
 import css from 'styled-jsx/css'
 
@@ -27,7 +27,13 @@ const {
     .btn {
         width: 100%;
         height: 100%;
-        /* margin-top: 5%; */
+    }
+    .correct {
+        background-color: yellow;
+    }
+
+    .incorrect {
+        background-color: red;
     }
 `
 const {
@@ -53,6 +59,41 @@ const { className: rowClassName, styles: rowStyles } = css.resolve`
         height: ${100 / rowCount}%;
     }
 `
+type OptionProps = {
+    isAnswer: boolean
+    katakana: string
+    downStep: number | null
+}
+
+const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
+    const [clicked, setClicked] = useState(false)
+
+    const correctnessClass = isAnswer ? 'correct' : 'incorrect'
+    const currentClass = clicked ? correctnessClass : ''
+
+    useEffect(() => {
+        setClicked(false)
+    }, [katakana, downStep])
+
+    // TODO check out hachijou dowstep 2 and 3 are rendered the exact same
+
+    return (
+        <>
+            <Button
+                className={`${choiceButtonClassName} ${currentClass}`}
+                variant='secondary'
+                onClick={() => setClicked(true)}
+            >
+                <Accent
+                    kana={katakana}
+                    downStep={downStep}
+                    interactive={false}
+                />
+            </Button>
+            {choiceButtonStyles}
+        </>
+    )
+}
 
 const getAcccentRows = (katakana: string, downstep: number) => {
     const potentialDS = shuffle(
@@ -74,18 +115,11 @@ const getAcccentRows = (katakana: string, downstep: number) => {
                 <Row key={i} className={rowClassName}>
                     {row.map((dS, i) => (
                         <Col className={colClassName} key={i}>
-                            <Button
-                                className={choiceButtonClassName}
-                                variant='secondary'
-                                onClick={() => {}}
-                            >
-                                <Accent
-                                    kana={katakana}
-                                    downStep={dS}
-                                    interactive={false}
-                                />
-                            </Button>
-                            {choiceButtonStyles}
+                            <Option
+                                downStep={dS}
+                                katakana={katakana}
+                                isAnswer={dS === downstep}
+                            />
                         </Col>
                     ))}
                     {colStyles}
