@@ -2,6 +2,7 @@ import Accent from '../accentWord/container'
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useEffect } from 'react'
 import * as R from 'rambda'
+import css from 'styled-jsx/css'
 
 type Props = {
     audioFile: string
@@ -9,7 +10,7 @@ type Props = {
     downstep: number
     onClickNext: () => void
 }
-
+const rowCount = 2
 // copy and pasted from SO
 function shuffle(a: number[]) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -19,6 +20,40 @@ function shuffle(a: number[]) {
     return a
 }
 
+const {
+    className: choiceButtonClassName,
+    styles: choiceButtonStyles,
+} = css.resolve`
+    .btn {
+        width: 100%;
+        height: 100%;
+        /* margin-top: 5%; */
+    }
+`
+const {
+    className: nextButtonClassName,
+    styles: nextButtonStyles,
+} = css.resolve`
+    .btn {
+        width: 100%;
+        height: 100%;
+        font-size: 500%;
+    }
+`
+
+const { className: colClassName, styles: colStyles } = css.resolve`
+    .col {
+        height: 100%;
+        padding: 5%;
+    }
+`
+
+const { className: rowClassName, styles: rowStyles } = css.resolve`
+    .row {
+        height: ${100 / rowCount}%;
+    }
+`
+
 const getAcccentRows = (katakana: string, downstep: number) => {
     const potentialDS = shuffle(
         R.range(0, katakana.length).filter((x) => x !== downstep),
@@ -26,7 +61,6 @@ const getAcccentRows = (katakana: string, downstep: number) => {
 
     console.log(potentialDS)
 
-    const rowCount = 2
     const optionCount = Math.min(4, katakana.length)
     const options = shuffle(
         R.take(optionCount - 1, potentialDS).concat([downstep]),
@@ -37,25 +71,11 @@ const getAcccentRows = (katakana: string, downstep: number) => {
     return (
         <div style={{ height: '65%' }}>
             {rows.map((row, i) => (
-                <Row
-                    key={i}
-                    style={{
-                        height: `${100 / rowCount}%`,
-                        // '50%',
-                    }}
-                >
+                <Row key={i} className={rowClassName}>
                     {row.map((dS, i) => (
-                        <Col
-                            key={i}
-                            style={{
-                                height: '100%',
-                            }}
-                        >
+                        <Col className={colClassName} key={i}>
                             <Button
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
+                                className={choiceButtonClassName}
                                 variant='secondary'
                                 onClick={() => {}}
                             >
@@ -65,10 +85,13 @@ const getAcccentRows = (katakana: string, downstep: number) => {
                                     interactive={false}
                                 />
                             </Button>
+                            {choiceButtonStyles}
                         </Col>
                     ))}
+                    {colStyles}
                 </Row>
             ))}
+            {rowStyles}
         </div>
     )
 }
@@ -100,17 +123,14 @@ export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
             {/* {getAcccentRows('フクロ', 1)} */}
             <Row style={{ height: '20%' }}>
                 <Button
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        fontSize: '500%',
-                    }}
+                    className={nextButtonClassName}
                     active={true}
                     variant='primary'
                     onClick={onClickNext}
                 >
                     NEXT
                 </Button>
+                {nextButtonStyles}
             </Row>
         </Container>
     )
