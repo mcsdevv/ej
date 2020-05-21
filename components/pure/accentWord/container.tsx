@@ -9,7 +9,7 @@ import {
     bundleCharacters,
     adjustDownstep,
     downStepToArray,
-} from '../../../src/common/wrapper'
+} from '../utils/common/wrapper'
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'

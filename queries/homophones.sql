@@ -24,3 +24,5 @@ where
     order by
       length(r.katakana) asc
   )
+order by
+  katakana

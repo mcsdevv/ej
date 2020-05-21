@@ -5,6 +5,9 @@ import {
     getSmallCharacterIndexes,
     bundleCharacters,
     adjustDownstep,
+    shuffle,
+    getFakeDownSteps,
+    getMVQDownSteps,
 } from './common'
 
 describe('downstep to arrray', () => {
@@ -99,5 +102,53 @@ describe('adjustDownstep', () => {
     })
     it('should return nul if downstep is null', () => {
         expect(adjustDownstep('ハチジョー', null)).toEqual(null)
+    })
+})
+
+describe('shuffle', () => {
+    const array = [0, 1, 2, 3, 4, 5]
+
+    it('should not rempve or add any elements', () => {
+        let shuffled = shuffle(array)
+
+        let i = 10
+        while (i > 0) {
+            shuffled = shuffle(shuffled)
+            expect(array).toEqual(shuffled.sort())
+            i--
+        }
+    })
+})
+
+describe('getRandomDownSteps', () => {
+    const word = 'ハチジョー'
+    it('should not have any duplicates', () => {
+        const ds = getFakeDownSteps(word, 2)
+        expect(ds).toEqual([0, 1, 4])
+    })
+
+    it('should not have any duplicates', () => {
+        const ds = getFakeDownSteps(word, 3)
+        expect(ds).toEqual([0, 1, 4])
+    })
+})
+
+describe('getMVQDownSteps', () => {
+    const downStep = 2
+    const word = 'ハチジョー'
+
+    it('the required number of options is > actual options', () => {
+        const options = getMVQDownSteps(word, downStep, 9).sort()
+        expect(options).toEqual([0, 1, 2, 4])
+    })
+
+    it('the required number of options is equal to actual options', () => {
+        const options = getMVQDownSteps(word, downStep, 4).sort()
+        expect(options).toEqual([0, 1, 2, 4])
+    })
+
+    it('the required number of options is < actual options', () => {
+        const options = getMVQDownSteps(word, downStep, 2).sort()
+        expect(options.length).toEqual(2)
     })
 })

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Pure from '../pure/accentQuiz/maunalEntry'
 import Loader from 'react-loader-spinner'
 import { Container, Row } from 'react-bootstrap'
-import { chooseId, fetcher } from '../../src/common/wrapper'
+import { chooseId, fetcher } from '../pure/utils/common/wrapper'
 
 type Data = {
     audioFile: string

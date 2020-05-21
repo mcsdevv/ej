@@ -91,3 +91,48 @@ export const bundleCharacters = (katakana: string): string[] => {
 
     return res
 }
+
+export const shuffle = (a: number[]) => {
+    const swap = (n1: number, n2: number) => {
+        const temp = a[n1]
+        a[n1] = a[n2]
+        a[n2] = temp
+    }
+
+    a.map((x, i) => {
+        swap(Math.floor(Math.random() * 10) % a.length, i)
+    })
+
+    return a
+}
+
+export const getFakeDownSteps = (katakana: string, downStep: number) => {
+    const smallindexes = getSmallCharacterIndexes(katakana)
+    const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
+    const badIndexes = smallindexes.concat(startIndexes)
+
+    const fakeDownSteps = R.range(0, katakana.length)
+        .filter((x) => !badIndexes.includes(x))
+        .filter((x) => x !== downStep)
+
+    return fakeDownSteps
+}
+
+export const getMVQDownSteps = (
+    katakana: string,
+    downStep: number,
+    maxOptionCount: number,
+): number[] => {
+    const fakeDownSteps = getFakeDownSteps(katakana, downStep)
+    const numTotake =
+        fakeDownSteps.length + 1 < maxOptionCount
+            ? fakeDownSteps.length
+            : maxOptionCount - 1
+
+    return R.pipe(
+        shuffle,
+        R.take(numTotake),
+        R.append(downStep),
+        shuffle,
+    )(fakeDownSteps)
+}

@@ -4,7 +4,7 @@ import Accent from '../pure/accentQuiz/multipleChoice'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
-import { chooseId } from '../../src/common/wrapper'
+import { chooseId } from '../pure/utils/common/wrapper'
 import * as R from 'rambda'
 
 function sleep(ms: number) {

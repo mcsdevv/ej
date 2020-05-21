@@ -3,6 +3,7 @@ import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import * as R from 'rambda'
 import css from 'styled-jsx/css'
+import { getMVQDownSteps } from '../utils/common/common'
 
 type Props = {
     audioFile: string
@@ -11,14 +12,6 @@ type Props = {
     onClickNext: () => void
 }
 const rowCount = 2
-// copy and pasted from SO
-function shuffle(a: number[]) {
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[a[i], a[j]] = [a[j], a[i]]
-    }
-    return a
-}
 
 const {
     className: choiceButtonClassName,
@@ -73,9 +66,10 @@ const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
 
     useEffect(() => {
         setClicked(false)
-    }, [katakana, downStep])
+    }, [katakana, downStep, isAnswer])
 
     // TODO check out hachijou dowstep 2 and 3 are rendered the exact same
+    // nedd to handle the case where there are downsteps on the small character and the one behind it, this ends up as the same accent diagram
 
     return (
         <>
@@ -96,16 +90,7 @@ const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
 }
 
 const getAcccentRows = (katakana: string, downstep: number) => {
-    const potentialDS = shuffle(
-        R.range(0, katakana.length).filter((x) => x !== downstep),
-    )
-
-    console.log(potentialDS)
-
-    const optionCount = Math.min(4, katakana.length)
-    const options = shuffle(
-        R.take(optionCount - 1, potentialDS).concat([downstep]),
-    )
+    const options = getMVQDownSteps(katakana, downstep, rowCount * 2)
 
     const rows = R.splitEvery(rowCount, options)
 
