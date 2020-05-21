@@ -11,7 +11,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     } = req
 
     const record = DB().query(`
-        select katakana, audioFile, downstep from Reading where id = ${wordId};`)
+        select katakana, audioFile, downStep from Reading where id = ${wordId};`)
 
     res.status(200).json(record[0])
 }

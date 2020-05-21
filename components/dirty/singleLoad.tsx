@@ -8,7 +8,7 @@ import { chooseId, fetcher } from '../pure/utils/common/wrapper'
 
 type Data = {
     audioFile: string
-    downstep: number
+    downStep: number
     katakana: string
 }
 
@@ -18,7 +18,7 @@ export default function () {
     const [id, setId] = useState<number | null>(null)
 
     const pickrandomId = () => {
-        const nextId = chooseId(id!, ids!)
+        const nextId = chooseId(ids!)
         if (nextId) {
             setId(nextId)
         }
@@ -46,5 +46,3 @@ export default function () {
         </NoSSR>
     )
 }
-
-// TODO rename downstep to downStep

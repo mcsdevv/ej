@@ -10,17 +10,17 @@ where
           katakana
         from Reading
         where
-          length(downstep) < 2
+          length(downStep) < 2
         group by
           katakana
         having
-          length(group_concat(distinct downstep)) > 4
+          length(group_concat(distinct downStep)) > 4
       ) l
     left join Reading r on l.katakana = r.katakana
     where
-      downstep NOTNULL
+      downStep NOTNULL
     GROUP by
-      r.downstep || r.katakana
+      r.downStep || r.katakana
     order by
       length(r.katakana) asc
   )

@@ -4,7 +4,7 @@ import * as R from 'rambda'
 
 export type Record = {
     audioFile: string
-    downstep: number
+    downStep: number
     katakana: string
 }
 

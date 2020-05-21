@@ -19,5 +19,3 @@ export default function Home({ chunks }: any) {
         </Main>
     )
 }
-
-// TODO rename downstep to downStep

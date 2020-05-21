@@ -5,11 +5,11 @@ import { useEffect } from 'react'
 type Props = {
     audioFile: string
     katakana: string
-    downstep: number
+    downStep: number
     onClickNext: () => void
 }
 
-export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
+export default ({ audioFile, katakana, downStep, onClickNext }: Props) => {
     const a = new Audio(`audio/readings/${audioFile}`)
     // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -35,7 +35,7 @@ export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
             <Row style={{ height: '65%' }}>
                 <Accent
                     kana={katakana}
-                    downStep={downstep}
+                    downStep={downStep}
                     interactive={true}
                 />
             </Row>

@@ -16,13 +16,13 @@ CREATE TABLE `Word` (
 --     CONSTRAINT katakana_word FOREIGN KEY (wordId)
 --         REFERENCES Word (id)
 -- );
--- CREATE TABLE `Reading` (id INTEGER PRIMARY KEY, downstep INTEGER, audioFile TEXT, wordId INTEGER,
+-- CREATE TABLE `Reading` (id INTEGER PRIMARY KEY, downStep INTEGER, audioFile TEXT, wordId INTEGER,
 --     CONSTRAINT reading_word FOREIGN KEY (wordId)
 --         REFERENCES Word (id)
 -- );
 CREATE TABLE `ParticleReading` (
   id INTEGER PRIMARY KEY,
-  downstep INTEGER,
+  downStep INTEGER,
   katakana TEXT,
   audioFile TEXT,
   particle TEXT,
@@ -33,7 +33,7 @@ CREATE TABLE `ParticleReading` (
 );
 CREATE TABLE `Reading` (
   id INTEGER PRIMARY KEY,
-  downstep INTEGER,
+  downStep INTEGER,
   katakana TEXT,
   audioFile TEXT,
   wordId INTEGER,

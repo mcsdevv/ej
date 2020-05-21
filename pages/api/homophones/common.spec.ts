@@ -5,7 +5,7 @@ describe('homophone endpoint helpers', () => {
     const flattened = R.flatten(chunks)
     it('there are no duplicated audiofiles', () => {
         const grouped = R.groupBy(
-            (record: Record) => record.downstep + record.katakana,
+            (record: Record) => record.downStep + record.katakana,
             flattened,
         )
 
@@ -15,7 +15,7 @@ describe('homophone endpoint helpers', () => {
     })
 
     it('there are not heiban', () => {
-        const values = R.filter((x: Record) => x.downstep === null, flattened)
+        const values = R.filter((x: Record) => x.downStep === null, flattened)
 
         expect(values).toEqual([])
     })
@@ -29,6 +29,6 @@ describe('homophone endpoint helpers', () => {
         const first = chunks[0][0]
         expect(Object.keys(first)).toContainEqual('katakana')
         expect(Object.keys(first)).toContainEqual('audioFile')
-        expect(Object.keys(first)).toContainEqual('downstep')
+        expect(Object.keys(first)).toContainEqual('downStep')
     })
 })

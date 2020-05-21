@@ -23,27 +23,31 @@ type Props = {
 const height = 240
 const colourDelay = '200ms'
 
-export default ({ kana, downStep, interactive }: Props): JSX.Element => {
+export default ({
+    kana,
+    downStep: dirtyDS,
+    interactive,
+}: Props): JSX.Element => {
     const bundled = bundleCharacters(kana)
-    const cleanDS = adjustDownstep(kana, downStep)
+    const downStep = adjustDownstep(kana, dirtyDS)
 
     const getInitialArray = (): readonly boolean[] =>
         interactive
             ? R.repeat(false, bundled.length)
-            : downStepToArray(cleanDS, bundled.length)
+            : downStepToArray(downStep, bundled.length)
 
     const [array, updateArray] = useImmer(getInitialArray())
 
     const getColour = (): string => {
         if (interactive) {
-            return isCorrect(downStep, array) ? 'yellow' : 'red'
+            return isCorrect(dirtyDS, array) ? 'yellow' : 'red'
         }
         return 'cornflowerblue'
     }
 
     useEffect(() => {
         updateArray(() => getInitialArray())
-    }, [kana, cleanDS])
+    }, [kana, downStep])
 
     const onClick = (index: number) => {
         updateArray((draft) => {

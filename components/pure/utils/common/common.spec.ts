@@ -10,46 +10,46 @@ import {
     getMVQDownSteps,
 } from './common'
 
-describe('downstep to arrray', () => {
-    it('downstep to array', () => {
+describe('downStep to arrray', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(0, 0)).toEqual([true])
     })
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(0, 1)).toEqual([true])
     })
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(null, 3)).toEqual([false, true, true])
     })
 
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(2, 3)).toEqual([false, true, true])
     })
 
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(1, 3)).toEqual([false, true, false])
     })
 
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(3, 5)).toEqual([false, true, true, true, false])
     })
 })
 
 describe('is correct', () => {
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(isCorrect(0, [true])).toBeTruthy()
     })
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(isCorrect(0, [false])).toBeTruthy()
     })
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(downStepToArray(0, 1)).toEqual([true])
     })
 
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(isCorrect(null, [false, true, true])).toBeTruthy()
     })
 
-    it('downstep to array', () => {
+    it('downStep to array', () => {
         expect(isCorrect(null, [false, true, false])).toBeFalsy()
     })
 })
@@ -88,19 +88,19 @@ describe('bundleCharacters', () => {
 })
 
 describe('adjustDownstep', () => {
-    it('should not change the downstep if its before the small character', () => {
+    it('should not change the downStep if its before the small character', () => {
         expect(adjustDownstep('ハチジョー', 2)).toEqual(2)
     })
-    it('should decrement the downstep if its on the character just before the small', () => {
+    it('should decrement the downStep if its on the character just before the small', () => {
         expect(adjustDownstep('ハチジョー', 3)).toEqual(2)
     })
-    it('decrement the downstep', () => {
+    it('decrement the downStep', () => {
         expect(adjustDownstep('コーシャク', 4)).toEqual(3)
     })
-    it('decrement the downstep', () => {
+    it('decrement the downStep', () => {
         expect(adjustDownstep('オッチョコチョイ', 6)).toEqual(4)
     })
-    it('should return nul if downstep is null', () => {
+    it('should return nul if downStep is null', () => {
         expect(adjustDownstep('ハチジョー', null)).toEqual(null)
     })
 })

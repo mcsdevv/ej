@@ -1,6 +1,6 @@
 select
   *,
-  CAST(downstep as ds)
+  CAST(downStep as ds)
 from Reading
 where
-  length(downstep) like "%,%";
+  length(downStep) like "%,%";

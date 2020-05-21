@@ -8,7 +8,7 @@ import { getMVQDownSteps } from '../utils/common/common'
 type Props = {
     audioFile: string
     katakana: string
-    downstep: number
+    downStep: number
     onClickNext: () => void
 }
 const rowCount = 2
@@ -89,10 +89,10 @@ const Option = ({ isAnswer, katakana, downStep, audioFile }: OptionProps) => {
 
 const getAcccentRows = (
     katakana: string,
-    downstep: number,
+    downStep: number,
     audioFile: string,
 ) => {
-    const options = getMVQDownSteps(katakana, downstep, rowCount * 2)
+    const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
 
     const rows = R.splitEvery(rowCount, options)
 
@@ -105,7 +105,7 @@ const getAcccentRows = (
                             <Option
                                 downStep={dS}
                                 katakana={katakana}
-                                isAnswer={dS === downstep}
+                                isAnswer={dS === downStep}
                                 audioFile={audioFile}
                             />
                         </Col>
@@ -118,7 +118,7 @@ const getAcccentRows = (
     )
 }
 
-export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
+export default ({ audioFile, katakana, downStep, onClickNext }: Props) => {
     const a = new Audio(`audio/readings/${audioFile}`)
     // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -141,7 +141,7 @@ export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
                 </Button>
             </Row>
 
-            {getAcccentRows(katakana, downstep, audioFile)}
+            {getAcccentRows(katakana, downStep, audioFile)}
             {/* {getAcccentRows('フクロ', 1)} */}
             <Row style={{ height: '20%' }}>
                 <Button

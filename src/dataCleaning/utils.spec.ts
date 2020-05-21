@@ -120,6 +120,4 @@ describe('data processing', () => {
     })
 })
 
-//TODO some words have multiple downsteps checkout "ほぞのお"
 // TODO parse out example sentences
-// TODO duplicate audio files.. remove them?

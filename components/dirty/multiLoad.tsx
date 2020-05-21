@@ -13,7 +13,7 @@ function sleep(ms: number) {
 
 export type Record = {
     audioFile: string
-    downstep: number
+    downStep: number
     katakana: string
 }
 
@@ -83,5 +83,4 @@ export default function ({ chunks }: Props) {
     )
 }
 
-// TODO rename downstep to downStep
-// TODO find out wht the first word of each chunk gets printed twice to the console, this is bad for debugginf.
+// TODO rename downStep to downStep
