@@ -1,6 +1,6 @@
 import NoSSR from 'react-no-ssr'
 import { useState } from 'react'
-import Accent from '../pure/accentQuiz/multipleChoice'
+import Accent from '../pure/accentQuiz/multipleChoice/multipleChoice'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
@@ -82,5 +82,3 @@ export default function ({ chunks }: Props) {
         </NoSSR>
     )
 }
-
-// TODO rename downStep to downStep
