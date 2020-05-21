@@ -1,15 +1,25 @@
-import Accent from '../accentWord/container'
-import { Button, Container, Row } from 'react-bootstrap'
-import { useEffect } from 'react'
+import { Button, Container, Row, Col } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import css from 'styled-jsx/css'
 
 type Props = {
     audioFile: string
-    katakana: string
-    downStep: number
     onClickNext: () => void
+    children: React.ReactNode
 }
 
-export default ({ audioFile, katakana, downStep, onClickNext }: Props) => {
+const {
+    className: nextButtonClassName,
+    styles: nextButtonStyles,
+} = css.resolve`
+    .btn {
+        width: 100%;
+        height: 100%;
+        font-size: 500%;
+    }
+`
+
+export default ({ audioFile, onClickNext, children }: Props) => {
     const a = new Audio(`audio/readings/${audioFile}`)
     // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -32,27 +42,18 @@ export default ({ audioFile, katakana, downStep, onClickNext }: Props) => {
                 </Button>
             </Row>
 
-            <Row style={{ height: '65%' }}>
-                <Accent
-                    kana={katakana}
-                    downStep={downStep}
-                    interactive={true}
-                />
-            </Row>
+            {children}
 
             <Row style={{ height: '20%' }}>
                 <Button
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        fontSize: '500%',
-                    }}
+                    className={nextButtonClassName}
                     active={true}
                     variant='primary'
                     onClick={onClickNext}
                 >
                     NEXT
                 </Button>
+                {nextButtonStyles}
             </Row>
         </Container>
     )

@@ -1,0 +1,52 @@
+import { Row, Col } from 'react-bootstrap'
+import * as R from 'rambda'
+import css from 'styled-jsx/css'
+import Option from './Option'
+import { getMVQDownSteps } from '../../utils/common/common'
+
+type Props = {
+    audioFile: string
+    katakana: string
+    downStep: number
+}
+const rowCount = 2
+
+const { className: colClassName, styles: colStyles } = css.resolve`
+    .col {
+        height: 100%;
+        padding: 5%;
+    }
+`
+
+const { className: rowClassName, styles: rowStyles } = css.resolve`
+    .row {
+        height: ${100 / rowCount}%;
+    }
+`
+
+export default ({ audioFile, katakana, downStep }: Props) => {
+    const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
+
+    const rows = R.splitEvery(rowCount, options)
+
+    return (
+        <div style={{ height: '65%' }}>
+            {rows.map((row, i) => (
+                <Row key={i} className={rowClassName}>
+                    {row.map((dS, i) => (
+                        <Col className={colClassName} key={i}>
+                            <Option
+                                downStep={dS}
+                                katakana={katakana}
+                                isAnswer={dS === downStep}
+                                audioFile={audioFile}
+                            />
+                        </Col>
+                    ))}
+                    {colStyles}
+                </Row>
+            ))}
+            {rowStyles}
+        </div>
+    )
+}

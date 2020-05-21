@@ -1,6 +1,8 @@
 import NoSSR from 'react-no-ssr'
 import { useState } from 'react'
-import Accent from '../pure/accentQuiz/multipleChoice/multipleChoice'
+import Multiplechoice from '../pure/accentQuiz/multipleChoice/index'
+import ManualEntry from '../pure/accentQuiz/manualEntry/index'
+
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
@@ -69,6 +71,8 @@ export default function ({ chunks }: Props) {
 
     const word = chunks[state.chunkIndex][state.wordIndex]
     console.log(word.audioFile)
+
+    const Accent = Math.random() > 0.5 ? Multiplechoice : ManualEntry
 
     return (
         <NoSSR onSSR={<Loader wait={true} />}>
