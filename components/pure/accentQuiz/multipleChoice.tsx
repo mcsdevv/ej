@@ -56,9 +56,10 @@ type OptionProps = {
     isAnswer: boolean
     katakana: string
     downStep: number | null
+    audioFile: string
 }
 
-const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
+const Option = ({ isAnswer, katakana, downStep, audioFile }: OptionProps) => {
     const [clicked, setClicked] = useState(false)
 
     const correctnessClass = isAnswer ? 'correct' : 'incorrect'
@@ -66,10 +67,7 @@ const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
 
     useEffect(() => {
         setClicked(false)
-    }, [katakana, downStep, isAnswer])
-
-    // TODO check out hachijou dowstep 2 and 3 are rendered the exact same
-    // nedd to handle the case where there are downsteps on the small character and the one behind it, this ends up as the same accent diagram
+    }, [audioFile])
 
     return (
         <>
@@ -89,7 +87,11 @@ const Option = ({ isAnswer, katakana, downStep }: OptionProps) => {
     )
 }
 
-const getAcccentRows = (katakana: string, downstep: number) => {
+const getAcccentRows = (
+    katakana: string,
+    downstep: number,
+    audioFile: string,
+) => {
     const options = getMVQDownSteps(katakana, downstep, rowCount * 2)
 
     const rows = R.splitEvery(rowCount, options)
@@ -104,6 +106,7 @@ const getAcccentRows = (katakana: string, downstep: number) => {
                                 downStep={dS}
                                 katakana={katakana}
                                 isAnswer={dS === downstep}
+                                audioFile={audioFile}
                             />
                         </Col>
                     ))}
@@ -138,7 +141,7 @@ export default ({ audioFile, katakana, downstep, onClickNext }: Props) => {
                 </Button>
             </Row>
 
-            {getAcccentRows(katakana, downstep)}
+            {getAcccentRows(katakana, downstep, audioFile)}
             {/* {getAcccentRows('フクロ', 1)} */}
             <Row style={{ height: '20%' }}>
                 <Button
