@@ -1,7 +1,13 @@
 import { head, last, initial } from 'lodash'
 import { readFileSync } from 'fs-extra'
 import { parentDir, normalizeStrings } from './common/wrapper'
-import { cleanImageFile, downsteps, cleanKatakana, Kana } from './img/wrapper'
+import {
+    cleanImageFile,
+    downsteps,
+    cleanKatakana,
+    Kana,
+    getImageFiles,
+} from './img/wrapper'
 
 export interface NHK {
     katakana: string[]
@@ -11,6 +17,7 @@ export interface NHK {
     kanji: string[]
     readings: Reading[]
     particleReading: ParticleReading[]
+    examples: Example[]
 }
 
 interface Reading {
@@ -24,6 +31,13 @@ interface ParticleReading {
     audioFile: string
     particle: string
     downsteps: number[]
+}
+
+interface Example {
+    kana: Kana
+    audioFile: string
+    downsteps: number[]
+    sentence: string
 }
 
 const cleanAudioFile = (audioFile: string) => {
@@ -51,6 +65,24 @@ export const parseNHKObject = (obj: any): NHK | null => {
     if (!obj) {
         return null
     }
+
+    const examples: Example[] = obj.reibun?.map((x: any) => {
+        const lastBit = last<string[]>(x)
+        const images = getImageFiles(lastBit)
+        return {
+            kana: cleanKatakana(images),
+            downsteps: getDownsteps(images),
+            sentence: lastBit
+                .map((x) => {
+                    if (images.includes(x)) {
+                        return cleanKatakana([x]).katakana
+                    }
+                    return x
+                })
+                .join(''),
+            audioFile: cleanAudioFile(head<string>(x)!),
+        }
+    })
 
     const readings: Reading[] = obj.yomi.map((x: any) => {
         const kana = cleanKatakana(last<string[]>(x)!)
@@ -99,6 +131,7 @@ export const parseNHKObject = (obj: any): NHK | null => {
         katakana: obj.katakana,
         readings: readings,
         particleReading: particleReading || [],
+        examples: examples || [],
     }
 }
 

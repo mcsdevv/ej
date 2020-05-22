@@ -1,7 +1,7 @@
 import NoSSR from 'react-no-ssr'
 import useSWR from 'swr'
 import { useState } from 'react'
-import Pure from '../pure/accentQuiz/maunalEntry'
+import Pure from '../pure/accentQuiz/manualEntry/maunalEntry'
 import Loader from 'react-loader-spinner'
 import { Container, Row } from 'react-bootstrap'
 import { chooseId, fetcher } from '../pure/utils/common/wrapper'

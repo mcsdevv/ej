@@ -1,5 +1,6 @@
 import { readdirSync } from 'fs-extra'
 import { imgDir, kanaDir, cleanFiles } from '../common/wrapper'
+import * as R from 'rambda'
 
 export type Kana = {
     katakana: string
@@ -74,8 +75,16 @@ export const cleanImageFile = (filename: string) => {
     return includedFile
 }
 
+export const getImageFiles = (fileList: string[]) =>
+    fileList.filter((x) => x in img2katakana)
+
 export const getKatakana = (fileList: string[]) =>
-    fileList.map((f) => img2katakana[cleanImageFile(f)]).join('')
+    fileList
+        .map((f) => {
+            const cleaned = cleanImageFile(f)
+            return R.defaultTo(cleaned, img2katakana[cleaned])
+        })
+        .join('')
 
 export const cleanKatakana = (fileList: string[]) =>
     parseDirty(getKatakana(fileList))

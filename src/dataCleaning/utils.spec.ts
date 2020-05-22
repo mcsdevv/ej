@@ -59,7 +59,7 @@ describe('data processing', () => {
             expect(parseNHKObject(null)).toBeNull()
         })
 
-        it('it return null if given null', () => {
+        it('it should not contain any undefined', () => {
             const particleReadings = flatMap(wordList, (x) => x.particleReading)
 
             expect(
@@ -67,12 +67,20 @@ describe('data processing', () => {
             ).toEqual(0)
         })
 
-        it('it return null if given null', () => {
+        it('all particles should have a length of 1', () => {
             const particleReadings = flatMap(
                 wordList.filter((x) => x.particleReading.length > 0),
                 (x) => x.particleReading,
+            ).filter((pr) => pr.particle.length !== 1)
+            expect(particleReadings).toEqual([])
+        })
+
+        it('gets all the example sentences', () => {
+            const particleReadings = flatMap(
+                wordList.filter((x) => x.examples.length > 0),
+                (x) => x.examples,
             )
-            console.log()
+            expect(particleReadings).toEqual([])
         })
     })
 
