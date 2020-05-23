@@ -76,11 +76,19 @@ describe('data processing', () => {
         })
 
         it('gets all the example sentences', () => {
-            const particleReadings = flatMap(
+            const examples = flatMap(
                 wordList.filter((x) => x.examples.length > 0),
                 (x) => x.examples,
             )
-            expect(particleReadings).toEqual([])
+
+            expect(
+                examples.filter((x) => !x.sentence.includes(x.kana.katakana))
+                    .length,
+            ).toEqual(0)
+
+            expect(examples[1].sentence).toEqual(
+                '夜になって、イイホう告が届いた',
+            )
         })
     })
 
