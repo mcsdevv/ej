@@ -17,6 +17,7 @@ export type Record = {
     audioFile: string
     downStep: number
     katakana: string
+    sentence?: string
 }
 
 type Props = {
@@ -71,8 +72,9 @@ export default function ({ chunks }: Props) {
 
     const word = chunks[state.chunkIndex][state.wordIndex]
     console.log(word.audioFile)
+    console.log(word.sentence)
 
-    const Accent = Math.random() > 0.5 ? Multiplechoice : ManualEntry
+    const Accent = true ? Multiplechoice : ManualEntry
 
     return (
         <NoSSR onSSR={<Loader wait={true} />}>

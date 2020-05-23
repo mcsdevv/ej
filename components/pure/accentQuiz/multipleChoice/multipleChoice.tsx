@@ -27,7 +27,7 @@ const { className: rowClassName, styles: rowStyles } = css.resolve`
 export default ({ audioFile, katakana, downStep }: Props) => {
     const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
 
-    const rows = R.splitEvery(rowCount, options)
+    const rows = R.splitEvery(Math.min(rowCount, options.length - 1), options)
 
     return (
         <div style={{ height: '65%' }}>

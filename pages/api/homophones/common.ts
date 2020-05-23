@@ -16,4 +16,4 @@ export const chunks = R.pipe(
     R.values,
     R.splitEvery(3),
     R.map((x) => R.flatten(x)),
-)('./queries/homophones.sql')
+)('./queries/examples.sql')
