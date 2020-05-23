@@ -40,6 +40,7 @@ interface Example {
     audioFile: string
     downsteps: number[]
     sentence: string
+    particle: string | null
 }
 
 const cleanAudioFile = (audioFile: string) => {
@@ -80,15 +81,15 @@ export const parseNHKObject = (obj: any): NHK | null => {
                 return x
             })
             .join('')
-        const ds = getDownsteps(images)
-        const cleanKana = cleanKatakana(images)
-        const kana = {
-            ...cleanKana,
-            katakana: ds.find((x) => x === cleanKana.katakana.length - 1)
-                ? cleanKana.katakana + sentence.split(cleanKana.katakana)[1][0]
-                : cleanKana.katakana,
+        const kana = cleanKatakana(images)
+        const lastPart = last(sentence.split(kana.katakana))!
+
+        if (!lastPart.length) {
+            throw new Error('expected after to have at least one character')
         }
+
         return {
+            particle: lastPart ? lastPart[0] : null,
             kana,
             downsteps: getDownsteps(images),
             sentence,

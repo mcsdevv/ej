@@ -83,28 +83,29 @@ describe('data processing', () => {
                 (x) => x.examples,
             )
 
-            expect(
-                examples.filter((x) => !x.sentence.includes(x.kana.katakana))
-                    .length,
-            ).toEqual(0)
+            const notIncluded = examples.filter(
+                (x) => !x.sentence.includes(x.kana.katakana),
+            )
+
+            expect(notIncluded.length).toEqual(0)
 
             expect(examples[1].sentence).toEqual(
                 '夜になって、イイホう告が届いた',
             )
         })
 
-        it('checks there are no odaka wihtout a particle attached', () => {
-            const examples = flatMap(
-                wordList.filter((x) => x.examples.length > 0),
-                (x) => x.examples,
-            )
+        // it('checks there are no odaka wihtout a particle attached', () => {
+        //     const examples = flatMap(
+        //         wordList.filter((x) => x.examples.length > 0),
+        //         (x) => x.examples,
+        //     )
 
-            expect(
-                examples.find((x) =>
-                    x.downsteps.find((ds) => ds === x.kana.katakana.length - 1),
-                ),
-            ).toBeFalsy()
-        })
+        //     expect(
+        //         examples.find((x) =>
+        //             x.downsteps.find((ds) => ds === x.kana.katakana.length - 1),
+        //         ),
+        //     ).toBeFalsy()
+        // })
     })
 
     describe('correctness', () => {

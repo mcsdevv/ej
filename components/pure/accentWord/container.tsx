@@ -18,6 +18,7 @@ type Props = {
     readonly kana: string
     readonly downStep: number | null
     interactive: boolean
+    particle: string | null
 }
 
 const height = 240
@@ -27,20 +28,23 @@ export default ({
     kana,
     downStep: dirtyDS,
     interactive,
+    particle,
 }: Props): JSX.Element => {
+    const isParticle = particle !== null
     const bundled = bundleCharacters(kana)
+    const combined = isParticle ? bundled.concat([particle!]) : bundled
     const downStep = adjustDownstep(kana, dirtyDS)
 
     const getInitialArray = (): readonly boolean[] =>
         interactive
-            ? R.repeat(false, bundled.length)
-            : downStepToArray(downStep, bundled.length)
+            ? R.repeat(false, combined.length)
+            : downStepToArray(downStep, combined.length, isParticle)
 
     const [array, updateArray] = useImmer(getInitialArray())
 
     const getColour = (): string => {
         if (interactive) {
-            return isCorrect(dirtyDS, array) ? 'yellow' : 'red'
+            return isCorrect(dirtyDS, array, isParticle) ? 'yellow' : 'red'
         }
         return 'cornflowerblue'
     }
@@ -55,7 +59,7 @@ export default ({
         })
     }
 
-    const columns = bundled.map((x, i) => (
+    const columns = combined.map((x, i) => (
         <Col
             key={i}
             letter={x}
@@ -67,13 +71,13 @@ export default ({
         />
     ))
 
-    const lines = range(0, bundled.length - 1).map((i) => {
+    const lines = range(0, combined.length - 1).map((i) => {
         return <Line key={i} index={i} high1={array[i]} high2={array[i + 1]} />
     })
 
     return (
         <svg
-            viewBox={`${-radius} 0 ${radius * 4 * bundled.length} ${height}`}
+            viewBox={`${-radius} 0 ${radius * 4 * combined.length} ${height}`}
             width='100%'
             height='100%'
         >

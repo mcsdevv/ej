@@ -7,7 +7,8 @@ import { getMVQDownSteps } from '../../utils/common/common'
 type Props = {
     audioFile: string
     katakana: string
-    downStep: number
+    downStep: number | null
+    particle: string | null
 }
 const rowCount = 2
 
@@ -24,7 +25,7 @@ const { className: rowClassName, styles: rowStyles } = css.resolve`
     }
 `
 
-export default ({ audioFile, katakana, downStep }: Props) => {
+export default ({ audioFile, katakana, downStep, particle }: Props) => {
     const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
 
     const rows = R.splitEvery(Math.min(rowCount, options.length - 1), options)
@@ -38,6 +39,7 @@ export default ({ audioFile, katakana, downStep }: Props) => {
                             <Option
                                 downStep={dS}
                                 katakana={katakana}
+                                particle={particle}
                                 isAnswer={dS === downStep}
                                 audioFile={audioFile}
                             />

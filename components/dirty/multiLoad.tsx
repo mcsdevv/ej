@@ -17,7 +17,8 @@ export type Record = {
     audioFile: string
     downStep: number
     katakana: string
-    sentence?: string
+    particle: string | null
+    sentence?: string //for debuggiong
 }
 
 type Props = {
@@ -73,6 +74,8 @@ export default function ({ chunks }: Props) {
     const word = chunks[state.chunkIndex][state.wordIndex]
     console.log(word.audioFile)
     console.log(word.sentence)
+    console.log(word.downStep)
+    console.log(word.particle)
 
     const Accent = true ? Multiplechoice : ManualEntry
 

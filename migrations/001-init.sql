@@ -45,6 +45,7 @@ CREATE TABLE `Example` (
   id INTEGER PRIMARY KEY,
   downStep INTEGER,
   sentence TEXT,
+  particle TEXT,
   katakana TEXT,
   audioFile TEXT,
   wordId INTEGER,

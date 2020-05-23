@@ -52,6 +52,7 @@ clean.forEach((nhk) => {
             nasal: example.kana.nasal.join(','),
             unVoiced: example.kana.unVoiced.join(','),
             sentence: example.sentence,
+            particle: example.particle,
         })
     })
 

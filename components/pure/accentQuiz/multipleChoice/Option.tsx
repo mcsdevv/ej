@@ -8,9 +8,33 @@ type Props = {
     katakana: string
     downStep: number | null
     audioFile: string
+    particle: string | null
 }
 
-export default ({ isAnswer, katakana, downStep, audioFile }: Props) => {
+const {
+    className: choiceButtonClassName,
+    styles: choiceButtonStyles,
+} = css.resolve`
+    .btn {
+        width: 100%;
+        height: 100%;
+    }
+    .correct {
+        background-color: yellow;
+    }
+
+    .incorrect {
+        background-color: red;
+    }
+`
+
+export default ({
+    isAnswer,
+    katakana,
+    downStep,
+    particle,
+    audioFile,
+}: Props) => {
     const [clicked, setClicked] = useState(false)
 
     const correctnessClass = isAnswer ? 'correct' : 'incorrect'
@@ -30,6 +54,7 @@ export default ({ isAnswer, katakana, downStep, audioFile }: Props) => {
                 <Accent
                     kana={katakana}
                     downStep={downStep}
+                    particle={particle}
                     interactive={false}
                 />
             </Button>
@@ -37,19 +62,3 @@ export default ({ isAnswer, katakana, downStep, audioFile }: Props) => {
         </>
     )
 }
-const {
-    className: choiceButtonClassName,
-    styles: choiceButtonStyles,
-} = css.resolve`
-    .btn {
-        width: 100%;
-        height: 100%;
-    }
-    .correct {
-        background-color: yellow;
-    }
-
-    .incorrect {
-        background-color: red;
-    }
-`

@@ -12,45 +12,83 @@ import {
 
 describe('downStep to arrray', () => {
     it('downStep to array', () => {
-        expect(downStepToArray(0, 0)).toEqual([true])
+        expect(downStepToArray(0, 1, false)).toEqual([true])
     })
     it('downStep to array', () => {
-        expect(downStepToArray(0, 1)).toEqual([true])
+        expect(downStepToArray(0, 1, true)).toEqual([true, false])
     })
     it('downStep to array', () => {
-        expect(downStepToArray(null, 3)).toEqual([false, true, true])
+        expect(downStepToArray(null, 1, false)).toEqual([true])
     })
-
     it('downStep to array', () => {
-        expect(downStepToArray(2, 3)).toEqual([false, true, true])
-    })
-
-    it('downStep to array', () => {
-        expect(downStepToArray(1, 3)).toEqual([false, true, false])
+        expect(downStepToArray(null, 1, true)).toEqual([false, true])
     })
 
     it('downStep to array', () => {
-        expect(downStepToArray(3, 5)).toEqual([false, true, true, true, false])
+        expect(downStepToArray(null, 3, false)).toEqual([false, true, true])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(null, 3, true)).toEqual([
+            false,
+            true,
+            true,
+            true,
+        ])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(2, 3, false)).toEqual([false, true, true])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(2, 3, true)).toEqual([false, true, true, false])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(1, 3, false)).toEqual([false, true, false])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(1, 3, true)).toEqual([false, true, false, false])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(3, 5, false)).toEqual([
+            false,
+            true,
+            true,
+            true,
+            false,
+        ])
+    })
+
+    it('downStep to array', () => {
+        expect(downStepToArray(3, 5, true)).toEqual([
+            false,
+            true,
+            true,
+            true,
+            false,
+            false,
+        ])
     })
 })
 
 describe('is correct', () => {
     it('downStep to array', () => {
-        expect(isCorrect(0, [true])).toBeTruthy()
+        expect(isCorrect(0, [true], false)).toBeTruthy()
     })
     it('downStep to array', () => {
-        expect(isCorrect(0, [false])).toBeTruthy()
-    })
-    it('downStep to array', () => {
-        expect(downStepToArray(0, 1)).toEqual([true])
+        expect(isCorrect(0, [false], false)).toBeTruthy()
     })
 
     it('downStep to array', () => {
-        expect(isCorrect(null, [false, true, true])).toBeTruthy()
+        expect(isCorrect(null, [false, true, true], false)).toBeTruthy()
     })
 
     it('downStep to array', () => {
-        expect(isCorrect(null, [false, true, false])).toBeFalsy()
+        expect(isCorrect(null, [false, true, false], false)).toBeFalsy()
     })
 })
 

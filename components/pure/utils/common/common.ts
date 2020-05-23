@@ -1,30 +1,40 @@
 import * as R from 'rambda'
 import fetch from 'node-fetch'
 
-export const downStepToArray = (downStep: number | null, length: number) => {
-    if (length <= 1) {
+export const downStepToArray = (
+    downStep: number | null,
+    length: number,
+    hasParticle: boolean,
+) => {
+    if (length <= 1 && !hasParticle) {
         return [true]
     }
 
     if (downStep === null) {
-        return [false].concat(R.repeat(true, length - 1))
+        return [false].concat(R.repeat(true, length - 1 + Number(hasParticle)))
     }
 
     if (downStep === 0) {
-        return [true].concat(R.repeat(false, length - 1))
+        return [true].concat(R.repeat(false, length - 1 + Number(hasParticle)))
     }
 
     return [false]
         .concat(R.repeat(true, downStep))
-        .concat(R.repeat(false, Math.max(length - downStep - 1, 0)))
+        .concat(
+            R.repeat(
+                false,
+                Math.max(length - downStep - 1, 0) + Number(hasParticle),
+            ),
+        )
 }
 
 export const isCorrect = (
     downStep: number | null,
     array: readonly boolean[],
+    hasParticle: boolean,
 ): boolean => {
     return (
-        R.equals(array, downStepToArray(downStep, array.length)) ||
+        R.equals(array, downStepToArray(downStep, array.length, hasParticle)) ||
         array.length === 1
     )
 }
@@ -107,7 +117,7 @@ export const shuffle = (a: number[]) => {
     return a
 }
 
-export const getFakeDownSteps = (katakana: string, downStep: number) => {
+export const getFakeDownSteps = (katakana: string, downStep: number | null) => {
     const smallindexes = getSmallCharacterIndexes(katakana)
     const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
     const badIndexes = smallindexes.concat(startIndexes)
@@ -121,7 +131,7 @@ export const getFakeDownSteps = (katakana: string, downStep: number) => {
 
 export const getMVQDownSteps = (
     katakana: string,
-    downStep: number,
+    downStep: number | null,
     maxOptionCount: number,
 ): number[] => {
     const fakeDownSteps = getFakeDownSteps(katakana, downStep)

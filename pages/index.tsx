@@ -2,7 +2,7 @@ import SingleLoad from '../components/dirty/singleLoad'
 import MultiLoad from '../components/dirty/multiLoad'
 
 import Main from '../components/pure/main'
-import { chunks } from './api/homophones/common'
+import { chunks } from './api/examples/common'
 import AccentWord from '../components/pure/accentWord/container'
 
 export async function getStaticProps(context: any) {
