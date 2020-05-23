@@ -1,6 +1,8 @@
 import { head, last, initial } from 'lodash'
 import { readFileSync } from 'fs-extra'
 import { parentDir, normalizeStrings } from './common/wrapper'
+import { getSmallCharacterIndexes } from '../../components/pure/utils/common/wrapper'
+
 import {
     cleanImageFile,
     downsteps,
@@ -54,12 +56,13 @@ const cleanAudioFile = (audioFile: string) => {
     return audioFile
 }
 
-const getDownsteps = (fileList: string[]): number[] =>
-    fileList
+const getDownsteps = (katakana: string, fileList: string[]): number[] => {
+    return fileList
         .map((f) => cleanImageFile(f))
         .map((f: string, index: number) => (downsteps.includes(f) ? index : ''))
         .filter(String)
         .map(Number)
+}
 
 export const parseNHKObject = (obj: any): NHK | null => {
     if (!obj) {
@@ -68,11 +71,12 @@ export const parseNHKObject = (obj: any): NHK | null => {
 
     const examples: Example[] = obj.reibun?.map((x: any) => {
         const lastBit = last<string[]>(x)
-        const images = getImageFiles(lastBit)
+        const images = getImageFiles(lastBit!)
+        const kana = cleanKatakana(images)
         return {
-            kana: cleanKatakana(images),
-            downsteps: getDownsteps(images),
-            sentence: lastBit
+            kana,
+            downsteps: getDownsteps(kana.katakana, images),
+            sentence: lastBit!
                 .map((x) => {
                     if (images.includes(x)) {
                         return cleanKatakana([x]).katakana
@@ -86,7 +90,7 @@ export const parseNHKObject = (obj: any): NHK | null => {
 
     const readings: Reading[] = obj.yomi.map((x: any) => {
         const kana = cleanKatakana(last<string[]>(x)!)
-        const downsteps = getDownsteps(last<string[]>(x)!)
+        const downsteps = getDownsteps(kana.katakana, last<string[]>(x)!)
 
         return {
             kana: kana,
@@ -97,10 +101,14 @@ export const parseNHKObject = (obj: any): NHK | null => {
 
     const particleReading: ParticleReading[] = obj.jyoshi
         ?.map((x: any) => {
+            const kana = cleanKatakana(initial(last<string[]>(x)))
             const wP = {
                 particle: last<string>(last<string>(x))!,
-                kana: cleanKatakana(initial(last<string[]>(x))),
-                downsteps: getDownsteps(initial(last<string[]>(x))),
+                kana,
+                downsteps: getDownsteps(
+                    kana.katakana,
+                    initial(last<string[]>(x)),
+                ),
                 audioFile: cleanAudioFile(head<string>(x)!),
             }
 

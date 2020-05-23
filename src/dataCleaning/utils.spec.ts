@@ -6,6 +6,8 @@ import {
     getParticleReadingfileName,
 } from './utils'
 
+import { getSmallCharacterIndexes } from '../../components/pure/utils/common/wrapper'
+
 import { cleanFiles } from './common/wrapper'
 import { readdirSync } from 'fs-extra'
 
@@ -93,6 +95,28 @@ describe('data processing', () => {
     })
 
     describe('correctness', () => {
+        it('there shouldnt be a word that has a downstep on a little character and on the one before it', () => {
+            const bad = wordList.filter((x) => {
+                const smallDownsteps = x.readings.find((reading) => {
+                    const smallIndexes = getSmallCharacterIndexes(
+                        reading.kana.katakana,
+                    )
+                    return smallIndexes.includes(reading.downsteps[0])
+                })
+
+                const prevSmallDownsteps = x.readings.find((reading) => {
+                    const previndexes = getSmallCharacterIndexes(
+                        reading.kana.katakana,
+                    ).map((i) => i - 1)
+                    return previndexes.includes(reading.downsteps[0])
+                })
+
+                return smallDownsteps && prevSmallDownsteps
+            })
+
+            expect(bad.length).toEqual(0)
+        })
+
         it('hozono', () => {
             const parsed = head(findWordByKanji('ほぞの緒')).readings
             expect(parsed[1].downsteps).toEqual([0, 4])

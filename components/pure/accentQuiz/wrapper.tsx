@@ -20,7 +20,7 @@ const {
 `
 
 export default ({ audioFile, onClickNext, children }: Props) => {
-    const a = new Audio(`audio/examples/${audioFile}`)
+    const a = new Audio(audioFile)
     // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     const play = () => a.play().catch((e) => {})

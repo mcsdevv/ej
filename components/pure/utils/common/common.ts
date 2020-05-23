@@ -43,8 +43,9 @@ export const chooseId = (ids: number[]): number => {
 export const fetcher = (url: string): Promise<any> =>
     fetch(url).then((r) => r.json())
 
+export const smalls = ['ョ', 'ャ', 'ュ', 'ィ', 'ゥ', 'ォ', 'ァ', 'ェ']
+
 export const getSmallCharacterIndexes = (katakana: string): number[] => {
-    const smalls = ['ョ', 'ャ', 'ュ', 'ィ', 'ゥ', 'ォ', 'ァ', 'ェ']
     return katakana
         .split('')
         .map((x, i) => ({

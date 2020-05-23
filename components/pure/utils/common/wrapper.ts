@@ -5,6 +5,7 @@ import {
     chooseId,
     adjustDownstep,
     bundleCharacters,
+    getSmallCharacterIndexes,
 } from './common'
 export {
     downStepToArray,
@@ -13,4 +14,5 @@ export {
     chooseId,
     adjustDownstep,
     bundleCharacters,
+    getSmallCharacterIndexes,
 }

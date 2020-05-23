@@ -34,7 +34,9 @@ clean.forEach((nhk) => {
         DB().insert('ParticleReading', {
             wordId: wordId,
             downStep: head(wP.downsteps),
-            audioFile: getParticleReadingfileName(wP),
+            audioFile: `audio/particleReadings/${getParticleReadingfileName(
+                wP,
+            )}`,
             katakana: wP.kana.katakana,
             nasal: wP.kana.nasal.join(','),
             unVoiced: wP.kana.unVoiced.join(','),
@@ -45,7 +47,7 @@ clean.forEach((nhk) => {
         DB().insert('Example', {
             wordId: wordId,
             downStep: head(example.downsteps),
-            audioFile: example.audioFile,
+            audioFile: `audio/examples/${example.audioFile}`,
             katakana: example.kana.katakana,
             nasal: example.kana.nasal.join(','),
             unVoiced: example.kana.unVoiced.join(','),
@@ -57,7 +59,7 @@ clean.forEach((nhk) => {
         DB().insert('Reading', {
             wordId: wordId,
             downStep: head(r.downsteps),
-            audioFile: getReadingfileName(r),
+            audioFile: `audio/readings/${getReadingfileName(r)}`,
             katakana: r.kana.katakana,
             nasal: r.kana.nasal.join(','),
             unVoiced: r.kana.unVoiced.join(','),
