@@ -92,6 +92,19 @@ describe('data processing', () => {
                 '夜になって、イイホう告が届いた',
             )
         })
+
+        it('checks there are no odaka wihtout a particle attached', () => {
+            const examples = flatMap(
+                wordList.filter((x) => x.examples.length > 0),
+                (x) => x.examples,
+            )
+
+            expect(
+                examples.find((x) =>
+                    x.downsteps.find((ds) => ds === x.kana.katakana.length - 1),
+                ),
+            ).toBeFalsy()
+        })
     })
 
     describe('correctness', () => {
