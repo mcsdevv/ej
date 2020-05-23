@@ -41,6 +41,17 @@ CREATE TABLE `Reading` (
   unVoiced TEXT,
   CONSTRAINT reading_word FOREIGN KEY (wordId) REFERENCES Word (id)
 );
+CREATE TABLE `Example` (
+  id INTEGER PRIMARY KEY,
+  downStep INTEGER,
+  sentence TEXT,
+  katakana TEXT,
+  audioFile TEXT,
+  wordId INTEGER,
+  nasal TEXT,
+  unVoiced TEXT,
+  CONSTRAINT reading_word FOREIGN KEY (wordId) REFERENCES Word (id)
+);
 -- Down
 DROP TABLE IF EXISTS `Word`;
 DROP TABLE IF EXISTS `Kanji`;
@@ -48,3 +59,4 @@ DROP TABLE IF EXISTS `Hiragana`;
 DROP TABLE IF EXISTS `Katakana`;
 DROP TABLE IF EXISTS `Reading`;
 DROP TABLE IF EXISTS `ParticleReading`;
+DROP TABLE IF EXISTS `Example`;

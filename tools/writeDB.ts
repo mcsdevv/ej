@@ -30,18 +30,28 @@ clean.forEach((nhk) => {
         jishoWord: nhk.jishoWord,
     })
 
-    if (nhk.particleReading.length) {
-        nhk.particleReading.forEach((wP) => {
-            DB().insert('ParticleReading', {
-                wordId: wordId,
-                downStep: head(wP.downsteps),
-                audioFile: getParticleReadingfileName(wP),
-                katakana: wP.kana.katakana,
-                nasal: wP.kana.nasal.join(','),
-                unVoiced: wP.kana.unVoiced.join(','),
-            })
+    nhk.particleReading.forEach((wP) => {
+        DB().insert('ParticleReading', {
+            wordId: wordId,
+            downStep: head(wP.downsteps),
+            audioFile: getParticleReadingfileName(wP),
+            katakana: wP.kana.katakana,
+            nasal: wP.kana.nasal.join(','),
+            unVoiced: wP.kana.unVoiced.join(','),
         })
-    }
+    })
+
+    nhk.examples.forEach((example) => {
+        DB().insert('Example', {
+            wordId: wordId,
+            downStep: head(example.downsteps),
+            audioFile: example.audioFile,
+            katakana: example.kana.katakana,
+            nasal: example.kana.nasal.join(','),
+            unVoiced: example.kana.unVoiced.join(','),
+            sentence: example.sentence,
+        })
+    })
 
     nhk.readings.forEach((r) => {
         DB().insert('Reading', {
