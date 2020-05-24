@@ -5,16 +5,16 @@ import Main from '../components/pure/main'
 import { chunks } from './api/examples/common'
 import AccentWord from '../components/pure/accentWord/container'
 
-export async function getStaticProps(context: any) {
-    return {
-        props: { chunks },
-    }
-}
+// export async function getStaticProps(context: any) {
+//     return {
+//         props: { chunks },
+//     }
+// }
 
 export default function Home({ chunks }: any) {
     return (
         <Main>
-            <MultiLoad chunks={chunks} />
+            <MultiLoad />
             {/* <AccentWord kana='ハチジョー' downStep={3} /> */}
         </Main>
     )

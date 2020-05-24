@@ -42,7 +42,7 @@ export default function () {
                     </Row>
                 </Container>
             )}
-            {data && <Pure {...data} onClickNext={pickrandomId} />}
+            {/* {data && <Pure {...data} onClickNext={pickrandomId} />} */}
         </NoSSR>
     )
 }

@@ -1,13 +1,15 @@
 import NoSSR from 'react-no-ssr'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Multiplechoice from '../pure/accentQuiz/multipleChoice/index'
 import ManualEntry from '../pure/accentQuiz/manualEntry/index'
-
+import useSWR from 'swr'
+import { Suspense } from 'react'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
-import { chooseId } from '../pure/utils/common/wrapper'
+import { chooseId, fetcher } from '../pure/utils/common/wrapper'
 import * as R from 'rambda'
+import { stat } from 'fs'
 
 function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -21,73 +23,51 @@ export type Record = {
     sentence?: string //for debuggiong
 }
 
-type Props = {
-    chunks: Record[][]
-}
-
 type State = {
     chunkIndex: number
     wordIndex: number
-    notSeenChunks: number[]
 }
 
-export default function ({ chunks }: Props) {
-    const [wait, setWait] = useState<boolean>(false)
-    const [finished, setFinished] = useState<boolean>(false)
+export default () => {
+    const { data: notSeenChunks } = useSWR<number[], Error>(
+        `/api/homophones/range`,
+        fetcher,
+    )
+
+    const [nsc, setNsc] = useState<number[]>()
+
+    if (!nsc && notSeenChunks) {
+        setNsc(notSeenChunks)
+    }
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
-        chunkIndex: chooseId(R.range(0, chunks.length)),
-        notSeenChunks: chunks.map((x, i) => i),
+        chunkIndex: 0,
     })
 
-    const nextWord = async () => {
-        const chunk = chunks[state.chunkIndex]
-        const nextWordIndex = state.wordIndex + 1
-        if (nextWordIndex < chunk.length) {
-            updateState((draft) => {
-                draft.wordIndex = nextWordIndex
-            })
-        } else {
-            setWait(true)
-            await sleep(1000)
+    useEffect(() => {
+        updateState((draft) => {
+            if (nsc) {
+                draft.chunkIndex = chooseId(nsc)
+            }
+        })
+    }, [nsc])
 
-            updateState((draft) => {
-                draft.wordIndex = 0
-                draft.notSeenChunks = R.without(
-                    [draft.chunkIndex],
-                    draft.notSeenChunks,
-                )
+    const { data: chunk } = useSWR<Record[], Error>(
+        `/api/homophones/chunk/${state.chunkIndex}`,
+        fetcher,
+    )
 
-                if (!draft.notSeenChunks.length) {
-                    setFinished(true)
-                } else {
-                    draft.chunkIndex = chooseId(draft.notSeenChunks)
-                }
-            })
-            setWait(false)
-        }
-    }
-    // console.log(chunks)
-    // console.log(state)
+    console.log(state)
+    console.log(chunk)
 
-    const word = chunks[state.chunkIndex][state.wordIndex]
-    console.log(word.audioFile)
-    console.log(word.sentence)
-    console.log(word.downStep)
-    console.log(word.particle)
+    // const onClick () => {
+    //     if ()
+    // }
 
-    const Accent = true ? Multiplechoice : ManualEntry
+    const word = chunk ? chunk[state.wordIndex] : undefined
 
     return (
-        <NoSSR onSSR={<Loader wait={true} />}>
-            {finished ? (
-                <div>FINISHED</div>
-            ) : (
-                <Loader wait={wait}>
-                    <Accent {...word} onClickNext={nextWord} />
-                </Loader>
-            )}
-        </NoSSR>
+        <NoSSR>{word ? <div>{word?.katakana}</div> : <div>loading</div>}</NoSSR>
     )
 }
