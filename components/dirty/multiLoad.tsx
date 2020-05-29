@@ -1,5 +1,5 @@
 import NoSSR from 'react-no-ssr'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Multiplechoice from '../pure/accentQuiz/multipleChoice/index'
 import ManualEntry from '../pure/accentQuiz/manualEntry/index'
 import useSWR from 'swr'
@@ -31,11 +31,10 @@ type State = {
 }
 
 export default () => {
-    const [wait, setWait] = useState(false)
-
-    const nscRes = useAxios(`/api/homophones/range`)[0]
-
-    const notSeenChunks = nscRes.data
+    const { data: notSeenChunks } = useSWR<number[], Error>(
+        `/api/homophones/range`,
+        fetcher,
+    )
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
@@ -52,10 +51,10 @@ export default () => {
         })
     }, [notSeenChunks])
 
-    const url = `/api/homophones/chunk/${state.chunkIndex}`
-
-    const [chunkRes, refetch] = useAxios(url)
-    const chunk = chunkRes.data
+    const { data: chunk } = useSWR(
+        `/api/homophones/chunk/${state.chunkIndex}`,
+        fetcher,
+    )
 
     const onClick = () => {
         updateState((draft) => {
@@ -71,28 +70,25 @@ export default () => {
             draft.nsc =
                 draft.nsc.length > 1
                     ? R.without([draft.chunkIndex], draft.nsc)
-                    : notSeenChunks
+                    : notSeenChunks!
 
             draft.chunkIndex = chooseId(draft.nsc)
             draft.wordIndex = 0
-            refetch()
         })
     }
+    // console.log(nsc)
 
-    if (chunkRes.loading) {
-        return <Loader wait={true}></Loader>
-    }
-    const word = chunk[state.wordIndex]
+    const word = chunk ? chunk[state.wordIndex] : undefined
 
     console.log('~~~~')
-    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunkRes)
-    console.log(url)
+    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
+    // console.log(url)
     // console.log(state.wordIndex)
     // console.log(word?.audioFile)
 
     return (
         <NoSSR>
-            <Loader wait={chunkRes.loading}>
+            <Loader wait={!word}>
                 <Multiplechoice {...word} onClickNext={onClick} />
             </Loader>
         </NoSSR>
