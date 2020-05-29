@@ -7,13 +7,14 @@ export type Record = {
     downStep: number
     katakana: string
 }
-
-export const chunks = R.pipe(
+// TODO FIX ME
+const p = R.pipe as any
+export const chunks = p(
     (filePath: string) => readFileSync(filePath),
     R.toString,
     (query: string): Record[] => DB().query(query),
     R.groupBy((record: Record) => record.katakana),
     R.values,
-    R.splitEvery(3),
-    R.map((x) => R.flatten(x)),
+    R.splitEvery(1),
+    R.map((x: Record[][]) => R.flatten(x)),
 )('./queries/homophones.sql')

@@ -1,5 +1,6 @@
 import * as R from 'rambda'
 import fetch from 'node-fetch'
+import { any } from 'cypress/types/bluebird'
 
 export const downStepToArray = (
     downStep: number | null,
@@ -140,7 +141,10 @@ export const getMVQDownSteps = (
             ? fakeDownSteps.length
             : maxOptionCount - 1
 
-    return R.pipe(
+    // TODO FIX ME
+    const p = R.pipe as any
+
+    return p(
         shuffle,
         R.take(numTotake),
         R.append(downStep),

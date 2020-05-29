@@ -30,7 +30,7 @@ export default ({
     interactive,
     particle,
 }: Props): JSX.Element => {
-    const isParticle = particle !== null
+    const isParticle = Boolean(particle)
     const bundled = bundleCharacters(kana)
     const combined = isParticle ? bundled.concat([particle!]) : bundled
     const downStep = adjustDownstep(kana, dirtyDS)

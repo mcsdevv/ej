@@ -5,6 +5,7 @@ import ManualEntry from '../pure/accentQuiz/manualEntry/index'
 import useSWR from 'swr'
 import { Suspense } from 'react'
 import Loader from '../pure/general/loader'
+import useAxios from 'axios-hooks'
 
 import { useImmer } from 'use-immer'
 import { chooseId, fetcher } from '../pure/utils/common/wrapper'
@@ -26,48 +27,74 @@ export type Record = {
 type State = {
     chunkIndex: number
     wordIndex: number
+    nsc: number[]
 }
 
 export default () => {
-    const { data: notSeenChunks } = useSWR<number[], Error>(
-        `/api/homophones/range`,
-        fetcher,
-    )
+    const [wait, setWait] = useState(false)
 
-    const [nsc, setNsc] = useState<number[]>()
+    const nscRes = useAxios(`/api/homophones/range`)[0]
 
-    if (!nsc && notSeenChunks) {
-        setNsc(notSeenChunks)
-    }
+    const notSeenChunks = nscRes.data
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
         chunkIndex: 0,
+        nsc: [],
     })
 
     useEffect(() => {
         updateState((draft) => {
-            if (nsc) {
-                draft.chunkIndex = chooseId(nsc)
+            if (notSeenChunks) {
+                draft.nsc = notSeenChunks
+                draft.chunkIndex = chooseId(draft.nsc)
             }
         })
-    }, [nsc])
+    }, [notSeenChunks])
 
-    const { data: chunk } = useSWR<Record[], Error>(
-        `/api/homophones/chunk/${state.chunkIndex}`,
-        fetcher,
-    )
+    const url = `/api/homophones/chunk/${state.chunkIndex}`
 
-    console.log(state)
-    console.log(chunk)
+    const [chunkRes, refetch] = useAxios(url)
+    const chunk = chunkRes.data
 
-    // const onClick () => {
-    //     if ()
-    // }
+    const onClick = () => {
+        updateState((draft) => {
+            if (!chunk) {
+                return
+            }
+            const nextWordId = draft.wordIndex + 1
+            if (nextWordId < chunk.length) {
+                draft.wordIndex = nextWordId
+                return
+            }
 
-    const word = chunk ? chunk[state.wordIndex] : undefined
+            draft.nsc =
+                draft.nsc.length > 1
+                    ? R.without([draft.chunkIndex], draft.nsc)
+                    : notSeenChunks
+
+            draft.chunkIndex = chooseId(draft.nsc)
+            draft.wordIndex = 0
+            refetch()
+        })
+    }
+
+    if (chunkRes.loading) {
+        return <Loader wait={true}></Loader>
+    }
+    const word = chunk[state.wordIndex]
+
+    console.log('~~~~')
+    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunkRes)
+    console.log(url)
+    // console.log(state.wordIndex)
+    // console.log(word?.audioFile)
 
     return (
-        <NoSSR>{word ? <div>{word?.katakana}</div> : <div>loading</div>}</NoSSR>
+        <NoSSR>
+            <Loader wait={chunkRes.loading}>
+                <Multiplechoice {...word} onClickNext={onClick} />
+            </Loader>
+        </NoSSR>
     )
 }

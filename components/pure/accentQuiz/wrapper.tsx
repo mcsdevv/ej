@@ -20,6 +20,7 @@ const {
 `
 
 export default ({ audioFile, onClickNext, children }: Props) => {
+    console.error(audioFile)
     const a = new Audio(audioFile)
     // Throws an error if the user has not yet interacted with page (chrome)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -27,6 +28,7 @@ export default ({ audioFile, onClickNext, children }: Props) => {
     useEffect(() => {
         play()
     }, [audioFile])
+
     return (
         <Container className='h-100'>
             <Row className='justify-content-center' style={{ height: '15%' }}>
