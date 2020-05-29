@@ -88,7 +88,7 @@ export default () => {
 
     return (
         <NoSSR>
-            <Loader wait={!word}>
+            <Loader wait={!notSeenChunks || !word}>
                 <Multiplechoice {...word} onClickNext={onClick} />
             </Loader>
         </NoSSR>
