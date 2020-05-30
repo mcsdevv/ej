@@ -8,6 +8,7 @@ import {
     shuffle,
     getFakeDownSteps,
     getMVQDownSteps,
+    DownStep,
 } from './common'
 
 import * as A from 'fp-ts/lib/Array'
@@ -201,7 +202,7 @@ describe('getMVQDownSteps', () => {
 
     const byDownstep = pipe(
         Ord.ordNumber,
-        Ord.contramap((ds: O.Option<number>) => O.getOrElse(() => -1)(ds)),
+        Ord.contramap((ds: DownStep) => O.getOrElse(() => -1)(ds)),
     )
 
     it('the required number of options is > actual options', () => {

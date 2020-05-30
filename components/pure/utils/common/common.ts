@@ -2,21 +2,23 @@ import * as A from 'fp-ts/lib/Array'
 import * as Eq from 'fp-ts/lib/Eq'
 import * as O from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import fetch from 'node-fetch'
 
-export const optionalEq = O.getEq(Eq.eqNumber).equals
+export const dsEqual = (x: number | null, y: DownStep) =>
+    O.getEq(Eq.eqNumber).equals(O.fromNullable(x), y)
+export const boolsEq = A.getEq(Eq.eqBoolean).equals
+
+export type DownStep = O.Option<number>
 
 export const downStepToArray = (
-    downStep: O.Option<number>,
+    downStep: DownStep,
     length: number,
     hasParticle: boolean,
 ): boolean[] => {
     if (length <= 1 && !hasParticle) {
         return [true]
     }
-
     const totalLength = length - 1 + Number(hasParticle)
 
     if (O.isNone(downStep)) {
@@ -38,25 +40,19 @@ export const downStepToArray = (
 }
 
 export const isCorrect = (
-    downStep: O.Option<number>,
+    downStep: DownStep,
     array: boolean[],
     hasParticle: boolean,
 ): boolean =>
-    A.getEq(Eq.eqBoolean).equals(
-        array,
-        downStepToArray(downStep, array.length, hasParticle),
-    ) || array.length === 1
+    boolsEq(array, downStepToArray(downStep, array.length, hasParticle)) ||
+    array.length === 1
 
 const between = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-export const chooseId = (ids: number[]): number => {
-    if (!ids.length) {
-        return 0
-    }
-    return ids[between(0, ids.length - 1)]
-}
+export const chooseId = (ids: number[]): number =>
+    !ids.length ? 0 : ids[between(0, ids.length - 1)]
 
 export const fetcher = (url: string): Promise<any> =>
     fetch(url).then((r) => r.json())
@@ -87,7 +83,7 @@ export const bundleCharacters = (katakana: string): string[] => {
     const array = katakana.split('')
     const smallindexes = getSmallCharacterIndexes(katakana)
 
-    if (pipe(A.head(smallindexes), (x) => optionalEq(O.some(0), x))) {
+    if (pipe(A.head(smallindexes), (x) => dsEqual(0, x))) {
         throw new Error('Word cannot start with little character')
     }
 
@@ -99,16 +95,13 @@ export const bundleCharacters = (katakana: string): string[] => {
 
     const pairs = A.chunksOf(2)(targetChars).map((x) => x.join(''))
 
-    const res = array
-        .map((x, i) => {
-            if (startIndexes.includes(i)) {
-                return pairs[startIndexes.findIndex((j) => j == i)]
-            }
-            return x
-        })
+    return array
+        .map((x, i) =>
+            startIndexes.includes(i)
+                ? pairs[startIndexes.findIndex((j) => j == i)]
+                : x,
+        )
         .filter((x, i) => !smallindexes.includes(i))
-
-    return res
 }
 
 export const shuffle = <T>(a: T[]) => {
@@ -125,26 +118,23 @@ export const shuffle = <T>(a: T[]) => {
     return a
 }
 
-export const getFakeDownSteps = (
-    katakana: string,
-    downStep: O.Option<number>,
-) => {
+export const getFakeDownSteps = (katakana: string, downStep: DownStep) => {
     const smallindexes = getSmallCharacterIndexes(katakana)
     const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
     const badIndexes = smallindexes.concat(startIndexes)
 
     const fakeDownSteps = A.range(0, katakana.length - 1)
         .filter((x) => !badIndexes.includes(x))
-        .filter((x) => !optionalEq(O.some(x), downStep))
+        .filter((x) => !dsEqual(x, downStep))
 
     return fakeDownSteps
 }
 
 export const getMVQDownSteps = (
     katakana: string,
-    downStep: O.Option<number>,
+    downStep: DownStep,
     maxOptionCount: number,
-): O.Option<number>[] => {
+): DownStep[] => {
     const fakeDownSteps = getFakeDownSteps(katakana, downStep)
     const numTotake =
         fakeDownSteps.length + 1 < maxOptionCount
