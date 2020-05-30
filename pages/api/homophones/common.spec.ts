@@ -1,34 +1,22 @@
-import { chunks, Record } from './common'
-import * as R from 'rambda'
+import { chunks, Word } from './common'
+import * as A from 'fp-ts/lib/Array'
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 
 describe('homophone endpoint helpers', () => {
-    const flattened = R.flatten(chunks)
+    const flattened: Word[] = A.flatten(chunks)
     it('there are no duplicated audiofiles', () => {
-        const grouped = R.groupBy(
-            (record: Record) => record.downStep + record.katakana,
-            flattened,
+        const grouped = NA.groupBy(
+            (record: Word) => record.downStep + record.katakana,
+        )(flattened)
+
+        const values = A.filter((x: Word[]) => x.length !== 1)(
+            Object.values(grouped),
         )
-
-        const values = R.filter((x) => x.length !== 1, grouped)
-
-        expect(values).toEqual({})
+        expect(values).toEqual([])
     })
 
     it('there are not heiban', () => {
-        const values = R.filter((x: Record) => x.downStep === null, flattened)
-
+        const values = A.filter((x: Word) => x.downStep === null)(flattened)
         expect(values).toEqual([])
-    })
-    it('chunks', () => {
-        const grouped = R.values(
-            R.groupBy((record: Record) => record.katakana, chunks[0]),
-        )
-        expect(grouped.length).toEqual(3)
-    })
-    it('chunks', () => {
-        const first = chunks[0][0]
-        expect(Object.keys(first)).toContainEqual('katakana')
-        expect(Object.keys(first)).toContainEqual('audioFile')
-        expect(Object.keys(first)).toContainEqual('downStep')
     })
 })

@@ -1,20 +1,22 @@
 import DB from 'better-sqlite3-helper'
 import { readFileSync } from 'fs-extra'
-import * as R from 'rambda'
+// import * as R from 'rambda'
+import { pipe } from 'fp-ts/lib/pipeable'
+import * as A from 'fp-ts/lib/Array'
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 
-export type Record = {
+export type Word = {
     audioFile: string
     downStep: number
     katakana: string
 }
-// TODO FIX ME
-const p = R.pipe as any
-export const chunks = p(
-    (filePath: string) => readFileSync(filePath),
-    R.toString,
-    (query: string): Record[] => DB().query(query),
-    R.groupBy((record: Record) => record.katakana),
-    R.values,
-    R.splitEvery(3),
-    R.map((x: Record[][]) => R.flatten(x)),
-)('./queries/homophones.sql')
+
+export const chunks: Word[][] = pipe(
+    readFileSync('./queries/homophones.sql'),
+    (o) => o.toString(),
+    (query): Word[] => DB().query(query),
+    NA.groupBy((r) => r.katakana),
+    (x) => Object.values(x),
+    A.chunksOf(2),
+    A.flatten,
+)
