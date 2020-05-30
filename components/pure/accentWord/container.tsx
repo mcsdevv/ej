@@ -9,14 +9,16 @@ import {
     bundleCharacters,
     adjustDownstep,
     downStepToArray,
+    DownStep,
 } from '../utils/common/wrapper'
+
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
 
 type Props = {
-    readonly kana: string
-    readonly downStep: number | null
+    kana: string
+    downStep: DownStep
     interactive: boolean
     particle: string | null
 }
@@ -51,7 +53,7 @@ export default ({
 
     useEffect(() => {
         updateArray(() => getInitialArray())
-    }, [kana, downStep])
+    }, [kana, dirtyDS, particle])
 
     const onClick = (index: number) => {
         updateArray((draft) => {

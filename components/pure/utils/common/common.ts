@@ -1,13 +1,13 @@
 import * as A from 'fp-ts/lib/Array'
+import * as ROA from 'fp-ts/lib/ReadonlyArray'
 import * as Eq from 'fp-ts/lib/Eq'
 import * as O from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import * as NA from 'fp-ts/lib/NonEmptyArray'
 import fetch from 'node-fetch'
 
 export const dsEqual = (x: number | null, y: DownStep) =>
     O.getEq(Eq.eqNumber).equals(O.fromNullable(x), y)
-export const boolsEq = A.getEq(Eq.eqBoolean).equals
+export const boolsEq = ROA.getEq(Eq.eqBoolean).equals
 
 export type DownStep = O.Option<number>
 
@@ -41,7 +41,7 @@ export const downStepToArray = (
 
 export const isCorrect = (
     downStep: DownStep,
-    array: boolean[],
+    array: readonly boolean[],
     hasParticle: boolean,
 ): boolean =>
     boolsEq(array, downStepToArray(downStep, array.length, hasParticle)) ||
@@ -70,14 +70,15 @@ export const getSmallCharacterIndexes = (katakana: string): number[] => {
         .map(({ i }) => i)
 }
 
-export const adjustDownstep = (katakana: string, downStep: number | null) => {
-    if (downStep === null) {
-        return null
-    }
-    const smallindexes = getSmallCharacterIndexes(katakana)
-
-    return downStep - smallindexes.filter((x) => x <= downStep).length
-}
+export const adjustDownstep = (katakana: string, downStep: DownStep) =>
+    O.isNone(downStep)
+        ? downStep
+        : O.some(
+              downStep.value -
+                  getSmallCharacterIndexes(katakana).filter(
+                      (x) => x <= downStep.value,
+                  ).length,
+          )
 
 export const bundleCharacters = (katakana: string): string[] => {
     const array = katakana.split('')

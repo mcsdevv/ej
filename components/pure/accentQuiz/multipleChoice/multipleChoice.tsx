@@ -2,12 +2,12 @@ import { Row, Col } from 'react-bootstrap'
 import * as R from 'rambda'
 import css from 'styled-jsx/css'
 import Option from './Option'
-import { getMVQDownSteps } from '../../utils/common/common'
+import { getMVQDownSteps, DownStep } from '../../utils/common/common'
 
 type Props = {
     audioFile: string
     katakana: string
-    downStep: number | null
+    downStep: DownStep
     particle: string | null
 }
 const rowCount = 2

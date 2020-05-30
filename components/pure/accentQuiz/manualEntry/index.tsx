@@ -1,10 +1,11 @@
 import Wrapper from '../wrapper'
 import ManualEntry from './maunalEntry'
+import { DownStep } from '../../utils/common/wrapper'
 type Props = {
     audioFile: string
     onClickNext: () => void
     katakana: string
-    downStep: number | null
+    downStep: DownStep
     particle: string | null
 }
 

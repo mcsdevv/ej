@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
-import { chooseId, fetcher } from '../pure/utils/common/wrapper'
+import { chooseId, fetcher, DownStep } from '../pure/utils/common/wrapper'
 import * as R from 'rambda'
 
 function sleep(ms: number) {
@@ -15,7 +15,7 @@ function sleep(ms: number) {
 
 export type Record = {
     audioFile: string
-    downStep: number
+    downStep: DownStep
     katakana: string
     particle: string | null
     sentence?: string //for debuggiong

@@ -1,9 +1,10 @@
 import Accent from '../../accentWord/container'
 import { Row } from 'react-bootstrap'
+import { DownStep } from '../../utils/common/wrapper'
 
 type Props = {
     katakana: string
-    downStep: number | null
+    downStep: DownStep
     particle: string | null
 }
 

@@ -150,21 +150,29 @@ describe('bundleCharacters', () => {
     })
 })
 
+const just = <T>(param: O.Option<T>) => {
+    if (O.isNone(param)) {
+        throw new Error('Was NONE!')
+    }
+
+    return param.value
+}
+
 describe('adjustDownstep', () => {
     it('should not change the downStep if its before the small character', () => {
-        expect(adjustDownstep('ハチジョー', 2)).toEqual(2)
+        expect(just(adjustDownstep('ハチジョー', O.some(2)))).toEqual(2)
     })
     it('should decrement the downStep if its on the character just before the small', () => {
-        expect(adjustDownstep('ハチジョー', 3)).toEqual(2)
+        expect(just(adjustDownstep('ハチジョー', O.some(3)))).toEqual(2)
     })
     it('decrement the downStep', () => {
-        expect(adjustDownstep('コーシャク', 4)).toEqual(3)
+        expect(just(adjustDownstep('コーシャク', O.some(4)))).toEqual(3)
     })
     it('decrement the downStep', () => {
-        expect(adjustDownstep('オッチョコチョイ', 6)).toEqual(4)
+        expect(just(adjustDownstep('オッチョコチョイ', O.some(6)))).toEqual(4)
     })
     it('should return nul if downStep is null', () => {
-        expect(adjustDownstep('ハチジョー', null)).toEqual(null)
+        expect(adjustDownstep('ハチジョー', O.none)).toEqual(O.none)
     })
 })
 

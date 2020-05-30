@@ -6,7 +6,9 @@ import {
     adjustDownstep,
     bundleCharacters,
     getSmallCharacterIndexes,
+    DownStep,
 } from './common'
+
 export {
     downStepToArray,
     isCorrect,
@@ -16,3 +18,5 @@ export {
     bundleCharacters,
     getSmallCharacterIndexes,
 }
+
+export type { DownStep }

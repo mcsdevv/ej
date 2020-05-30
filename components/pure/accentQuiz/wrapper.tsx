@@ -1,5 +1,5 @@
-import { Button, Container, Row, Col } from 'react-bootstrap'
-import { useEffect, useState } from 'react'
+import { Button, Container, Row } from 'react-bootstrap'
+import { useEffect } from 'react'
 import css from 'styled-jsx/css'
 
 type Props = {

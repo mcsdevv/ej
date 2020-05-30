@@ -2,11 +2,12 @@ import Accent from '../../accentWord/container'
 import { Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import css from 'styled-jsx/css'
+import { DownStep } from '../../utils/common/wrapper'
 
 type Props = {
     isAnswer: boolean
     katakana: string
-    downStep: number | null
+    downStep: DownStep
     audioFile: string
     particle: string | null
 }
