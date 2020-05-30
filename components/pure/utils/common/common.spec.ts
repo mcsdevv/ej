@@ -10,6 +10,12 @@ import {
     getMVQDownSteps,
 } from './common'
 
+import * as A from 'fp-ts/lib/Array'
+import * as Eq from 'fp-ts/lib/Eq'
+import * as O from 'fp-ts/lib/Option'
+import * as Ord from 'fp-ts/lib/Ord'
+import { pipe } from 'fp-ts/lib/pipeable'
+
 describe('downStep to arrray', () => {
     it('downStep to array', () => {
         expect(downStepToArray(0, 1, false)).toEqual([true])
@@ -160,29 +166,34 @@ describe('shuffle', () => {
 
 describe('getRandomDownSteps', () => {
     const word = 'ハチジョー'
-    it('should not have any duplicates', () => {
-        const ds = getFakeDownSteps(word, 2)
+    it('should not have any duplicates 2', () => {
+        const ds = getFakeDownSteps(word, O.some(2))
         expect(ds).toEqual([0, 1, 4])
     })
 
-    it('should not have any duplicates', () => {
-        const ds = getFakeDownSteps(word, 3)
+    it('should not have any duplicates  3', () => {
+        const ds = getFakeDownSteps(word, O.some(3))
         expect(ds).toEqual([0, 1, 4])
     })
 })
 
 describe('getMVQDownSteps', () => {
-    const downStep = 2
+    const downStep = O.some(2)
     const word = 'ハチジョー'
 
+    const byDownstep = pipe(
+        Ord.ordNumber,
+        Ord.contramap((ds: O.Option<number>) => O.getOrElse(() => -1)(ds)),
+    )
+
     it('the required number of options is > actual options', () => {
-        const options = getMVQDownSteps(word, downStep, 9).sort()
-        expect(options).toEqual([0, 1, 2, 4])
+        const options = A.sort(byDownstep)(getMVQDownSteps(word, downStep, 9))
+        expect(options).toEqual(A.map(O.some)([0, 1, 2, 4]))
     })
 
     it('the required number of options is equal to actual options', () => {
-        const options = getMVQDownSteps(word, downStep, 4).sort()
-        expect(options).toEqual([0, 1, 2, 4])
+        const options = A.sort(byDownstep)(getMVQDownSteps(word, downStep, 4))
+        expect(options).toEqual(A.map(O.some)([0, 1, 2, 4]))
     })
 
     it('the required number of options is < actual options', () => {

@@ -1,6 +1,13 @@
-import * as R from 'rambda'
+import * as A from 'fp-ts/lib/Array'
+import * as Eq from 'fp-ts/lib/Eq'
+import * as O from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/pipeable'
+
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 import fetch from 'node-fetch'
-import { any } from 'cypress/types/bluebird'
+import { any, map } from 'cypress/types/bluebird'
+
+export const optionalEq = O.getEq(Eq.eqNumber)
 
 export const downStepToArray = (
     downStep: number | null,
@@ -11,34 +18,35 @@ export const downStepToArray = (
         return [true]
     }
 
+    const totalLength = length - 1 + Number(hasParticle)
+
     if (downStep === null) {
-        return [false].concat(R.repeat(true, length - 1 + Number(hasParticle)))
+        return A.flatten([[false], A.replicate(totalLength, true)])
     }
 
     if (downStep === 0) {
-        return [true].concat(R.repeat(false, length - 1 + Number(hasParticle)))
+        return A.flatten([[true], A.replicate(totalLength, false)])
     }
 
-    return [false]
-        .concat(R.repeat(true, downStep))
-        .concat(
-            R.repeat(
-                false,
-                Math.max(length - downStep - 1, 0) + Number(hasParticle),
-            ),
-        )
+    return A.flatten([
+        [false],
+        A.replicate(downStep, true),
+        A.replicate(
+            Math.max(length - downStep - 1, 0) + Number(hasParticle),
+            false,
+        ),
+    ])
 }
 
 export const isCorrect = (
     downStep: number | null,
-    array: readonly boolean[],
+    array: boolean[],
     hasParticle: boolean,
-): boolean => {
-    return (
-        R.equals(array, downStepToArray(downStep, array.length, hasParticle)) ||
-        array.length === 1
-    )
-}
+): boolean =>
+    A.getEq(Eq.eqBoolean).equals(
+        array,
+        downStepToArray(downStep, array.length, hasParticle),
+    ) || array.length === 1
 
 const between = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -80,17 +88,17 @@ export const bundleCharacters = (katakana: string): string[] => {
     const array = katakana.split('')
     const smallindexes = getSmallCharacterIndexes(katakana)
 
-    if (smallindexes.length && R.head(smallindexes) === 0) {
+    if (pipe(A.head(smallindexes), (x) => optionalEq.equals(O.some(0), x))) {
         throw new Error('Word cannot start with little character')
     }
 
     const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
 
     const targetChars = array.filter((x, i) =>
-        R.flatten<number>([smallindexes, startIndexes]).includes(i),
+        A.flatten<number>([smallindexes, startIndexes]).includes(i),
     )
 
-    const pairs = R.splitEvery(2, targetChars).map((x) => x.join(''))
+    const pairs = A.chunksOf(2)(targetChars).map((x) => x.join(''))
 
     const res = array
         .map((x, i) => {
@@ -104,7 +112,7 @@ export const bundleCharacters = (katakana: string): string[] => {
     return res
 }
 
-export const shuffle = (a: number[]) => {
+export const shuffle = <T>(a: T[]) => {
     const swap = (n1: number, n2: number) => {
         const temp = a[n1]
         a[n1] = a[n2]
@@ -118,36 +126,38 @@ export const shuffle = (a: number[]) => {
     return a
 }
 
-export const getFakeDownSteps = (katakana: string, downStep: number | null) => {
+export const getFakeDownSteps = (
+    katakana: string,
+    downStep: O.Option<number>,
+) => {
     const smallindexes = getSmallCharacterIndexes(katakana)
     const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
     const badIndexes = smallindexes.concat(startIndexes)
 
-    const fakeDownSteps = R.range(0, katakana.length)
+    const fakeDownSteps = A.range(0, katakana.length - 1)
         .filter((x) => !badIndexes.includes(x))
-        .filter((x) => x !== downStep)
+        .filter((x) => !optionalEq.equals(O.some(x), downStep))
 
     return fakeDownSteps
 }
 
 export const getMVQDownSteps = (
     katakana: string,
-    downStep: number | null,
+    downStep: O.Option<number>,
     maxOptionCount: number,
-): number[] => {
+): O.Option<number>[] => {
     const fakeDownSteps = getFakeDownSteps(katakana, downStep)
     const numTotake =
         fakeDownSteps.length + 1 < maxOptionCount
             ? fakeDownSteps.length
             : maxOptionCount - 1
 
-    // TODO FIX ME
-    const p = R.pipe as any
-
-    return p(
+    return pipe(
+        fakeDownSteps,
         shuffle,
-        R.take(numTotake),
-        R.append(downStep),
+        A.takeLeft(numTotake),
+        A.map(O.some),
+        (array) => A.snoc(array, downStep),
         shuffle,
-    )(fakeDownSteps)
+    )
 }
