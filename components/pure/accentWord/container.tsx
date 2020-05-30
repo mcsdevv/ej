@@ -1,5 +1,6 @@
 import { range } from 'lodash'
-import * as R from 'rambda'
+import * as A from 'fp-ts/lib/Array'
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
 
@@ -47,7 +48,7 @@ export default ({
 
     const getInitialArray = (): readonly boolean[] =>
         interactive
-            ? R.repeat(false, combined.length)
+            ? A.replicate(combined.length, false)
             : downStepToArray(downStep, combined.length, isParticle)
 
     const [array, updateArray] = useImmer(getInitialArray())

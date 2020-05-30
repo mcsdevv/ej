@@ -7,8 +7,10 @@ import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
 import { chooseId, fetcher, DownStep } from '../pure/utils/common/wrapper'
-import * as R from 'rambda'
+import * as A from 'fp-ts/lib/Array'
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 import { Particle } from '../pure/accentWord/container'
+import { stat } from 'fs'
 
 function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -28,7 +30,7 @@ type State = {
     nsc: number[]
 }
 
-const audioType = 'examples'
+const audioType = 'homophones'
 
 export default () => {
     const { data: notSeenChunks } = useSWR<number[], Error>(
@@ -69,7 +71,7 @@ export default () => {
 
             draft.nsc =
                 draft.nsc.length > 1
-                    ? R.without([draft.chunkIndex], draft.nsc)
+                    ? A.filter((x: number) => x !== draft.chunkIndex)(draft.nsc)
                     : notSeenChunks!
 
             draft.chunkIndex = chooseId(draft.nsc)
@@ -81,7 +83,8 @@ export default () => {
     const word = chunk ? chunk[state.wordIndex] : undefined
 
     console.log('~~~~')
-    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
+    console.log(state.nsc)
+    // console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
     // console.log(url)
     // console.log(state.wordIndex)
     // console.log(word?.audioFile)

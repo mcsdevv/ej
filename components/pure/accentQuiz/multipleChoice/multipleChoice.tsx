@@ -1,5 +1,6 @@
 import { Row, Col } from 'react-bootstrap'
-import * as R from 'rambda'
+import * as A from 'fp-ts/lib/Array'
+import * as NA from 'fp-ts/lib/NonEmptyArray'
 import css from 'styled-jsx/css'
 import Option from './Option'
 import { getMVQDownSteps, DownStep } from '../../utils/common/common'
@@ -29,7 +30,9 @@ const { className: rowClassName, styles: rowStyles } = css.resolve`
 export default ({ audioFile, katakana, downStep, particle }: Props) => {
     const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
 
-    const rows = R.splitEvery(Math.min(rowCount, options.length - 1), options)
+    const rowsToDraw = options.length <= 1 ? options.length : rowCount
+
+    const rows = A.chunksOf(rowsToDraw)(options)
 
     return (
         <div style={{ height: '65%' }}>
