@@ -1,4 +1,5 @@
-import { chunks, Word } from './common'
+import { chunks } from './common'
+import { Word } from '../utils'
 import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
@@ -20,7 +21,7 @@ describe('homophone endpoint helpers', () => {
     })
 
     it('there are not heiban', () => {
-        const values = A.filter((x: Word) => x.downStep === null)(flattened)
+        const values = A.filter((x: Word) => O.isNone(x.downStep))(flattened)
         expect(values).toEqual([])
     })
 })
