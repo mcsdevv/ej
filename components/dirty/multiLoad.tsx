@@ -1,16 +1,13 @@
-import NoSSR from 'react-no-ssr'
+// import NoSSR from 'react-no-ssr'
 import { useEffect } from 'react'
 import Multiplechoice from '../pure/accentQuiz/multipleChoice/index'
 import ManualEntry from '../pure/accentQuiz/manualEntry/index'
 import useSWR from 'swr'
-import { Suspense } from 'react'
 import Loader from '../pure/general/loader'
-import useAxios from 'axios-hooks'
 
 import { useImmer } from 'use-immer'
 import { chooseId, fetcher } from '../pure/utils/common/wrapper'
 import * as R from 'rambda'
-import { stat } from 'fs'
 
 function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -87,10 +84,8 @@ export default () => {
     // console.log(word?.audioFile)
 
     return (
-        <NoSSR>
-            <Loader wait={!notSeenChunks || !word}>
-                <Multiplechoice {...word} onClickNext={onClick} />
-            </Loader>
-        </NoSSR>
+        <Loader wait={!notSeenChunks || !word}>
+            <Multiplechoice {...word} onClickNext={onClick} />
+        </Loader>
     )
 }
