@@ -1,4 +1,4 @@
-import Accent from '../../accentWord/container'
+import Accent, { Particle } from '../../accentWord/container'
 import { Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import css from 'styled-jsx/css'
@@ -9,7 +9,7 @@ type Props = {
     katakana: string
     downStep: DownStep
     audioFile: string
-    particle: string | null
+    particle: Particle
 }
 
 const {

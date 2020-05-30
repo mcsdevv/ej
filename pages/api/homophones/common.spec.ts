@@ -1,12 +1,16 @@
 import { chunks, Word } from './common'
 import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
+import * as O from 'fp-ts/lib/Option'
 
 describe('homophone endpoint helpers', () => {
     const flattened: Word[] = A.flatten(chunks)
     it('there are no duplicated audiofiles', () => {
         const grouped = NA.groupBy(
-            (record: Word) => record.downStep + record.katakana,
+            (record: Word) =>
+                (O.toNullable(record.downStep) as any) +
+                O.toNullable(record.particle) +
+                record.katakana,
         )(flattened)
 
         const values = A.filter((x: Word[]) => x.length !== 1)(

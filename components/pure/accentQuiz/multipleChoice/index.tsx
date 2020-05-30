@@ -1,12 +1,13 @@
 import Wrapper from '../wrapper'
 import MultipleChoice from './multipleChoice'
 import { DownStep } from '../../utils/common/common'
+import { Particle } from '../../accentWord/container'
 type Props = {
     audioFile: string
     onClickNext: () => void
     katakana: string
     downStep: DownStep
-    particle: string | null
+    particle: Particle
 }
 
 export default ({

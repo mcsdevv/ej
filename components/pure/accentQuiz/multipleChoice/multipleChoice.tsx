@@ -3,12 +3,13 @@ import * as R from 'rambda'
 import css from 'styled-jsx/css'
 import Option from './Option'
 import { getMVQDownSteps, DownStep } from '../../utils/common/common'
+import { Particle } from '../../accentWord/container'
 
 type Props = {
     audioFile: string
     katakana: string
     downStep: DownStep
-    particle: string | null
+    particle: Particle
 }
 const rowCount = 2
 

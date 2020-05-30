@@ -1,11 +1,11 @@
-import Accent from '../../accentWord/container'
+import Accent, { Particle } from '../../accentWord/container'
 import { Row } from 'react-bootstrap'
 import { DownStep } from '../../utils/common/wrapper'
 
 type Props = {
     katakana: string
     downStep: DownStep
-    particle: string | null
+    particle: Particle
 }
 
 export default ({ katakana, downStep, particle }: Props) => (

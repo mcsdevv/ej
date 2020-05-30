@@ -8,6 +8,7 @@ import Loader from '../pure/general/loader'
 import { useImmer } from 'use-immer'
 import { chooseId, fetcher, DownStep } from '../pure/utils/common/wrapper'
 import * as R from 'rambda'
+import { Particle } from '../pure/accentWord/container'
 
 function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -17,7 +18,7 @@ export type Record = {
     audioFile: string
     downStep: DownStep
     katakana: string
-    particle: string | null
+    particle: Particle
     sentence?: string //for debuggiong
 }
 

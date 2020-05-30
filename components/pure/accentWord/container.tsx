@@ -1,5 +1,6 @@
 import { range } from 'lodash'
 import * as R from 'rambda'
+import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
 
 import { useImmer } from 'use-immer'
@@ -16,11 +17,13 @@ import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
 
+export type Particle = O.Option<string>
+
 type Props = {
     kana: string
     downStep: DownStep
     interactive: boolean
-    particle: string | null
+    particle: Particle
 }
 
 const height = 240
@@ -32,9 +35,14 @@ export default ({
     interactive,
     particle,
 }: Props): JSX.Element => {
-    const isParticle = Boolean(particle)
+    const isParticle = O.isSome(particle)
+
     const bundled = bundleCharacters(kana)
-    const combined = isParticle ? bundled.concat([particle!]) : bundled
+
+    const combined = O.isSome(particle)
+        ? bundled.concat([particle.value])
+        : bundled
+
     const downStep = adjustDownstep(kana, dirtyDS)
 
     const getInitialArray = (): readonly boolean[] =>
