@@ -17,6 +17,6 @@ export const chunks: Word[][] = pipe(
     execQuery('./queries/homophones.sql'),
     NA.groupBy((r) => r.katakana),
     (x) => Object.values(x),
-    A.chunksOf(2),
     A.flatten,
+    A.chunksOf(2),
 )

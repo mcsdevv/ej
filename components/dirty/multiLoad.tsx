@@ -28,9 +28,11 @@ type State = {
     nsc: number[]
 }
 
+const audioType = 'examples'
+
 export default () => {
     const { data: notSeenChunks } = useSWR<number[], Error>(
-        `/api/homophones/range`,
+        `/api/${audioType}/range`,
         fetcher,
     )
 
@@ -50,7 +52,7 @@ export default () => {
     }, [notSeenChunks])
 
     const { data: chunk } = useSWR(
-        `/api/homophones/chunk/${state.chunkIndex}`,
+        `/api/${audioType}/chunk/${state.chunkIndex}`,
         fetcher,
     )
 
