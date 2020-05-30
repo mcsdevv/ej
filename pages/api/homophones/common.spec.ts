@@ -1,5 +1,4 @@
-import { chunks } from './common'
-import { Word } from '../utils'
+import { chunks, Word } from './common'
 import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
