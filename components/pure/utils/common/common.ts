@@ -5,41 +5,40 @@ import { pipe } from 'fp-ts/lib/pipeable'
 
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import fetch from 'node-fetch'
-import { any, map } from 'cypress/types/bluebird'
 
-export const optionalEq = O.getEq(Eq.eqNumber)
+export const optionalEq = O.getEq(Eq.eqNumber).equals
 
 export const downStepToArray = (
-    downStep: number | null,
+    downStep: O.Option<number>,
     length: number,
     hasParticle: boolean,
-) => {
+): boolean[] => {
     if (length <= 1 && !hasParticle) {
         return [true]
     }
 
     const totalLength = length - 1 + Number(hasParticle)
 
-    if (downStep === null) {
+    if (O.isNone(downStep)) {
         return A.flatten([[false], A.replicate(totalLength, true)])
     }
 
-    if (downStep === 0) {
+    if (downStep.value === 0) {
         return A.flatten([[true], A.replicate(totalLength, false)])
     }
 
     return A.flatten([
         [false],
-        A.replicate(downStep, true),
+        A.replicate(downStep.value, true),
         A.replicate(
-            Math.max(length - downStep - 1, 0) + Number(hasParticle),
+            Math.max(length - downStep.value - 1, 0) + Number(hasParticle),
             false,
         ),
     ])
 }
 
 export const isCorrect = (
-    downStep: number | null,
+    downStep: O.Option<number>,
     array: boolean[],
     hasParticle: boolean,
 ): boolean =>
@@ -88,7 +87,7 @@ export const bundleCharacters = (katakana: string): string[] => {
     const array = katakana.split('')
     const smallindexes = getSmallCharacterIndexes(katakana)
 
-    if (pipe(A.head(smallindexes), (x) => optionalEq.equals(O.some(0), x))) {
+    if (pipe(A.head(smallindexes), (x) => optionalEq(O.some(0), x))) {
         throw new Error('Word cannot start with little character')
     }
 
@@ -136,7 +135,7 @@ export const getFakeDownSteps = (
 
     const fakeDownSteps = A.range(0, katakana.length - 1)
         .filter((x) => !badIndexes.includes(x))
-        .filter((x) => !optionalEq.equals(O.some(x), downStep))
+        .filter((x) => !optionalEq(O.some(x), downStep))
 
     return fakeDownSteps
 }
