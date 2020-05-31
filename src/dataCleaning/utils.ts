@@ -70,6 +70,12 @@ export const parseNHKObject = (obj: any): NHK | null => {
         return null
     }
 
+    const examplesBlackList = ['琴しつ｛瑟｝（〜相和す）']
+
+    if (obj.katakana.includes('キンシツ')) {
+        console.log()
+    }
+
     const examples: Example[] = obj.reibun?.map((x: any) => {
         const lastBit = last<string[]>(x)
         const images = getImageFiles(lastBit!)
@@ -145,7 +151,8 @@ export const parseNHKObject = (obj: any): NHK | null => {
         katakana: obj.katakana,
         readings: readings,
         particleReading: particleReading || [],
-        examples: examples || [],
+        examples:
+            !examplesBlackList.includes(obj.jisho) && examples ? examples : [],
     }
 }
 
