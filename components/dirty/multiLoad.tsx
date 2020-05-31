@@ -9,20 +9,6 @@ import { useImmer } from 'use-immer'
 import { chooseId, fetcher, DownStep } from '../pure/utils/common/wrapper'
 import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
-import { Particle } from '../pure/accentWord/container'
-import { stat } from 'fs'
-
-function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-export type Record = {
-    audioFile: string
-    downStep: DownStep
-    katakana: string
-    particle: Particle
-    sentence?: string //for debuggiong
-}
 
 type State = {
     chunkIndex: number
@@ -30,9 +16,11 @@ type State = {
     nsc: number[]
 }
 
-const audioType = 'homophones'
+type Props = {
+    audioType: 'homophones' | 'examples'
+}
 
-export default () => {
+export default ({ audioType }: Props) => {
     const { data: notSeenChunks } = useSWR<number[], Error>(
         `/api/${audioType}/range`,
         fetcher,
@@ -40,7 +28,7 @@ export default () => {
 
     const [state, updateState] = useImmer<State>({
         wordIndex: 0,
-        chunkIndex: 0,
+        chunkIndex: -1,
         nsc: [],
     })
 
@@ -54,7 +42,9 @@ export default () => {
     }, [notSeenChunks])
 
     const { data: chunk } = useSWR(
-        `/api/${audioType}/chunk/${state.chunkIndex}`,
+        state.chunkIndex > -1
+            ? `/api/${audioType}/chunk/${state.chunkIndex}`
+            : null,
         fetcher,
     )
 
@@ -78,16 +68,15 @@ export default () => {
             draft.wordIndex = 0
         })
     }
-    // console.log(nsc)
 
-    const word = chunk ? chunk[state.wordIndex] : undefined
+    const word = chunk?.[state.wordIndex]
 
     console.log('~~~~')
-    console.log(state.nsc)
-    // console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
+    console.log(notSeenChunks)
+    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
     // console.log(url)
-    // console.log(state.wordIndex)
-    // console.log(word?.audioFile)
+    console.log(state.wordIndex)
+    console.log(word?.audioFile)
 
     return (
         <Loader wait={!notSeenChunks || !word}>

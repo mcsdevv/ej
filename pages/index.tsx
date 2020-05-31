@@ -1,21 +1,22 @@
-import SingleLoad from '../components/dirty/singleLoad'
-import MultiLoad from '../components/dirty/multiLoad'
-
 import Main from '../components/pure/main'
-import { chunks } from './api/examples/common'
-import AccentWord from '../components/pure/accentWord/container'
+import Link from 'next/link'
+import { Container, Row } from 'react-bootstrap'
 
-// export async function getStaticProps(context: any) {
-//     return {
-//         props: { chunks },
-//     }
-// }
-
-export default function Home({ chunks }: any) {
+export default () => {
     return (
         <Main>
-            <MultiLoad />
-            {/* <AccentWord kana='ハチジョー' downStep={3} /> */}
+            <Container>
+                <Row>
+                    <Link href='/sentences'>
+                        <a>Example Sentences</a>
+                    </Link>
+                </Row>
+                <Row>
+                    <Link href='/readings'>
+                        <a>Word Readings</a>
+                    </Link>
+                </Row>
+            </Container>
         </Main>
     )
 }
