@@ -122,12 +122,13 @@ export const shuffle = <T>(a: T[]) => {
 export const getFakeDownSteps = (katakana: string, downStep: DownStep) => {
     const smallindexes = getSmallCharacterIndexes(katakana)
     const startIndexes = smallindexes.map((x) => x - 1).filter((x) => x > -1)
-    const badIndexes = smallindexes.concat(startIndexes)
 
-    const fakeDownSteps = A.range(0, katakana.length - 1)
-        .filter((x) => !badIndexes.includes(x))
+    const fakeDownSteps = A.range(
+        0,
+        katakana.length - 1 - Number(O.isNone(downStep)),
+    )
+        .filter((x) => !startIndexes.includes(x))
         .filter((x) => !dsEqual(x, downStep))
-
     return fakeDownSteps
 }
 

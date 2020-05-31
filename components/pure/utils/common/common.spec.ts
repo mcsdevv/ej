@@ -152,7 +152,7 @@ describe('bundleCharacters', () => {
 
 const just = <T>(param: O.Option<T>) => {
     if (O.isNone(param)) {
-        throw new Error('Was NONE!')
+        return null
     }
 
     return param.value
@@ -193,12 +193,7 @@ describe('shuffle', () => {
 
 describe('getRandomDownSteps', () => {
     const word = 'ハチジョー'
-    it('should not have any duplicates 2', () => {
-        const ds = getFakeDownSteps(word, O.some(2))
-        expect(ds).toEqual([0, 1, 4])
-    })
-
-    it('should not have any duplicates  3', () => {
+    it('should not have any duplicates at 3', () => {
         const ds = getFakeDownSteps(word, O.some(3))
         expect(ds).toEqual([0, 1, 4])
     })
@@ -215,16 +210,22 @@ describe('getMVQDownSteps', () => {
 
     it('the required number of options is > actual options', () => {
         const options = A.sort(byDownstep)(getMVQDownSteps(word, downStep, 9))
-        expect(options).toEqual(A.map(O.some)([0, 1, 2, 4]))
+        expect(A.map(just)(options)).toEqual([0, 1, 2, 3, 4])
     })
 
     it('the required number of options is equal to actual options', () => {
         const options = A.sort(byDownstep)(getMVQDownSteps(word, downStep, 4))
-        expect(options).toEqual(A.map(O.some)([0, 1, 2, 4]))
+        expect(options.length).toEqual(4)
     })
 
     it('the required number of options is < actual options', () => {
-        const options = getMVQDownSteps(word, downStep, 2).sort()
-        expect(options.length).toEqual(2)
+        const options = getMVQDownSteps(word, downStep, 1)
+        expect(options.length).toEqual(1)
+    })
+
+    it('must have at least 2 options', () => {
+        const options = A.sort(byDownstep)(getMVQDownSteps('ジョオ', O.none, 9))
+        // console.log(options)
+        expect(A.map(just)(options)).toEqual([null, 1])
     })
 })
