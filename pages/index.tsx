@@ -16,6 +16,11 @@ export default () => {
                         <a>Word Readings</a>
                     </Link>
                 </Row>
+                <Row>
+                    <Link href='/withParticle'>
+                        <a>Word Readings with particle</a>
+                    </Link>
+                </Row>
             </Container>
         </Main>
     )

@@ -16,7 +16,7 @@ type Props = {
     particle: Particle
 }
 const minRows = 2
-const maxCols = 3
+const maxCols = 2
 const maxOptions = 10
 
 export default ({ audioFile, katakana, downStep, particle }: Props) => {
@@ -39,7 +39,7 @@ export default ({ audioFile, katakana, downStep, particle }: Props) => {
     const { className: colClassName, styles: colStyles } = css.resolve`
         .col {
             height: 100%;
-            padding: 2%;
+            padding: 1%;
         }
     `
 

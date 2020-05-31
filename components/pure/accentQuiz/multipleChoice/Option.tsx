@@ -49,7 +49,7 @@ export default ({
         <>
             <Button
                 className={`${choiceButtonClassName} ${currentClass}`}
-                variant='secondary'
+                variant='light'
                 onClick={() => setClicked(true)}
             >
                 <Accent

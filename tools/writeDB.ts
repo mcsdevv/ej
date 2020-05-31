@@ -40,6 +40,7 @@ clean.forEach((nhk) => {
             katakana: wP.kana.katakana,
             nasal: wP.kana.nasal.join(','),
             unVoiced: wP.kana.unVoiced.join(','),
+            particle: wP.particle,
         })
     })
 

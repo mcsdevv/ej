@@ -5,7 +5,7 @@ import Main from '../components/pure/main'
 export default () => {
     return (
         <Main>
-            <MultiLoad audioType='sentences' />
+            <MultiLoad audioType='withParticle' />
         </Main>
     )
 }

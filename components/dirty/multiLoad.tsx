@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import Loader from '../pure/general/loader'
 
 import { useImmer } from 'use-immer'
-import { chooseId, fetcher, DownStep } from '../pure/utils/common/wrapper'
+import { chooseId, fetcher } from '../pure/utils/common/wrapper'
 import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 
@@ -17,12 +17,12 @@ type State = {
 }
 
 type Props = {
-    audioType: 'homophones' | 'examples'
+    audioType: 'readings' | 'sentences' | 'withParticle'
 }
 
 export default ({ audioType }: Props) => {
-    const { data: notSeenChunks } = useSWR<number[], Error>(
-        `/api/${audioType}/range`,
+    const { data: notSeenChunks } = useSWR<number, Error>(
+        `/api/range/${audioType}`,
         fetcher,
     )
 
@@ -35,7 +35,7 @@ export default ({ audioType }: Props) => {
     useEffect(() => {
         updateState((draft) => {
             if (notSeenChunks) {
-                draft.nsc = notSeenChunks
+                draft.nsc = A.range(0, notSeenChunks)
                 draft.chunkIndex = chooseId(draft.nsc)
             }
         })
@@ -43,7 +43,7 @@ export default ({ audioType }: Props) => {
 
     const { data: chunk } = useSWR(
         state.chunkIndex > -1
-            ? `/api/${audioType}/chunk/${state.chunkIndex}`
+            ? `/api/chunk/${audioType}/${state.chunkIndex}`
             : null,
         fetcher,
     )
@@ -62,7 +62,7 @@ export default ({ audioType }: Props) => {
             draft.nsc =
                 draft.nsc.length > 1
                     ? A.filter((x: number) => x !== draft.chunkIndex)(draft.nsc)
-                    : notSeenChunks!
+                    : A.range(0, notSeenChunks!)
 
             draft.chunkIndex = chooseId(draft.nsc)
             draft.wordIndex = 0
@@ -72,11 +72,11 @@ export default ({ audioType }: Props) => {
     const word = chunk?.[state.wordIndex]
 
     console.log('~~~~')
-    console.log(notSeenChunks)
-    console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
+    console.log(state.nsc)
+    // console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
     // console.log(url)
-    console.log(state.wordIndex)
-    console.log(word?.audioFile)
+    // console.log(state.wordIndex)
+    // console.log(word?.audioFile)
 
     return (
         <Loader wait={!notSeenChunks || !word}>
