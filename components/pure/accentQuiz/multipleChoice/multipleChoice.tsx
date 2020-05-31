@@ -5,6 +5,7 @@ import css from 'styled-jsx/css'
 import Option from './Option'
 import { getMVQDownSteps, DownStep } from '../../utils/common/common'
 import { Particle } from '../../accentWord/container'
+import { cons } from 'fp-ts/lib/ReadonlyArray'
 
 type Props = {
     audioFile: string
@@ -12,27 +13,33 @@ type Props = {
     downStep: DownStep
     particle: Particle
 }
-const rowCount = 2
-
-const { className: colClassName, styles: colStyles } = css.resolve`
-    .col {
-        height: 100%;
-        padding: 5%;
-    }
-`
-
-const { className: rowClassName, styles: rowStyles } = css.resolve`
-    .row {
-        height: ${100 / rowCount}%;
-    }
-`
+const minRows = 2
+const maxCols = 3
+const maxOptions = 10
 
 export default ({ audioFile, katakana, downStep, particle }: Props) => {
-    const options = getMVQDownSteps(katakana, downStep, rowCount * 2)
+    const options = getMVQDownSteps(katakana, downStep, maxOptions)
 
-    const rowsToDraw = options.length <= 1 ? options.length : rowCount
+    const rowsToDraw = Math.max(minRows, Math.ceil(options.length / maxCols))
 
-    const rows = A.chunksOf(rowsToDraw)(options)
+    console.log('rtd', rowsToDraw)
+
+    const rows = A.chunksOf(Math.ceil(options.length / rowsToDraw))(options)
+
+    // console.log()
+
+    const { className: colClassName, styles: colStyles } = css.resolve`
+        .col {
+            height: 100%;
+            padding: 2%;
+        }
+    `
+
+    const { className: rowClassName, styles: rowStyles } = css.resolve`
+        .row {
+            height: ${100 / rowsToDraw}%;
+        }
+    `
 
     return (
         <div style={{ height: '65%' }}>
