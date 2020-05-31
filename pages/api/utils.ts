@@ -16,3 +16,12 @@ export const execQuery = (fileName: string): any[] =>
             particle: O.fromNullable(w.particle),
         })),
     )
+
+export const chunkByKatakana = (words: any[]) =>
+    pipe(
+        words,
+        NA.groupBy((r) => r.katakana),
+        (x) => Object.values(x),
+        A.chunksOf(5),
+        A.map(A.flatten),
+    )
