@@ -6,8 +6,8 @@
         "test": "yarn run jest --watch  --watchPathIgnorePatterns=\"dataCleaning\"",
         "e2e": "npx cypress open",
         "dev": "next dev",
-        "build": "next build",
-        "start": "./makeDB.sh && next build && next start"
+        "build": "./makeDB.sh && next build",
+        "start": "next start"
     },
     "dependencies": {
         "@babel/core": "^7.9.0",
