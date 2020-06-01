@@ -7,8 +7,6 @@
         "e2e": "npx cypress open",
         "dev": "next dev",
         "build": "./makeDB.sh && next build",
-        "export": "next export",
-        "deploy": "yarn build && yarn export",
         "start": "next start",
         "postbuild": "next-on-netlify"
     },
