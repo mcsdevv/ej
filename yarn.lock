@@ -4566,7 +4566,7 @@ fs-constants@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs-constants/-/fs-constants-1.0.0.tgz#6be0de9be998ce16af8afc24497b9ee9b7ccd9ad"
   integrity sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==
 
-fs-extra@8.1.0:
+fs-extra@8.1.0, fs-extra@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
   integrity sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==
@@ -6565,6 +6565,20 @@ neo-async@2.6.1, neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
+next-aws-lambda@^2.3.4:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/next-aws-lambda/-/next-aws-lambda-2.4.1.tgz#9e4fcc3878700b1c9e6885ccc47af8b88521bdfc"
+  integrity sha512-GdRUJdCMuBaMhn4PdCd07+rB2NCkw8S9OM5I9Pag6XUgyKpuTFOc+wmCR9nIvM3yPina7uuoBdLnP6am6gJQsA==
+
+next-on-netlify@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/next-on-netlify/-/next-on-netlify-1.2.0.tgz#636a60ab8f0e62454c71b31c0cfc5d464c95d7b3"
+  integrity sha512-fCkZ2yZVVDLYMfHX3DZN9jETIS1PdQHtjAoJdKFxyxAJnSzir7Eu31R9YvWPd/W0iDr0jWcrgXlwHUUiqNR03Q==
+  dependencies:
+    fs-extra "^8.1.0"
+    next-aws-lambda "^2.3.4"
+    path-to-regexp "^3.2.0"
+
 next-tick@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
@@ -7112,6 +7126,11 @@ path-parse@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+
+path-to-regexp@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.2.0.tgz#fa7877ecbc495c601907562222453c43cc204a5f"
+  integrity sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==
 
 pbkdf2@^3.0.3:
   version "3.0.17"

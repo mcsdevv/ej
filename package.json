@@ -7,7 +7,10 @@
         "e2e": "npx cypress open",
         "dev": "next dev",
         "build": "./makeDB.sh && next build",
-        "start": "next start"
+        "export": "next export",
+        "deploy": "yarn build && yarn export",
+        "start": "next start",
+        "postbuild": "next-on-netlify"
     },
     "dependencies": {
         "@babel/core": "^7.9.0",
@@ -25,6 +28,7 @@
         "jquery": "^3.5.1",
         "lodash": "^4.17.15",
         "next": "9.4.4",
+        "next-on-netlify": "^1.2.0",
         "node-fetch": "^2.6.0",
         "popper.js": "^1.16.1",
         "rambda": "^5.4.3",
