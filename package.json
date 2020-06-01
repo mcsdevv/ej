@@ -7,12 +7,13 @@
         "e2e": "npx cypress open",
         "dev": "next dev",
         "build": "next build",
-        "start": "next start"
+        "start": "./makeDB.sh && next start"
     },
     "dependencies": {
         "@babel/core": "^7.9.0",
         "@babel/preset-env": "^7.9.5",
         "@babel/preset-typescript": "^7.9.0",
+        "@types/backblaze-b2": "^1.5.0",
         "babel-jest": "^25.3.0",
         "better-sqlite3-helper": "^2.3.0",
         "bootstrap": "^4.4.1",
@@ -50,6 +51,7 @@
         "@types/styled-jsx": "^2.2.8",
         "@typescript-eslint/eslint-plugin": "^2.31.0",
         "@typescript-eslint/parser": "^2.31.0",
+        "backblaze-b2": "^1.5.0",
         "eslint": "^6.8.0",
         "eslint-plugin-functional": "^3.0.1",
         "eslint-plugin-react": "^7.19.0"
