@@ -1,7 +1,15 @@
 import { head, last, initial } from 'lodash'
 import { readFileSync } from 'fs-extra'
 import { parentDir, normalizeStrings } from './common/wrapper'
-import { cleanImageFile, downsteps, cleanKatakana, Kana } from './img/wrapper'
+// import { getSmallCharacterIndexes } from '../../components/pure/utils/common/wrapper'
+
+import {
+    cleanImageFile,
+    downsteps,
+    cleanKatakana,
+    Kana,
+    getImageFiles,
+} from './img/wrapper'
 
 export interface NHK {
     katakana: string[]
@@ -11,6 +19,7 @@ export interface NHK {
     kanji: string[]
     readings: Reading[]
     particleReading: ParticleReading[]
+    examples: Example[]
 }
 
 interface Reading {
@@ -24,6 +33,14 @@ interface ParticleReading {
     audioFile: string
     particle: string
     downsteps: number[]
+}
+
+interface Example {
+    kana: Kana
+    audioFile: string
+    downsteps: number[]
+    sentence: string
+    particle: string | null
 }
 
 const cleanAudioFile = (audioFile: string) => {
@@ -40,17 +57,51 @@ const cleanAudioFile = (audioFile: string) => {
     return audioFile
 }
 
-const getDownsteps = (fileList: string[]): number[] =>
-    fileList
+const getDownsteps = (fileList: string[]): number[] => {
+    return fileList
         .map((f) => cleanImageFile(f))
         .map((f: string, index: number) => (downsteps.includes(f) ? index : ''))
         .filter(String)
         .map(Number)
+}
 
 export const parseNHKObject = (obj: any): NHK | null => {
     if (!obj) {
         return null
     }
+
+    const examplesBlackList = ['琴しつ｛瑟｝（〜相和す）']
+
+    if (obj.katakana.includes('キンシツ')) {
+        console.log()
+    }
+
+    const examples: Example[] = obj.reibun?.map((x: any) => {
+        const lastBit = last<string[]>(x)
+        const images = getImageFiles(lastBit!)
+        const sentence = lastBit!
+            .map((x) => {
+                if (images.includes(x)) {
+                    return cleanKatakana([x]).katakana
+                }
+                return x
+            })
+            .join('')
+        const kana = cleanKatakana(images)
+        const lastPart = last(sentence.split(kana.katakana))!
+
+        if (!lastPart.length) {
+            throw new Error('expected after to have at least one character')
+        }
+
+        return {
+            particle: lastPart ? lastPart[0] : null,
+            kana,
+            downsteps: getDownsteps(images),
+            sentence,
+            audioFile: cleanAudioFile(head<string>(x)!),
+        }
+    })
 
     const readings: Reading[] = obj.yomi.map((x: any) => {
         const kana = cleanKatakana(last<string[]>(x)!)
@@ -65,9 +116,10 @@ export const parseNHKObject = (obj: any): NHK | null => {
 
     const particleReading: ParticleReading[] = obj.jyoshi
         ?.map((x: any) => {
+            const kana = cleanKatakana(initial(last<string[]>(x)))
             const wP = {
                 particle: last<string>(last<string>(x))!,
-                kana: cleanKatakana(initial(last<string[]>(x))),
+                kana,
                 downsteps: getDownsteps(initial(last<string[]>(x))),
                 audioFile: cleanAudioFile(head<string>(x)!),
             }
@@ -99,6 +151,8 @@ export const parseNHKObject = (obj: any): NHK | null => {
         katakana: obj.katakana,
         readings: readings,
         particleReading: particleReading || [],
+        examples:
+            !examplesBlackList.includes(obj.jisho) && examples ? examples : [],
     }
 }
 

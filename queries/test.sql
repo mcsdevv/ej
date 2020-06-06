@@ -1,6 +1,4 @@
-select
-  *,
-  CAST(downstep as ds)
+select *,
+  CAST(downStep as ds)
 from Reading
-where
-  length(downstep) like "%,%";
+where length(downStep) like "%,poop%";

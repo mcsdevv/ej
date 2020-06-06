@@ -1,6 +1,12 @@
 import { flatten } from 'lodash'
 import { cleanFiles, imgDir } from '../common/wrapper'
-import { processImages, img2katakana, downsteps, parseDirty } from './img'
+import {
+    processImages,
+    img2katakana,
+    downsteps,
+    parseDirty,
+    getImageFiles,
+} from './img'
 import { readdirSync } from 'fs-extra'
 
 const allImg = cleanFiles(readdirSync(`${imgDir}/all`)).sort()
@@ -29,7 +35,8 @@ describe('data pre-processing', () => {
         it('checks if all downsteps and non downsteps have been accounted for', () => {
             expect(allImg).toEqual(notDownsteps.concat(downsteps).sort())
         })
-
+    })
+    describe('parsekana', () => {
         it('parseskana p', () => {
             expect(parseDirty('シpゴト')).toEqual({
                 katakana: 'シゴト',
@@ -66,6 +73,13 @@ describe('data pre-processing', () => {
                 nasal: [2, 5],
                 unVoiced: [3],
             })
+        })
+    })
+    describe('getImageFiles', () => {
+        it('returns only image files', () => {
+            expect(
+                getImageFiles(['easda', 'dasdas', '00002FDD_070B.jpg', 'adsa']),
+            ).toEqual(['00002FDD_070B.jpg'])
         })
     })
 })

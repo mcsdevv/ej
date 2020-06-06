@@ -1,0 +1,10 @@
+[build]
+  command   = "yarn build"
+  functions = "functions"
+  publish   = "public"
+[[plugins]]
+  package = "netlify-plugin-cache-nextjs"
+[dev]
+  command   = "serve public -p 3000"
+  functions = "functions"
+  publish   = "public"

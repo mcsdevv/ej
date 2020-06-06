@@ -26,6 +26,7 @@
     ]
   },
   "exclude": [
+    "tools",
     "node_modules",
     "**/*.spec.ts"
   ],

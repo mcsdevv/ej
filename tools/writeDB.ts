@@ -30,24 +30,38 @@ clean.forEach((nhk) => {
         jishoWord: nhk.jishoWord,
     })
 
-    if (nhk.particleReading.length) {
-        nhk.particleReading.forEach((wP) => {
-            DB().insert('ParticleReading', {
-                wordId: wordId,
-                downstep: head(wP.downsteps),
-                audioFile: getParticleReadingfileName(wP),
-                katakana: wP.kana.katakana,
-                nasal: wP.kana.nasal.join(','),
-                unVoiced: wP.kana.unVoiced.join(','),
-            })
+    nhk.particleReading.forEach((wP) => {
+        DB().insert('ParticleReading', {
+            wordId: wordId,
+            downStep: head(wP.downsteps),
+            audioFile: `audio/particleReadings/${getParticleReadingfileName(
+                wP,
+            )}`,
+            katakana: wP.kana.katakana,
+            nasal: wP.kana.nasal.join(','),
+            unVoiced: wP.kana.unVoiced.join(','),
+            particle: wP.particle,
         })
-    }
+    })
+
+    nhk.examples.forEach((example) => {
+        DB().insert('Example', {
+            wordId: wordId,
+            downStep: head(example.downsteps),
+            audioFile: `audio/examples/${example.audioFile}`,
+            katakana: example.kana.katakana,
+            nasal: example.kana.nasal.join(','),
+            unVoiced: example.kana.unVoiced.join(','),
+            sentence: example.sentence,
+            particle: example.particle,
+        })
+    })
 
     nhk.readings.forEach((r) => {
         DB().insert('Reading', {
             wordId: wordId,
-            downstep: head(r.downsteps),
-            audioFile: getReadingfileName(r),
+            downStep: head(r.downsteps),
+            audioFile: `audio/readings/${getReadingfileName(r)}`,
             katakana: r.kana.katakana,
             nasal: r.kana.nasal.join(','),
             unVoiced: r.kana.unVoiced.join(','),
