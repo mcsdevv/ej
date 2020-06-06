@@ -24,7 +24,7 @@ jobs:
 
             # Runs a single command using the runners shell
             - name: Install deps
-              run: yarn
+              run: yarn install --frozen-lockfile
 
             - name: run tests
               run: yarn jest
