@@ -8,6 +8,8 @@ const chunkMap = new Map<string, any>(
     Object.entries({ sentences, readings, withParticle }),
 )
 
+// console.log('cm', chunkMap)
+
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
         query: { _mode },

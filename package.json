@@ -7,8 +7,7 @@
         "e2e": "npx cypress open",
         "dev": "next dev",
         "build": "./makeDB.sh && next build",
-        "start": "next start",
-        "postbuild": "next-on-netlify"
+        "start": "next start"
     },
     "dependencies": {
         "@babel/core": "^7.9.0",
@@ -16,7 +15,7 @@
         "@babel/preset-typescript": "^7.9.0",
         "@types/backblaze-b2": "^1.5.0",
         "babel-jest": "^25.3.0",
-        "better-sqlite3-helper": "^2.3.0",
+        "better-sqlite3-helper": "^3.1.0",
         "bootstrap": "^4.4.1",
         "cypress": "4.7.0",
         "fp-ts": "^2.6.2",
@@ -39,6 +38,7 @@
         "ts-node": "^8.9.0",
         "typescript": "^3.9.3",
         "use-immer": "^0.4.0",
+        "vercel": "^19.0.1",
         "webpack": "4.31.0"
     },
     "devDependencies": {
@@ -57,6 +57,7 @@
         "backblaze-b2": "^1.5.0",
         "eslint": "^6.8.0",
         "eslint-plugin-functional": "^3.0.1",
-        "eslint-plugin-react": "^7.19.0"
+        "eslint-plugin-react": "^7.19.0",
+        "serve": "^11.3.1"
     }
 }

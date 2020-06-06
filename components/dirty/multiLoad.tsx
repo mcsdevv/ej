@@ -69,10 +69,11 @@ export default ({ audioType }: Props) => {
         })
     }
 
-    const word = chunk?.[state.wordIndex]
-
     console.log('~~~~')
     console.log(state.nsc)
+
+    const word = chunk?.[state.wordIndex]
+
     // console.log(state.chunkIndex, state.wordIndex, word?.audioFile, chunk)
     // console.log(url)
     // console.log(state.wordIndex)

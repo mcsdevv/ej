@@ -101,8 +101,6 @@ describe('data processing', () => {
 
             const examples = wordList
                 .filter((x) => x.examples.length > 0)
-                // .map((x) => x.jisho)
-                // .filter((x) => x.jisho.includes('（'))
                 .filter((x) => regex.exec(x.jisho))
                 .map((x) => ({
                     r: regex.exec(x.jisho),
