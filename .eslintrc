@@ -17,8 +17,6 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
-        // "plugin:functional/external-recommended",
-        // "plugin:functional/lite"
     ],
     "rules": {
         "semi": 0,

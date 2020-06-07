@@ -23,7 +23,16 @@
     "jsx": "preserve",
     "types": [
       "cypress"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/frontend/*": [
+        "src/frontend/*"
+      ],
+      "@/backend/*": [
+        "src/backend/*"
+      ],
+    }
   },
   "exclude": [
     "tools",
@@ -34,6 +43,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "tools/writeDB.js"
+    "tools/writeDB.js",
+    "components/pure/accentWord/container.spec.js",
+    "components/pure/accentWord/container.spec.js"
   ]
 }

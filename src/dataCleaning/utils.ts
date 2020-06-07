@@ -1,7 +1,6 @@
 import { head, last, initial } from 'lodash'
 import { readFileSync } from 'fs-extra'
 import { parentDir, normalizeStrings } from './common/wrapper'
-// import { getSmallCharacterIndexes } from '../../components/pure/utils/common/wrapper'
 
 import {
     cleanImageFile,
