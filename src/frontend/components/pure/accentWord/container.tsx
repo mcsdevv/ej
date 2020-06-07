@@ -11,13 +11,12 @@ import {
     adjustDownstep,
     downStepToArray,
     DownStep,
+    Particle,
 } from '../utils/common/wrapper'
 
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
-
-export type Particle = O.Option<string>
 
 export type Action = {
     type: 'reset' | 'toggle'

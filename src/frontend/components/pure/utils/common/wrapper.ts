@@ -6,6 +6,7 @@ import {
     bundleCharacters,
     getSmallCharacterIndexes,
     DownStep,
+    Particle,
 } from './common'
 
 export {
@@ -17,4 +18,4 @@ export {
     getSmallCharacterIndexes,
 }
 
-export type { DownStep }
+export type { DownStep, Particle }

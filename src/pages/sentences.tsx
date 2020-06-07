@@ -1,6 +1,6 @@
-import MultiLoad from '../components/dirty/multiLoad'
+import MultiLoad from '../frontend/components/dirty/multiLoad'
 
-import Main from '../components/pure/main'
+import Main from '../frontend/components/pure/main'
 
 export default () => {
     return (

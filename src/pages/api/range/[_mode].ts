@@ -1,6 +1,6 @@
-import { chunks as sentences } from '../../../common/sentences/sentences'
-import { chunks as readings } from '../../../common/readings/readings'
-import { chunks as withParticle } from '../../../common/withParticle/withParticle'
+import { chunks as sentences } from '@/backend/common/sentences'
+import { chunks as readings } from '@/backend/common/readings'
+import { chunks as withParticle } from '@/backend/common/withParticle'
 
 import { NextApiRequest, NextApiResponse } from 'next'
 

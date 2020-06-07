@@ -9,6 +9,7 @@ export const dsEqual = (x: number | null, y: DownStep) =>
 export const boolsEq = ROA.getEq(Eq.eqBoolean).equals
 
 export type DownStep = O.Option<number>
+export type Particle = O.Option<string>
 
 export const downStepToArray = (
     downStep: DownStep,

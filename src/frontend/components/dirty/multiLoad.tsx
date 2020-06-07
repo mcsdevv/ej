@@ -6,9 +6,9 @@ import { useImmerReducer } from 'use-immer'
 import { chooseId } from '../pure/utils/common/wrapper'
 import * as A from 'fp-ts/lib/Array'
 
-import { Word } from '../../common/readings/readings'
+import { Word } from '../../../backend/common/readings/readings'
 
-import { onResponse } from '../dirty/utils'
+import { onResponse } from './utils'
 
 export type Action = {
     type: 'nextWord' | 'nextChunk' | 'setNsc' | 'setNsw' | 'setChunk'

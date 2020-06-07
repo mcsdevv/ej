@@ -23,7 +23,16 @@
     "jsx": "preserve",
     "types": [
       "cypress"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/frontend/*": [
+        "src/frontend/*"
+      ],
+      "@/backend/*": [
+        "src/backend/*"
+      ],
+    }
   },
   "exclude": [
     "tools",

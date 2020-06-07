@@ -1,4 +1,4 @@
-import Main from '../components/pure/main'
+import Main from '@/frontend/components/pure/main'
 import Link from 'next/link'
 import { Container, Row } from 'react-bootstrap'
 
