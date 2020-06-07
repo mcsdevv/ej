@@ -1,10 +1,9 @@
 import { range } from 'lodash'
 import * as A from 'fp-ts/lib/Array'
-import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
 
-import { useImmer } from 'use-immer'
+import { useImmerReducer } from 'use-immer'
 
 import {
     isCorrect,
@@ -17,6 +16,46 @@ import {
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
+
+export type Action = {
+    type: 'reset' | 'toggle'
+    index?: number
+}
+
+export type State = {
+    array: boolean[]
+    isCorrect: boolean
+}
+
+export const useAccent = (
+    hasParticle: boolean,
+    length: number,
+    downStep: DownStep,
+    interactive: boolean,
+) => {
+    const getInitialArray = (): boolean[] =>
+        interactive
+            ? A.replicate(length, false)
+            : downStepToArray(downStep, length, hasParticle)
+
+    const reducer = (draft: State, action: Action): void => {
+        switch (action.type) {
+            case 'reset': {
+                draft.array = getInitialArray()
+                draft.isCorrect = !interactive
+                break
+            }
+            case 'toggle': {
+                const i = action.index!
+                draft.array[i] = !draft.array[i]
+                draft.isCorrect = isCorrect(downStep, draft.array, hasParticle)
+                break
+            }
+        }
+    }
+
+    return { getInitialArray, reducer }
+}
 
 export type Particle = O.Option<string>
 
@@ -36,39 +75,35 @@ export default ({
     interactive,
     particle,
 }: Props): JSX.Element => {
-    const isParticle = O.isSome(particle)
-
-    const bundled = bundleCharacters(kana)
+    const hasParticle = O.isSome(particle)
 
     const combined = O.isSome(particle)
-        ? bundled.concat([particle.value])
-        : bundled
+        ? bundleCharacters(kana).concat([particle.value])
+        : bundleCharacters(kana)
 
     const downStep = adjustDownstep(kana, dirtyDS)
 
-    const getInitialArray = (): readonly boolean[] =>
-        interactive
-            ? A.replicate(combined.length, false)
-            : downStepToArray(downStep, combined.length, isParticle)
+    const { getInitialArray, reducer } = useAccent(
+        hasParticle,
+        combined.length,
+        downStep,
+        interactive,
+    )
 
-    const [array, updateArray] = useImmer(getInitialArray())
-
-    const getColour = (): string => {
-        if (interactive) {
-            return isCorrect(dirtyDS, array, isParticle) ? 'yellow' : 'red'
-        }
-        return 'cornflowerblue'
-    }
+    const [state, dispatch] = useImmerReducer(reducer, {
+        array: getInitialArray(),
+        isCorrect: false,
+    })
 
     useEffect(() => {
-        updateArray(() => getInitialArray())
-    }, [kana, dirtyDS, particle])
+        dispatch({ type: 'reset' })
+    }, [kana, dirtyDS, particle, interactive])
 
-    const onClick = (index: number) => {
-        updateArray((draft) => {
-            draft[index] = !draft[index]
-        })
-    }
+    const color = !interactive
+        ? 'cornflowerblue'
+        : state.isCorrect
+        ? 'yellow'
+        : 'red'
 
     const columns = combined.map((x, i) => (
         <Col
@@ -76,14 +111,21 @@ export default ({
             letter={x}
             index={i}
             conHeight={height}
-            high={array[i]}
-            onClick={() => onClick(i)}
+            high={state.array[i]}
+            onClick={() => dispatch({ type: 'toggle', index: i })}
             interactive={interactive}
         />
     ))
 
     const lines = range(0, combined.length - 1).map((i) => {
-        return <Line key={i} index={i} high1={array[i]} high2={array[i + 1]} />
+        return (
+            <Line
+                key={i}
+                index={i}
+                high1={state.array[i]}
+                high2={state.array[i + 1]}
+            />
+        )
     })
 
     return (
@@ -97,13 +139,13 @@ export default ({
             <style global jsx>
                 {`
                     line {
-                        stroke: ${getColour()};
+                        stroke: ${color};
                         transition: stroke ${colourDelay};
                         stroke-width: 5px;
                     }
 
                     circle {
-                        fill: ${getColour()};
+                        fill: ${color};
                         transition: fill ${colourDelay};
                         stroke-width: ${sWidth}px;
                         stroke: cornflowerblue;

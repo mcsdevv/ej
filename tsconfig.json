@@ -34,6 +34,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "tools/writeDB.js"
+    "tools/writeDB.js",
+    "components/pure/accentWord/container.spec.js",
+    "components/pure/accentWord/container.spec.js"
   ]
 }
