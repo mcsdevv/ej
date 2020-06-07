@@ -26,11 +26,11 @@ export default ({ audioFile, katakana, downStep, particle }: Props) => {
         maxOptions,
     )
 
-    console.log('opts', options)
+    // console.log('opts', options)
 
     const rowsToDraw = Math.max(minRows, Math.ceil(options.length / maxCols))
 
-    console.log('rtd', rowsToDraw)
+    // console.log('rtd', rowsToDraw)
 
     const rows = A.chunksOf(Math.ceil(options.length / rowsToDraw))(options)
 

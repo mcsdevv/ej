@@ -22,6 +22,6 @@ export const chunkByKatakana = (words: any[]) =>
         words,
         NA.groupBy((r) => r.katakana),
         (x) => Object.values(x),
-        A.chunksOf(5),
+        A.chunksOf(1),
         A.map(A.flatten),
     )

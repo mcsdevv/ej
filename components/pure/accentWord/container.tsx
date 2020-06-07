@@ -17,6 +17,8 @@ import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
 
+export type Particle = O.Option<string>
+
 export type Action = {
     type: 'reset' | 'toggle'
     index?: number
@@ -25,6 +27,16 @@ export type Action = {
 export type State = {
     array: boolean[]
     isCorrect: boolean
+}
+
+const height = 240
+const colourDelay = '200ms'
+
+type Props = {
+    kana: string
+    downStep: DownStep
+    interactive: boolean
+    particle: Particle
 }
 
 export const useAccent = (
@@ -56,18 +68,6 @@ export const useAccent = (
 
     return { getInitialArray, reducer }
 }
-
-export type Particle = O.Option<string>
-
-type Props = {
-    kana: string
-    downStep: DownStep
-    interactive: boolean
-    particle: Particle
-}
-
-const height = 240
-const colourDelay = '200ms'
 
 export default ({
     kana,
