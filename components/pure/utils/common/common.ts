@@ -3,7 +3,6 @@ import * as ROA from 'fp-ts/lib/ReadonlyArray'
 import * as Eq from 'fp-ts/lib/Eq'
 import * as O from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import fetch from 'node-fetch'
 
 export const dsEqual = (x: number | null, y: DownStep) =>
     O.getEq(Eq.eqNumber).equals(O.fromNullable(x), y)
@@ -53,9 +52,6 @@ const between = (min: number, max: number): number => {
 
 export const chooseId = (ids: number[]): number =>
     !ids.length ? 0 : ids[between(0, ids.length - 1)]
-
-export const fetcher = (url: string): Promise<any> =>
-    fetch(url).then((r) => r.json())
 
 export const smalls = ['ョ', 'ャ', 'ュ', 'ィ', 'ゥ', 'ォ', 'ァ', 'ェ']
 

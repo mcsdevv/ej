@@ -1,19 +1,18 @@
-// import NoSSR from 'react-no-ssr'
-import { useEffect } from 'react'
 import Multiplechoice from '../pure/accentQuiz/multipleChoice/index'
 import ManualEntry from '../pure/accentQuiz/manualEntry/index'
-import useSWR from 'swr'
 import Loader from '../pure/general/loader'
 
 import { useImmerReducer } from 'use-immer'
-import { chooseId, fetcher } from '../pure/utils/common/wrapper'
+import { chooseId } from '../pure/utils/common/wrapper'
 import * as A from 'fp-ts/lib/Array'
-import * as NA from 'fp-ts/lib/NonEmptyArray'
+
+import { Word } from '../../common/readings/readings'
+
+import { onResponse } from '../dirty/utils'
 
 export type Action = {
-    type: 'nextWord' | 'nextChunk' | 'setNsc' | 'setNsw'
-    notSeenChunks?: number
-    notSeenWords?: number
+    type: 'nextWord' | 'nextChunk' | 'setNsc' | 'setNsw' | 'setChunk'
+    payload?: any
 }
 
 export type State = {
@@ -21,19 +20,26 @@ export type State = {
     wordIndex: number
     nsc: number[]
     nsw: number[]
+    chunkCount: number
+    chunk?: Word
 }
 
 export const reducer = (draft: State, action: Action): void => {
     switch (action.type) {
-        case 'setNsw': {
-            draft.nsw = A.range(0, action.notSeenWords!).filter(
-                (x) => x !== draft.wordIndex,
-            )
+        case 'setChunk': {
+            draft.chunk = action.payload
             break
         }
         case 'setNsc': {
-            draft.nsc = A.range(0, action.notSeenChunks!).filter(
+            draft.chunkCount = action.payload
+            draft.nsc = A.range(0, draft.chunkCount).filter(
                 (x) => x !== draft.chunkIndex,
+            )
+            break
+        }
+        case 'setNsw': {
+            draft.nsw = A.range(0, action.payload).filter(
+                (x) => x !== draft.wordIndex,
             )
             break
         }
@@ -49,7 +55,7 @@ export const reducer = (draft: State, action: Action): void => {
             if (draft.nsc.length > 1) {
                 draft.nsc = draft.nsc.filter((x) => x !== draft.chunkIndex)
             } else {
-                draft.nsc = A.range(0, action.notSeenChunks!).filter(
+                draft.nsc = A.range(0, draft.chunkCount).filter(
                     (x) => x !== draft.chunkIndex,
                 )
             }
@@ -63,69 +69,57 @@ type Props = {
 }
 
 export default ({ audioType }: Props) => {
-    const { data: notSeenChunks } = useSWR<number, Error>(
-        `/api/range/${audioType}`,
-        fetcher,
-    )
-
     const [state, dispatch] = useImmerReducer(reducer, {
         wordIndex: -1,
         chunkIndex: -1,
+        chunkCount: -1,
+        chunk: undefined,
         nsc: [],
         nsw: [],
     })
 
-    useEffect(() => {
-        if (notSeenChunks) {
-            dispatch({ type: 'setNsc', notSeenChunks })
-            dispatch({ type: 'nextChunk' })
-        }
-    }, [notSeenChunks])
+    onResponse(`/api/range/${audioType}`, (chunkCount) => {
+        dispatch({ type: 'setNsc', payload: chunkCount })
+        dispatch({ type: 'nextChunk' })
+    })
 
-    const { data: chunk } = useSWR(
-        state.chunkIndex > -1
-            ? `/api/chunk/${audioType}/${state.chunkIndex}`
-            : null,
-        fetcher,
-    )
-
-    useEffect(() => {
-        if (chunk) {
+    onResponse(
+        `/api/chunk/${audioType}/${state.chunkIndex}`,
+        (chunk) => {
+            dispatch({ type: 'setChunk', payload: chunk })
             if (state.wordIndex === -1) {
                 dispatch({ type: 'nextWord' })
             } else {
-                dispatch({ type: 'setNsw', notSeenWords: chunk.length - 1 })
+                dispatch({ type: 'setNsw', payload: chunk.length - 1 })
             }
-        }
-    }, [chunk])
-
-    const onClick = () =>
-        state.nsw.length
-            ? dispatch({
-                  type: 'nextWord',
-                  notSeenChunks,
-              })
-            : dispatch({
-                  type: 'nextChunk',
-                  notSeenChunks,
-              })
+        },
+        state.chunkIndex > -1,
+    )
 
     console.log('~~~~')
-    // console.log(state.nsc)
 
-    const word = chunk?.[state.wordIndex]
+    const word = state?.chunk?.[state.wordIndex]
 
     console.log(state.chunkIndex)
-    console.log(state.nsc)
+    // console.log(state.nsc)
     console.log(state.wordIndex)
-    console.log(state.nsw)
-    // console.log(url)
-    // console.log(state.wordIndex)
-    console.log(word?.audioFile)
+    // console.log(state.nsw)
+    // console.log(word?.audioFile)
 
     return (
-        <Loader wait={!notSeenChunks || !word}>
-            <Multiplechoice {...word} onClickNext={onClick} />
+        <Loader wait={!word}>
+            <Multiplechoice
+                {...word}
+                onClickNext={() =>
+                    state.nsw.length
+                        ? dispatch({
+                              type: 'nextWord',
+                          })
+                        : dispatch({
+                              type: 'nextChunk',
+                          })
+                }
+            />
         </Loader>
     )
 }

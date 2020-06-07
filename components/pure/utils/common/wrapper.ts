@@ -1,7 +1,6 @@
 import {
     downStepToArray,
     isCorrect,
-    fetcher,
     chooseId,
     adjustDownstep,
     bundleCharacters,
@@ -12,7 +11,6 @@ import {
 export {
     downStepToArray,
     isCorrect,
-    fetcher,
     chooseId,
     adjustDownstep,
     bundleCharacters,
