@@ -6,7 +6,7 @@ import {
     getParticleReadingfileName,
 } from './utils'
 
-import { getSmallCharacterIndexes } from '../../components/pure/utils/common/wrapper'
+import { getSmallCharacterIndexes } from '../frontend/components/pure/utils/common/wrapper'
 
 import { cleanFiles } from './common/wrapper'
 import { readdirSync } from 'fs-extra'
