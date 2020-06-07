@@ -12,7 +12,6 @@ import {
 } from './common'
 
 import * as A from 'fp-ts/lib/Array'
-import * as Eq from 'fp-ts/lib/Eq'
 import * as O from 'fp-ts/lib/Option'
 import * as Ord from 'fp-ts/lib/Ord'
 import { pipe } from 'fp-ts/lib/pipeable'
