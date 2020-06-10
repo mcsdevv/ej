@@ -96,13 +96,13 @@ export default ({ audioType }: Props) => {
         state.chunkIndex > -1,
     )
 
-    console.log('~~~~')
+    // console.log('~~~~')
 
     const word = state?.chunk?.[state.wordIndex]
 
-    console.log(state.chunkIndex)
+    // console.log(state.chunkIndex)
     // console.log(state.nsc)
-    console.log(state.wordIndex)
+    // console.log(state.wordIndex)
     // console.log(state.nsw)
     // console.log(word?.audioFile)
 
