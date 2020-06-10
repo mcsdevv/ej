@@ -1,20 +1,25 @@
 import { motion } from 'framer-motion'
-import { getHeight, getCircleX } from './utils'
+import { getHeight, getCircleX, animationDuration } from './utils'
 
 export default ({
     index,
     high1,
     high2,
+    interactive,
 }: {
-    readonly index: number
-    readonly high1: boolean
-    readonly high2: boolean
+    index: number
+    high1: boolean
+    high2: boolean
+    interactive: boolean
 }) => {
     const hInterval1 = getHeight(high1)
     const hInterval2 = getHeight(high2)
 
     return (
         <motion.line
+            transition={{
+                duration: animationDuration,
+            }}
             initial={{ y1: hInterval1, y2: hInterval2 }}
             animate={{ y1: hInterval1, y2: hInterval2 }}
             x1={getCircleX(index)}

@@ -4,10 +4,16 @@ import * as NA from 'fp-ts/lib/NonEmptyArray'
 import css from 'styled-jsx/css'
 import * as O from 'fp-ts/lib/Option'
 import Option from './Option'
-import { getMVQDownSteps, DownStep } from '../../utils/common/common'
+import {
+    getMVQDownSteps,
+    DownStep,
+    downStepArrayEq,
+    dsEqual,
+} from '../../utils/common/common'
 import { Particle } from '../../accentWord/container'
 import { cons } from 'fp-ts/lib/ReadonlyArray'
 import { option } from 'fp-ts/lib/Option'
+import { useRef, useEffect } from 'react'
 
 type Props = {
     audioFile: string
@@ -19,12 +25,49 @@ const minRows = 2
 const maxCols = 2
 const maxOptions = 10
 
+function usePrevious(value) {
+    const ref = useRef()
+    useEffect(() => {
+        ref.current = value
+    })
+    return ref.current
+}
+
 export default ({ audioFile, katakana, downStep, particle }: Props) => {
-    const options = getMVQDownSteps(
+    let options = getMVQDownSteps(
         katakana + O.getOrElse(() => '')(particle),
         downStep,
         maxOptions,
     )
+
+    // const oldOptions = A.takeLeft(options.length)(usePrevious(options) ?? [])
+
+    console.log('~~~~ start multiplechjoice')
+    console.log(audioFile, katakana, downStep, particle)
+    // console.log(JSON.stringify(oldOptions))
+    console.log(JSON.stringify(options))
+
+    // while (
+    //     oldOptions &&
+    //     A.zip(options, oldOptions).find(([a, b]) => {
+    //         console.log(a, b)
+    //         if (O.isSome(a) && O.isSome(b)) {
+    //             const res = a.value === b.value
+
+    //             if (res) {
+    //                 console.log(a + '==' + b)
+    //             }
+
+    //             return res
+    //         }
+    //     })
+    // ) {
+    //     options = getMVQDownSteps(
+    //         katakana + O.getOrElse(() => '')(particle),
+    //         downStep,
+    //         maxOptions,
+    //     )
+    // }
 
     // console.log('opts', options)
 

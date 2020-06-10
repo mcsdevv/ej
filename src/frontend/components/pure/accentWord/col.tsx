@@ -1,5 +1,11 @@
 import { motion } from 'framer-motion'
-import { getHeight, getCircleX, radius, wInterval } from './utils'
+import {
+    getHeight,
+    getCircleX,
+    radius,
+    wInterval,
+    animationDuration,
+} from './utils'
 
 type Props = {
     letter: string
@@ -27,12 +33,18 @@ export default ({
         >
             <g>
                 <motion.circle
+                    transition={{
+                        duration: animationDuration,
+                    }}
                     initial={{ cy: hInterval }}
                     animate={{ cy: hInterval }}
                     cx={getCircleX(index)}
                     r={radius}
                 />
                 <motion.text
+                    transition={{
+                        duration: animationDuration,
+                    }}
                     width={radius * 2}
                     initial={{
                         y:
