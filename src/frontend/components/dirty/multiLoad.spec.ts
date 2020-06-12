@@ -1,4 +1,4 @@
-import { State, Action, reducer } from './multiLoad'
+import { State, Action, reducer } from './utils'
 import { produce } from 'immer'
 import * as O from 'fp-ts/lib/Option'
 
@@ -15,10 +15,12 @@ describe('container', () => {
 
         actual: wrapper(
             {},
-            { type: 'setChunk', payload: [{ katakana: 'よ' }] },
+            { type: 'setChunk', payload: [{ katakana: 'よ' }], wait: true },
             reducer,
         ),
         expected: {
+            nsw: [],
+            wait: false,
             chunk: [
                 {
                     katakana: 'よ',
@@ -71,6 +73,7 @@ describe('container', () => {
             chunkIndex: 4,
             nsc: [0, 1, 2, 3],
             chunkCount: 4,
+            wait: true,
         },
     })
 

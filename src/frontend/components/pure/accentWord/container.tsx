@@ -82,10 +82,6 @@ const Container = ({
     interactive,
     particle,
 }: Props) => {
-    // console.log('$$$$$$$')
-    // console.log(kana, dirtyDS, particle, interactive)
-    // sleep(500)
-
     const hasParticle = O.isSome(particle)
 
     const combined = O.isSome(particle)

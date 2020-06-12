@@ -4,7 +4,6 @@ import css from 'styled-jsx/css'
 import * as O from 'fp-ts/lib/Option'
 import Option from './Option'
 import { getMVQDownSteps, DownStep, Particle } from '../../utils/common/common'
-import { cons } from 'fp-ts/lib/NonEmptyArray'
 
 type Props = {
     audioFile: string
@@ -14,7 +13,7 @@ type Props = {
 }
 const minRows = 2
 const maxCols = 2
-const maxOptions = 2
+const maxOptions = 6
 
 export default ({ audioFile, katakana, downStep, particle }: Props) => {
     const options = getMVQDownSteps(
@@ -22,9 +21,6 @@ export default ({ audioFile, katakana, downStep, particle }: Props) => {
         downStep,
         maxOptions,
     )
-
-    // console.log('#####')
-    // console.log(options)
 
     const rowsToDraw = Math.max(minRows, Math.ceil(options.length / maxCols))
 
@@ -36,13 +32,11 @@ export default ({ audioFile, katakana, downStep, particle }: Props) => {
             padding: 1%;
         }
     `
-
     const { className: rowClassName, styles: rowStyles } = css.resolve`
         .row {
             height: ${100 / rowsToDraw}%;
         }
     `
-
     return (
         <div style={{ height: '65%' }}>
             {rows.map((row, i) => (
