@@ -44,7 +44,7 @@ export const reducer = (draft: State, action: Action): void => {
         case 'setChunk': {
             draft.chunk = action.payload
             const range = A.range(0, draft.chunk!.length - 1)
-            draft.wordIndex = chooseId(range)
+            draft.wordIndex = 0
             draft.nsw = range.filter((x) => x !== draft.wordIndex)
             draft.wait = false
             return
@@ -57,7 +57,7 @@ export const reducer = (draft: State, action: Action): void => {
             return
         }
         case 'nextWord': {
-            draft.wordIndex = chooseId(draft.nsw)
+            draft.wordIndex++
             draft.nsw = A.filter((x: number) => x !== draft.wordIndex)(
                 draft.nsw,
             )

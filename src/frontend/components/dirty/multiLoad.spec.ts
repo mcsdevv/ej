@@ -50,11 +50,11 @@ describe('container', () => {
         given: 'an initialised state',
         should: 'choose a new word',
         actual: wrapper(
-            { wordIndex: 0, nsw: [3] },
+            { wordIndex: 0, nsw: [1] },
             { type: 'nextWord' },
             reducer,
         ),
-        expected: { wordIndex: 3, nsw: [] },
+        expected: { wordIndex: 1, nsw: [] },
     })
 
     assert({

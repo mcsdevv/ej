@@ -4,6 +4,7 @@ import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import { readFileSync } from 'fs-extra'
+import { shuffle } from '@/frontend/components/pure/utils/common/common'
 
 export const execQuery = (fileName: string): any[] =>
     pipe(
@@ -22,6 +23,7 @@ export const chunkByKatakana = (words: any[]) =>
         words,
         NA.groupBy((r) => r.katakana),
         (x) => Object.values(x),
-        A.chunksOf(1),
+        A.chunksOf(10),
+        shuffle,
         A.map(A.flatten),
     )
