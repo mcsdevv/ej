@@ -1,15 +1,15 @@
 import { range } from 'lodash'
-import * as A from 'fp-ts/lib/Array'
+
 import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
 
 import { useImmerReducer } from 'use-immer'
 
+import { useAccent } from './utils'
+
 import {
-    isCorrect,
     bundleCharacters,
     adjustDownstep,
-    downStepToArray,
     DownStep,
     Particle,
 } from '../utils/common/wrapper'
@@ -19,16 +19,6 @@ import Line from './line'
 import { sWidth, radius } from './utils'
 import React from 'react'
 
-export type Action = {
-    type: 'reset' | 'toggle'
-    index?: number
-}
-
-export type State = {
-    array: boolean[]
-    isCorrect: boolean
-}
-
 const height = 240
 const colourDelay = '200ms'
 
@@ -37,43 +27,6 @@ type Props = {
     downStep: DownStep
     interactive: boolean
     particle: Particle
-}
-
-export const useAccent = (
-    hasParticle: boolean,
-    length: number,
-    downStep: DownStep,
-    interactive: boolean,
-) => {
-    const getInitialArray = (): boolean[] =>
-        interactive
-            ? A.replicate(length, false)
-            : downStepToArray(downStep, length, hasParticle)
-
-    const reducer = (draft: State, action: Action): void => {
-        switch (action.type) {
-            case 'reset': {
-                draft.array = getInitialArray()
-                draft.isCorrect = !interactive
-                break
-            }
-            case 'toggle': {
-                const i = action.index!
-                draft.array[i] = !draft.array[i]
-                draft.isCorrect = isCorrect(downStep, draft.array, hasParticle)
-                break
-            }
-        }
-    }
-
-    return { getInitialArray, reducer }
-}
-
-function sleep(waitMsec) {
-    var startMsec = new Date()
-
-    // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-    while (new Date() - startMsec < waitMsec);
 }
 
 const Container = ({
