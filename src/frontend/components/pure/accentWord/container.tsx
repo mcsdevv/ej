@@ -17,6 +17,7 @@ import {
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
+import React from 'react'
 
 export type Action = {
     type: 'reset' | 'toggle'
@@ -68,12 +69,23 @@ export const useAccent = (
     return { getInitialArray, reducer }
 }
 
-export default ({
+function sleep(waitMsec) {
+    var startMsec = new Date()
+
+    // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+    while (new Date() - startMsec < waitMsec);
+}
+
+const Container = ({
     kana,
     downStep: dirtyDS,
     interactive,
     particle,
-}: Props): JSX.Element => {
+}: Props) => {
+    // console.log('$$$$$$$')
+    // console.log(kana, dirtyDS, particle, interactive)
+    // sleep(500)
+
     const hasParticle = O.isSome(particle)
 
     const combined = O.isSome(particle)
@@ -158,3 +170,7 @@ export default ({
         </svg>
     )
 }
+
+// Container.whyDidYouRender = true
+
+export default Container

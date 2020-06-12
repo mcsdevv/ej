@@ -15,13 +15,16 @@ describe('container', () => {
 
         actual: wrapper(
             {},
-            { type: 'setChunk', payload: { katakana: 'よ' } },
+            { type: 'setChunk', payload: [{ katakana: 'よ' }] },
             reducer,
         ),
         expected: {
-            chunk: {
-                katakana: 'よ',
-            },
+            chunk: [
+                {
+                    katakana: 'よ',
+                },
+            ],
+            wordIndex: 0,
         },
     })
 
@@ -39,17 +42,6 @@ describe('container', () => {
             nsc: [0, 2, 3],
             chunkCount: 3,
         },
-    })
-
-    assert({
-        given: 'an initialised state',
-        should: 'set nsw',
-        actual: wrapper(
-            { wordIndex: 1, chunkIndex: 1, nsw: [] },
-            { type: 'setNsw', payload: 3 },
-            reducer,
-        ),
-        expected: { wordIndex: 1, chunkIndex: 1, nsw: [0, 2, 3] },
     })
 
     assert({

@@ -5,12 +5,10 @@ export default ({
     index,
     high1,
     high2,
-    interactive,
 }: {
     index: number
     high1: boolean
     high2: boolean
-    interactive: boolean
 }) => {
     const hInterval1 = getHeight(high1)
     const hInterval2 = getHeight(high2)

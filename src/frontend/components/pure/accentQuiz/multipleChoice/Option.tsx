@@ -36,6 +36,9 @@ export default ({
     particle,
     audioFile,
 }: Props) => {
+    // console.log('¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥')
+    // console.log(katakana, downStep, particle, false)
+
     const [clicked, setClicked] = useState(false)
 
     const correctnessClass = isAnswer ? 'correct' : 'incorrect'

@@ -6,12 +6,17 @@ import { useImmerReducer } from 'use-immer'
 import { chooseId } from '../pure/utils/common/wrapper'
 import * as A from 'fp-ts/lib/Array'
 
-import { Word } from '../../../backend/common/readings/readings'
+import { Word } from '@/backend/common/readings'
 
-import { onResponse } from './utils'
+import { onResponse, fetcher } from './utils'
+
+import { isEqual } from 'lodash'
+import { stat, watchFile } from 'fs'
+import useSWR from 'swr'
+import { useEffect } from 'react'
 
 export type Action = {
-    type: 'nextWord' | 'nextChunk' | 'setNsc' | 'setNsw' | 'setChunk'
+    type: 'nextWord' | 'nextChunk' | 'setNsc' | 'setNsw' | 'setChunk' | 'wait'
     payload?: any
 }
 
@@ -21,34 +26,38 @@ export type State = {
     nsc: number[]
     nsw: number[]
     chunkCount: number
-    chunk?: Word
+    chunk?: Word[]
+    wait: boolean
 }
 
 export const reducer = (draft: State, action: Action): void => {
+    // console.log(action)
     switch (action.type) {
+        case 'wait': {
+            draft.wait = true
+            return
+        }
         case 'setChunk': {
             draft.chunk = action.payload
-            break
+            const range = A.range(0, draft.chunk!.length - 1)
+            draft.wordIndex = chooseId(range)
+            draft.nsw = range.filter((x) => x !== draft.wordIndex)
+            draft.wait = false
+            return
         }
         case 'setNsc': {
             draft.chunkCount = action.payload
             draft.nsc = A.range(0, draft.chunkCount).filter(
                 (x) => x !== draft.chunkIndex,
             )
-            break
-        }
-        case 'setNsw': {
-            draft.nsw = A.range(0, action.payload).filter(
-                (x) => x !== draft.wordIndex,
-            )
-            break
+            return
         }
         case 'nextWord': {
             draft.wordIndex = chooseId(draft.nsw)
             draft.nsw = A.filter((x: number) => x !== draft.wordIndex)(
                 draft.nsw,
             )
-            break
+            return
         }
         case 'nextChunk': {
             draft.chunkIndex = chooseId(draft.nsc)
@@ -59,7 +68,7 @@ export const reducer = (draft: State, action: Action): void => {
                     (x) => x !== draft.chunkIndex,
                 )
             }
-            break
+            return
         }
     }
 }
@@ -68,35 +77,60 @@ type Props = {
     audioType: 'readings' | 'sentences' | 'withParticle'
 }
 
-export default ({ audioType }: Props) => {
+const useFetch = (
+    url: string,
+    onSuccess: <S>(data: S) => void,
+    onError: (error: Error) => void,
+    ...conditions: boolean[]
+) => {
+    useEffect(() => {
+        if (conditions.every((x) => x)) {
+            fetch(url)
+                .then((raw) => raw.json())
+                .then((data) => onSuccess(data))
+                .catch((error) => onError(error))
+        }
+    }, [url])
+}
+
+const multiLoader = ({ audioType }: Props) => {
     const [state, dispatch] = useImmerReducer(reducer, {
-        wordIndex: -1,
+        wordIndex: 0,
         chunkIndex: -1,
         chunkCount: -1,
         chunk: undefined,
         nsc: [],
         nsw: [],
+        wait: false,
     })
 
-    onResponse(`/api/range/${audioType}`, (chunkCount) => {
-        dispatch({ type: 'setNsc', payload: chunkCount })
-        dispatch({ type: 'nextChunk' })
-    })
-
-    onResponse(
-        `/api/chunk/${audioType}/${state.chunkIndex}`,
-        (chunk) => {
-            dispatch({ type: 'setChunk', payload: chunk })
-            if (state.wordIndex === -1) {
-                dispatch({ type: 'nextWord' })
-            } else {
-                dispatch({ type: 'setNsw', payload: chunk.length - 1 })
-            }
+    useFetch(
+        `/api/range/${audioType}`,
+        (chunkCount) => {
+            dispatch({
+                type: 'setNsc',
+                payload: chunkCount,
+            })
+            dispatch({
+                type: 'nextChunk',
+            })
         },
-        state.chunkIndex > -1,
+        (error) => console.error(error),
     )
 
-    // console.log('~~~~')
+    useFetch(
+        `/api/chunk/${audioType}/${state.chunkIndex}`,
+        (chunk) => {
+            dispatch({
+                type: 'setChunk',
+                payload: chunk,
+            })
+        },
+        (error) => console.error(error),
+        state.chunkIndex !== -1,
+    )
+
+    console.log('~~~~')
 
     const word = state?.chunk?.[state.wordIndex]
 
@@ -104,22 +138,32 @@ export default ({ audioType }: Props) => {
     // console.log(state.nsc)
     // console.log(state.wordIndex)
     // console.log(state.nsw)
-    // console.log(word?.audioFile)
+    console.log(state)
+    console.log(word?.audioFile)
 
     return (
-        <Loader wait={!word}>
+        <Loader wait={!word || state.wait}>
             <Multiplechoice
                 {...word}
-                onClickNext={() =>
-                    state.nsw.length
-                        ? dispatch({
-                              type: 'nextWord',
-                          })
-                        : dispatch({
-                              type: 'nextChunk',
-                          })
-                }
+                onClickNext={() => {
+                    if (state.nsw.length) {
+                        dispatch({
+                            type: 'nextWord',
+                        })
+                    } else {
+                        dispatch({
+                            type: 'wait',
+                        })
+                        dispatch({
+                            type: 'nextChunk',
+                        })
+                    }
+                }}
             />
         </Loader>
     )
 }
+
+multiLoader.whyDidYouRender = true
+
+export default multiLoader
