@@ -2,12 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { pipe } from 'fp-ts/lib/pipeable'
 import {
-    getChunkMode,
+    getChunksByMode,
     getChunkById,
-    badRequest,
-    success,
+    returnResponse,
 } from '../../../../backend/common/common'
-import { fold, map, flatten } from 'fp-ts/lib/Either'
+import { map, flatten } from 'fp-ts/lib/Either'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
@@ -15,12 +14,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     } = req
 
     pipe(
-        getChunkMode(_mode),
+        getChunksByMode(_mode),
         map(getChunkById(_chunkId)),
         flatten,
-        fold(
-            (error) => badRequest(res, error),
-            (data) => success(res, data),
-        ),
+        returnResponse(res),
     )
 }

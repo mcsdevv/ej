@@ -4,21 +4,21 @@ import { chunks as withParticle } from './withParticle'
 
 import { fromNullable, mapNullable, flatten } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { fromOption, fold } from 'fp-ts/lib/Either'
+import { fromOption, fold, Either } from 'fp-ts/lib/Either'
 import { NextApiResponse } from 'next'
 import { lookup } from 'fp-ts/lib/Array'
 import { lookup as mapLookup } from 'fp-ts/lib/Map'
 
 import { eqString } from 'fp-ts/lib/Eq'
 
-export type Response = { json: unknown; status: number }
+export type Response = { json: any; status: number }
 export type ErrorMessage = { error: string }
 
-export const chunkMap = new Map<string, unknown>(
+export const chunkMap = new Map<string, any>(
     Object.entries({ sentences, readings, withParticle }),
 )
 
-export const getChunkMode = (_mode: unknown) =>
+export const getChunksByMode = (_mode: string | string[]) =>
     pipe(
         fromNullable(_mode),
         mapNullable(String),
@@ -27,7 +27,7 @@ export const getChunkMode = (_mode: unknown) =>
         fromOption(() => ({ error: `invalid mode: ${_mode}` })),
     )
 
-export const getChunkById = (_chunkId: unknown) => <A>(chunks: A[][]) =>
+export const getChunkById = (_chunkId: string | string[]) => <A>(chunks: A[]) =>
     pipe(
         fromNullable(_chunkId),
         mapNullable(Number),
@@ -51,11 +51,11 @@ export const badRequest = (
     json(error)
 }
 
-export const returnResponse = (
+export const returnResponse = <A, B>(
     res: NextApiResponse,
-    transformation: <A, B>(data: A) => B,
+    transformation?: (data: A) => B,
 ) =>
     fold(
         (error: ErrorMessage) => badRequest(res, error),
-        (data) => success(res, transformation(data)),
+        (data: A) => success(res, transformation ? transformation(data) : data),
     )
