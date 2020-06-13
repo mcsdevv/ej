@@ -1,32 +1,37 @@
-import { chunks as sentences } from '@/backend/common/sentences'
-import { chunks as readings } from '@/backend/common/readings'
-import { chunks as withParticle } from '@/backend/common/withParticle'
-
 import { NextApiRequest, NextApiResponse } from 'next'
 
-const chunkMap = new Map<string, any>(
-    Object.entries({ sentences, readings, withParticle }),
-)
+import { pipe } from 'fp-ts/lib/pipeable'
+import { gg, badRequest, success } from '../../../../backend/common/common'
+import { fold, getOrElse } from 'fp-ts/lib/Either'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
         query: { _mode, _chunkId },
     } = req
 
-    const mode = _mode.toString()
-    const chunkId = Number(_chunkId)
-
-    if (!chunkMap.has(mode)) {
-        res.status(404).json({ error: 'mode not found' })
-    }
-
-    const chunks = new Map(
-        chunkMap.get(mode).map((x: any, i: number) => [i, x]),
+    pipe(
+        gg(_mode, _chunkId),
+        fold(
+            (error) => badRequest(res, error),
+            (data) => success(res, data),
+        ),
     )
 
-    if (!chunks.has(chunkId)) {
-        res.status(404).json({ error: 'chunk not found' })
-    }
-
-    res.status(200).json(chunks.get(chunkId))
+    //     fromNullable(_chunkId),
+    //     mapNullable((chunkId: any) => Number(chunkId),
+    //     filter((chunkId) => chunkId < chunks.length),
+    //     mapNullable(
+    //         (mode): Response => ({
+    //             status: 200,
+    //             json: func(chunkMap.get(mode)),
+    //         }),
+    //     ),
+    //     getOrElse(
+    //         (): Response => ({
+    //             status: 400,
+    //             json: { error: `invalid parameter: ${_mode}` },
+    //         }),
+    //     ),
+    //     ({ status, json }) => res.status(status).json(json),
+    // )
 }
