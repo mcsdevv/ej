@@ -6,7 +6,7 @@ import {
     getChunkById,
     returnResponse,
 } from '../../../../backend/common/common'
-import { map, flatten } from 'fp-ts/lib/Either'
+import { chain } from 'fp-ts/lib/Either'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
@@ -15,8 +15,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
     pipe(
         getChunksByMode(_mode),
-        map(getChunkById(_chunkId)),
-        flatten,
+        chain(getChunkById(_chunkId)),
         returnResponse(res),
     )
 }

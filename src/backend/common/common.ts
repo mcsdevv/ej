@@ -2,7 +2,7 @@ import { chunks as sentences } from './sentences'
 import { chunks as readings } from './readings'
 import { chunks as withParticle } from './withParticle'
 
-import { fromNullable, mapNullable, flatten } from 'fp-ts/lib/Option'
+import { fromNullable, mapNullable, chain } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { fromOption, fold } from 'fp-ts/lib/Either'
 import { lookup } from 'fp-ts/lib/Array'
@@ -22,8 +22,7 @@ export const getChunksByMode = (_mode: string | string[]) =>
     pipe(
         fromNullable(_mode),
         mapNullable(String),
-        mapNullable((mode) => mapLookup(eqString)(mode, chunkMap)),
-        flatten,
+        chain((mode) => mapLookup(eqString)(mode, chunkMap)),
         fromOption(() => ({ error: `invalid mode: ${_mode}` })),
     )
 
@@ -31,11 +30,8 @@ export const getChunkById = (_chunkId: string | string[]) => <A>(chunks: A[]) =>
     pipe(
         fromNullable(_chunkId),
         mapNullable(Number),
-        mapNullable((chunkId) => lookup(chunkId, chunks)),
-        flatten,
-        fromOption(() => ({
-            error: `invalid chunkId: ${_chunkId}`,
-        })),
+        chain((chunkId) => lookup(chunkId, chunks)),
+        fromOption(() => ({ error: `invalid chunkId: ${_chunkId}` })),
     )
 
 export const success = <A>({ json, status }: NextApiResponse, data: A) => {
