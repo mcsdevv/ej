@@ -1,14 +1,14 @@
 import { pipe } from 'fp-ts/lib/pipeable'
 import { execQuery, chunkByKatakana } from './utils'
-import {
-    DownStep,
-    Particle,
-} from '@/frontend/components/pure/utils/common/wrapper'
+// import {
+//     DownStep,
+//     Particle,
+// } from '@/frontend/components/pure/utils/common/wrapper'
 
 export type Word = {
     audioFile: string
-    downStep: DownStep
-    particle: Particle
+    downStep: any //TODO fix these types
+    particle: any
     katakana: string
     sentence?: string
 }

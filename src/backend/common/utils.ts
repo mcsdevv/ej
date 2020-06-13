@@ -4,7 +4,7 @@ import * as A from 'fp-ts/lib/Array'
 import * as NA from 'fp-ts/lib/NonEmptyArray'
 import * as O from 'fp-ts/lib/Option'
 import { readFileSync } from 'fs-extra'
-import { shuffle } from '@/frontend/components/pure/utils/common/common'
+import { shuffle } from '../../frontend/components/pure/utils/common/common'
 
 export const execQuery = (fileName: string): any[] =>
     pipe(
