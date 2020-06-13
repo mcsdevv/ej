@@ -8,8 +8,5 @@ module.exports = {
     coverageDirectory: 'coverage',
     roots: ['<rootDir>'],
     testEnvironment: 'node',
-    testMatch: [
-        '**/__tests__/**/*.[jt]s?(x)',
-        '**/?(*.)+(spec|test).[tj]s?(x)',
-    ],
+    testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.spec).[tj]s?(x)'],
 }

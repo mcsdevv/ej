@@ -1,12 +1,12 @@
 import * as A from 'fp-ts/lib/Array'
 import { isCorrect, downStepToArray, DownStep } from '../utils/common/wrapper'
 
-export const sWidth = 3
+export const animationDuration = 0.3
+export const sWidth = 0
 export const radius = 40 - 2 * sWidth
 export const wInterval = radius * 4
 export const getHeight = (high: boolean) => (high ? 2 * radius : 4 * radius)
 export const getCircleX = (index: number) => radius + index * wInterval + sWidth
-export const animationDuration = 0.3
 
 export type Action = {
     type: 'reset' | 'toggle'

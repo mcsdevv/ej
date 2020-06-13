@@ -1,1 +1,9 @@
-{}
+{
+    "experimentalComponentTesting": true,
+    "componentFolder": "src",
+    "testFiles": "**/*test.*",
+    "nodeVersion": "system",
+    "env": {
+        "coverage": true
+    }
+}

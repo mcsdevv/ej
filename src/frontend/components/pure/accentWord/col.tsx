@@ -1,3 +1,4 @@
+import React from 'react'
 import { motion } from 'framer-motion'
 import {
     getHeight,
@@ -28,6 +29,7 @@ export default ({
 
     return (
         <g
+            className={high ? 'high' : 'low'}
             onClick={onClick}
             style={{ pointerEvents: interactive ? 'all' : 'none' }}
         >
@@ -60,8 +62,8 @@ export default ({
                     }}
                     x={
                         letter.length === 1
-                            ? +index * wInterval + radius / 2
-                            : +index * wInterval + radius / 3
+                            ? +index * wInterval + radius / 2 - 3
+                            : +index * wInterval + radius / 3 - 2
                     }
                     style={{
                         fontSize: `${
