@@ -27,4 +27,4 @@ jobs:
               run: yarn install --frozen-lockfile
 
             - name: run tests
-              run: yarn jest
+              run: yarn jest --detectOpenHandles
