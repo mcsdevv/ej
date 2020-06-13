@@ -21,7 +21,7 @@ describe('/api/range', () => {
 
         const json = await response.json()
 
-        expect(json).toEqual({ error: `invalid parameter: ${undefined}` })
+        expect(json).toEqual({ error: `invalid mode: ${undefined}` })
 
         return server.close()
     })
@@ -38,7 +38,7 @@ describe('/api/range', () => {
 
         const json = await response.json()
 
-        expect(json).toEqual({ error: `invalid parameter: invalid` })
+        expect(json).toEqual({ error: `invalid mode: invalid` })
 
         return server.close()
     })

@@ -1,10 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getChunk } from '../../../backend/common/common'
+import {
+    getChunkMode,
+    badRequest,
+    success,
+} from '../../../backend/common/common'
+import { pipe } from 'fp-ts/lib/pipeable'
+import { fold } from 'fp-ts/lib/Either'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
         query: { _mode },
     } = req
 
-    getChunk(_mode, (chunks) => chunks.length - 1, res)
+    pipe(
+        getChunkMode(_mode),
+        fold(
+            (error) => badRequest(res, error),
+            (chunks) => success(res, chunks.length - 1),
+        ),
+    )
 }

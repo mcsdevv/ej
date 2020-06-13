@@ -6,11 +6,11 @@ import * as O from 'fp-ts/lib/Option'
 import { readFileSync } from 'fs-extra'
 import { shuffle } from '../../frontend/components/pure/utils/common/common'
 
-export const execQuery = (fileName: string): any[] =>
+export const execQuery = (fileName: string) =>
     pipe(
         readFileSync(fileName),
         (o) => o.toString(),
-        (query): any[] => DB().query(query),
+        (query) => DB().query(query),
         A.map((w) => ({
             ...w,
             downStep: O.fromNullable(w.downStep),
@@ -18,12 +18,15 @@ export const execQuery = (fileName: string): any[] =>
         })),
     )
 
-export const chunkByKatakana = (words: any[]) =>
+type K = {
+    katakana: string
+}
+
+export const chunkByKatakana = (words: K[]) =>
     pipe(
         words,
         NA.groupBy((r) => r.katakana),
         (x) => Object.values(x),
         A.chunksOf(5),
-        // shuffle,
         A.map(A.flatten),
     )

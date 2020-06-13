@@ -2,43 +2,32 @@ import { chunks as sentences } from './sentences'
 import { chunks as readings } from './readings'
 import { chunks as withParticle } from './withParticle'
 
-import {
-    fromNullable,
-    mapNullable,
-    filter,
-    getOrElse,
-    flatten,
-} from 'fp-ts/lib/Option'
+import { fromNullable, mapNullable, flatten } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import {
-    left,
-    right,
-    reduce,
-    chain,
-    map,
-    fromOption,
-    flatten as EFlatten,
-} from 'fp-ts/lib/Either'
+import { fromOption, fold } from 'fp-ts/lib/Either'
 import { NextApiResponse } from 'next'
 import { lookup } from 'fp-ts/lib/Array'
-import { sequenceT } from 'fp-ts/lib/Apply'
+import { lookup as mapLookup } from 'fp-ts/lib/Map'
 
-export type Response = { json: any; status: number }
+import { eqString } from 'fp-ts/lib/Eq'
+
+export type Response = { json: unknown; status: number }
 export type ErrorMessage = { error: string }
 
-export const chunkMap = new Map<string, any>(
+export const chunkMap = new Map<string, unknown>(
     Object.entries({ sentences, readings, withParticle }),
 )
-export const getC = (_mode: any) =>
+
+export const getChunkMode = (_mode: unknown) =>
     pipe(
         fromNullable(_mode),
-        mapNullable((mode) => mode.toString()),
-        filter((mode) => chunkMap.has(mode)),
-        mapNullable((mode) => right(chunkMap.get(mode))),
-        getOrElse(() => left({ error: `invalid mode: ${_mode}` })),
+        mapNullable(String),
+        mapNullable((mode) => mapLookup(eqString)(mode, chunkMap)),
+        flatten,
+        fromOption(() => ({ error: `invalid mode: ${_mode}` })),
     )
 
-export const getId = (_chunkId: any, chunks: any[][]) =>
+export const getChunkById = (_chunkId: unknown) => <A>(chunks: A[][]) =>
     pipe(
         fromNullable(_chunkId),
         mapNullable(Number),
@@ -49,14 +38,7 @@ export const getId = (_chunkId: any, chunks: any[][]) =>
         })),
     )
 
-export const gg = (_mode: any, _chunkId: any) =>
-    pipe(
-        getC(_mode),
-        map((chunks) => getId(_chunkId, chunks)),
-        EFlatten,
-    )
-
-export const success = ({ json, status }: NextApiResponse, data: any) => {
+export const success = <A>({ json, status }: NextApiResponse, data: A) => {
     status(200)
     json(data)
 }
@@ -69,26 +51,11 @@ export const badRequest = (
     json(error)
 }
 
-export const getChunk = (
-    _mode: any,
-    func: (chunks: any[][]) => any,
+export const returnResponse = (
     res: NextApiResponse,
+    transformation: <A, B>(data: A) => B,
 ) =>
-    pipe(
-        fromNullable(_mode),
-        mapNullable((mode) => mode.toString()),
-        filter((mode) => chunkMap.has(mode)),
-        mapNullable(
-            (mode): Response => ({
-                status: 200,
-                json: func(chunkMap.get(mode)),
-            }),
-        ),
-        getOrElse(
-            (): Response => ({
-                status: 400,
-                json: { error: `invalid parameter: ${_mode}` },
-            }),
-        ),
-        ({ status, json }) => res.status(status).json(json),
+    fold(
+        (error: ErrorMessage) => badRequest(res, error),
+        (data) => success(res, transformation(data)),
     )

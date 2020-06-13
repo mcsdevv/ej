@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { pipe } from 'fp-ts/lib/pipeable'
-import { gg, badRequest, success } from '../../../../backend/common/common'
-import { fold, getOrElse } from 'fp-ts/lib/Either'
+import {
+    getChunkMode,
+    getChunkById,
+    badRequest,
+    success,
+} from '../../../../backend/common/common'
+import { fold, map, flatten } from 'fp-ts/lib/Either'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
@@ -10,28 +15,12 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     } = req
 
     pipe(
-        gg(_mode, _chunkId),
+        getChunkMode(_mode),
+        map(getChunkById(_chunkId)),
+        flatten,
         fold(
             (error) => badRequest(res, error),
             (data) => success(res, data),
         ),
     )
-
-    //     fromNullable(_chunkId),
-    //     mapNullable((chunkId: any) => Number(chunkId),
-    //     filter((chunkId) => chunkId < chunks.length),
-    //     mapNullable(
-    //         (mode): Response => ({
-    //             status: 200,
-    //             json: func(chunkMap.get(mode)),
-    //         }),
-    //     ),
-    //     getOrElse(
-    //         (): Response => ({
-    //             status: 400,
-    //             json: { error: `invalid parameter: ${_mode}` },
-    //         }),
-    //     ),
-    //     ({ status, json }) => res.status(status).json(json),
-    // )
 }
