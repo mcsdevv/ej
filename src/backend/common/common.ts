@@ -4,12 +4,12 @@ import { chunks as withParticle } from './withParticle'
 
 import { fromNullable, mapNullable, flatten } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { fromOption, fold, Either } from 'fp-ts/lib/Either'
-import { NextApiResponse } from 'next'
+import { fromOption, fold } from 'fp-ts/lib/Either'
 import { lookup } from 'fp-ts/lib/Array'
 import { lookup as mapLookup } from 'fp-ts/lib/Map'
-
 import { eqString } from 'fp-ts/lib/Eq'
+
+import { NextApiResponse } from 'next'
 
 export type Response = { json: any; status: number }
 export type ErrorMessage = { error: string }

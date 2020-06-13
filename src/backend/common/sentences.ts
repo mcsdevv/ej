@@ -5,6 +5,10 @@ import { execQuery, chunkByKatakana } from './utils'
 export const chunks = pipe(
     execQuery('./queries/sentences.sql'),
     chunkByKatakana,
+    (x: any) => {
+        console.log(x)
+        return x
+    },
 )
 
 // TODO cant just add a particle for the example sentences willy nilly, sometimes the next thing is another word e.g lookup 琴瑟相和す

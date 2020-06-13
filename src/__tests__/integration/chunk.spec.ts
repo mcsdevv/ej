@@ -4,6 +4,11 @@ import listen from 'test-listen'
 import { apiResolver } from 'next-server/dist/server/api-utils'
 import handler from '../../pages/api/chunk/[_mode]/[_chunkId]'
 
+import { some } from 'fp-ts/lib/Option'
+
+jest.mock('../../backend/common/readings')
+jest.mock('../../backend/common/sentences')
+jest.mock('../../backend/common/withParticle')
 describe('/api/chunk', () => {
     let url
     let server
@@ -54,7 +59,11 @@ describe('/api/chunk', () => {
 
         const json = await response.json()
 
-        expect(json).not.toHaveProperty('error')
+        expect(json.map((x) => x.katakana)).toEqual([
+            'モチツキ',
+            'モチツキ',
+            'モチツキ',
+        ])
 
         expect(response.status).toEqual(200)
 
@@ -73,7 +82,11 @@ describe('/api/chunk', () => {
 
         const json = await response.json()
 
-        expect(json.length).toEqual(15)
+        expect(json.map((x) => x.particle)).toEqual([
+            some('オ'),
+            some('オ'),
+            some('オ'),
+        ])
 
         return server.close()
     })
@@ -90,7 +103,12 @@ describe('/api/chunk', () => {
 
         const json = await response.json()
 
-        expect(json.length).toEqual(28)
+        expect(json.map((x) => x.sentence)).toEqual([
+            '暗い夜道はキミガ悪い',
+            'やや楽観ムードのキミガある',
+            '良い卵のキミワ盛り上がっている',
+            '無視されたのかキミトも呼ばれず',
+        ])
 
         return server.close()
     })

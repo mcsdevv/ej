@@ -4,6 +4,9 @@ import listen from 'test-listen'
 import { apiResolver } from 'next-server/dist/server/api-utils'
 import handler from '../../pages/api/range/[_mode]'
 
+jest.mock('../../backend/common/readings')
+jest.mock('../../backend/common/sentences')
+jest.mock('../../backend/common/withParticle')
 describe('/api/range', () => {
     let url
     let server
@@ -53,7 +56,7 @@ describe('/api/range', () => {
 
         const json = await response.json()
 
-        expect(json).toEqual(7)
+        expect(json).toEqual(1)
 
         return server.close()
     })
@@ -69,7 +72,7 @@ describe('/api/range', () => {
 
         const json = await response.json()
 
-        expect(json).toEqual(4)
+        expect(json).toEqual(1)
 
         return server.close()
     })
@@ -85,7 +88,7 @@ describe('/api/range', () => {
 
         const json = await response.json()
 
-        expect(json).toEqual(757)
+        expect(json).toEqual(1)
 
         return server.close()
     })

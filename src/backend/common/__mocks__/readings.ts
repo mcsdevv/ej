@@ -1,0 +1,51 @@
+export const chunks = [
+    [
+        {
+            id: 14656,
+            downStep: { _tag: 'Some', value: 3 },
+            katakana: 'モチツキ',
+            audioFile: 'audio/particleReadings/モチツキ|3||2|オ.wav',
+            wordId: 17345,
+            nasal: '',
+            unVoiced: '2',
+        },
+        {
+            id: 14657,
+            downStep: { _tag: 'Some', value: 2 },
+            katakana: 'モチツキ',
+            audioFile: 'audio/particleReadings/モチツキ|2||2|オ.wav',
+            wordId: 17345,
+            nasal: '',
+            unVoiced: '2',
+        },
+        {
+            id: 14658,
+            downStep: { _tag: 'Some', value: 1 },
+            katakana: 'モチツキ',
+            audioFile: 'audio/particleReadings/モチツキ|1||2|オ.wav',
+            wordId: 17345,
+            nasal: '',
+            unVoiced: '2',
+        },
+    ],
+    [
+        {
+            id: 54111,
+            downStep: { _tag: 'Some', value: 1 },
+            katakana: 'ワラウチ',
+            audioFile: 'audio/particleReadings/ワラウチ|1|||オ.wav',
+            wordId: 58449,
+            nasal: '',
+            unVoiced: '',
+        },
+        {
+            id: 54112,
+            downStep: { _tag: 'Some', value: 2 },
+            katakana: 'ワラウチ',
+            audioFile: 'audio/particleReadings/ワラウチ|2|||オ.wav',
+            wordId: 58449,
+            nasal: '',
+            unVoiced: '',
+        },
+    ],
+]
