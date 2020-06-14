@@ -11,6 +11,7 @@ import { eqString } from 'fp-ts/lib/Eq'
 
 import { NextApiResponse } from 'next'
 
+//TODO Should fix these types
 export type Response = { json: any; status: number }
 export type ErrorMessage = { error: string }
 
