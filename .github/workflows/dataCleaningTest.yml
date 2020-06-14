@@ -14,4 +14,4 @@ jobs:
             - name: Install deps
               run: yarn install --frozen-lockfile
             - name: run data cleaning tests
-              run: yarn jest ./src/dataCleaning
+              run: yarn jest ./src/dataCleaning --detectOpenHandles
