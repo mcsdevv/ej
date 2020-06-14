@@ -16,7 +16,7 @@ const path = 'public/audio/readings'
 
 const processChunk = async (chunk: string[]) => {
     let { data: urlRes } = await b2.getUploadUrl({ bucketId })
-    console.log('urlRes: ', urlRes)
+
     while (chunk.length) {
         const file = chunk.pop()
         try {
@@ -27,7 +27,6 @@ const processChunk = async (chunk: string[]) => {
                 uploadAuthToken: urlRes.authorizationToken,
             })
         } catch (e) {
-            console.log(e)
             ;({ data: urlRes } = await b2.getUploadUrl({ bucketId }))
             chunk.unshift(file)
         }

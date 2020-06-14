@@ -45,16 +45,7 @@ const multiLoader = ({ audioType }: Props) => {
         state.chunkIndex !== -1,
     )
 
-    console.log('~~~~')
-
     const word = state?.chunk?.[state.wordIndex]
-
-    // console.log(state.chunkIndex)
-    // console.log(state.nsc)
-    // console.log(state.wordIndex)
-    // console.log(state.nsw)
-    console.log(state)
-    // console.log(word?.audioFile)
 
     return (
         <Loader wait={!word || state.wait}>

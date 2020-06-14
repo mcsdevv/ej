@@ -38,7 +38,6 @@ export type State = {
 }
 
 export const reducer = (draft: State, action: Action): void => {
-    // console.log(action)
     switch (action.type) {
         case 'setChunk': {
             draft.chunk = action.payload
@@ -89,7 +88,6 @@ export const reducer = (draft: State, action: Action): void => {
 // ) => {
 //     const res = useSWR(conditions.some((x) => !x) ? null : url, fetcher)
 
-//     console.log(url, res)
 //     const { data, isValidating } = res
 //     useEffect(() => {
 //         if (data) {

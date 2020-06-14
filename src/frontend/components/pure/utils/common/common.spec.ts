@@ -224,7 +224,6 @@ describe('getMVQDownSteps', () => {
 
     it('must have at least 2 options', () => {
         const options = A.sort(byDownstep)(getMVQDownSteps('ジョオ', O.none, 9))
-        // console.log(options)
         expect(A.map(just)(options)).toEqual([null, 1])
     })
 })

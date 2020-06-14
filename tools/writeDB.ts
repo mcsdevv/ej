@@ -24,7 +24,6 @@ const clean = words.filter(
 DB({ migrate: { force: 'last' } })
 
 clean.forEach((nhk) => {
-    // console.log(nhk)
     const wordId = DB().insert('word', {
         jisho: nhk.jisho,
         jishoWord: nhk.jishoWord,
