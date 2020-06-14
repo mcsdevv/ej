@@ -1,0 +1,17 @@
+# This is a basic workflow to help you get started with Actions
+
+name: dataCleaningTests
+
+on:
+    push:
+        paths:
+            - '**dataCleaning**'
+jobs:
+    normalTest:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install deps
+              run: yarn install --frozen-lockfile
+            - name: run data cleaning tests
+              run: yarn jest ./src/dataCleaning
