@@ -54,7 +54,7 @@ const multiLoader = ({ audioType }: Props) => {
     // console.log(state.wordIndex)
     // console.log(state.nsw)
     console.log(state)
-    console.log(word?.audioFile)
+    // console.log(word?.audioFile)
 
     return (
         <Loader wait={!word || state.wait}>

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import fetch from 'node-fetch'
 import * as A from 'fp-ts/lib/Array'
-import { Word } from '@/backend/common/readings'
 import { chooseId } from '../pure/utils/common/wrapper'
 
 export const fetcher = (url: string): Promise<any> =>
@@ -34,7 +33,7 @@ export type State = {
     nsc: number[]
     nsw: number[]
     chunkCount: number
-    chunk?: Word[]
+    chunk?: any[]
     wait: boolean
 }
 

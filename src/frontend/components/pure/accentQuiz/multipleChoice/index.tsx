@@ -1,7 +1,7 @@
 import Wrapper from '../wrapper'
 import MultipleChoice from './multipleChoice'
-import { DownStep } from '../../utils/common/common'
-import { Particle } from '../../accentWord/container'
+import { DownStep, Particle } from '../../utils/common/common'
+
 type Props = {
     audioFile: string
     onClickNext: () => void
