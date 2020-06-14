@@ -12,7 +12,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     const {
         query: { _mode, _chunkId },
     } = req
-
     pipe(
         getChunksByMode(_mode),
         chain(getChunkById(_chunkId)),
