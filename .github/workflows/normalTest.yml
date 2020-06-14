@@ -16,4 +16,5 @@ jobs:
               uses: bahmutov/npm-install@v1.1.0
             - name: run tests
               run: yarn run jest  --testPathIgnorePatterns="dataCleaning" --detectOpenHandles
+            - name: try to build
               run: yarn next build
