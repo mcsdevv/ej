@@ -15,6 +15,8 @@ describe('interactive', () => {
             />,
         )
         cy.get('text').should('contain.text', 'ダイガク')
+        cy.get('.incorrect').should('exist')
+        cy.get('.correct').should('not.exist')
     })
 
     it('responds to input', () => {
@@ -47,5 +49,7 @@ describe('interactive', () => {
         cy.contains('イ').click({ force: true })
         cy.contains('ガ').click({ force: true })
         cy.contains('ク').click({ force: true })
+        cy.get('.incorrect').should('not.exist')
+        cy.get('.correct').should('exist')
     })
 })

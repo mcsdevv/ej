@@ -59,11 +59,11 @@ const Container = ({
         dispatch({ type: 'reset' })
     }, [kana, dirtyDS, particle, interactive])
 
-    const color = !interactive
-        ? 'cornflowerblue'
-        : state.isCorrect
-        ? 'yellow'
-        : 'red'
+    // const color = !interactive
+    //     ? 'cornflowerblue'
+    //     : state.isCorrect
+    //     ? 'yellow'
+    //     : 'red'
 
     const columns = combined.map((x, i) => (
         <Col
@@ -88,31 +88,49 @@ const Container = ({
         )
     })
 
+    const defaultColor = 'cornflowerblue'
+    const incorrectColor = 'red'
+    const correctColor = 'green'
+
     return (
         <svg
             viewBox={`${-radius} 0 ${radius * 4 * combined.length} ${height}`}
             width='100%'
             height='100%'
+            className={`
+            ${interactive && state.isCorrect ? 'correct' : 'incorrect'}`}
         >
             {lines}
             {columns}
             <style jsx>
                 {`
+                    text {
+                        fill: white;
+                    }
+
                     line {
-                        stroke: ${color};
+                        stroke: ${defaultColor};
                         transition: stroke ${colourDelay};
                         stroke-width: 5px;
                     }
 
                     circle {
-                        fill: ${color};
+                        fill: ${defaultColor};
                         transition: fill ${colourDelay};
                         stroke-width: ${sWidth}px;
                         stroke: cornflowerblue;
                     }
 
-                    text {
-                        fill: white;
+                    .correct line,
+                    .correct circle {
+                        stroke: ${correctColor};
+                        fill: ${correctColor};
+                    }
+
+                    .incorrect line,
+                    .incorrect circle {
+                        stroke: ${incorrectColor};
+                        fill: ${incorrectColor};
                     }
                 `}
             </style>
