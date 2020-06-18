@@ -98,7 +98,7 @@ const Container = ({
             width='100%'
             height='100%'
             className={`
-            ${interactive && state.isCorrect ? 'correct' : 'incorrect'}`}
+            ${interactive && (state.isCorrect ? 'correct' : 'incorrect')}`}
         >
             {lines}
             {columns}
