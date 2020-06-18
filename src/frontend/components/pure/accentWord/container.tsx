@@ -1,9 +1,11 @@
-import React from 'react'
+import { range } from 'lodash'
+
 import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
+
 import { useImmerReducer } from 'use-immer'
+
 import { useAccent } from './utils'
-import { range } from 'fp-ts/lib/Array'
 
 import {
     bundleCharacters,
@@ -15,8 +17,7 @@ import {
 import Col from './col'
 import Line from './line'
 import { sWidth, radius } from './utils'
-
-import styles from './container.module.scss'
+import React from 'react'
 
 const height = 240
 const colourDelay = '200ms'
@@ -58,6 +59,12 @@ const Container = ({
         dispatch({ type: 'reset' })
     }, [kana, dirtyDS, particle, interactive])
 
+    const color = !interactive
+        ? 'cornflowerblue'
+        : state.isCorrect
+        ? 'yellow'
+        : 'red'
+
     const columns = combined.map((x, i) => (
         <Col
             key={i}
@@ -70,7 +77,7 @@ const Container = ({
         />
     ))
 
-    const lines = range(0, combined.length - 2).map((i) => {
+    const lines = range(0, combined.length - 1).map((i) => {
         return (
             <Line
                 key={i}
@@ -86,16 +93,29 @@ const Container = ({
             viewBox={`${-radius} 0 ${radius * 4 * combined.length} ${height}`}
             width='100%'
             height='100%'
-            className={`${styles.accentWord} ${
-                !interactive
-                    ? styles.default
-                    : state.isCorrect
-                    ? styles.correct
-                    : styles.incorrect
-            }`}
         >
             {lines}
             {columns}
+            <style jsx>
+                {`
+                    line {
+                        stroke: ${color};
+                        transition: stroke ${colourDelay};
+                        stroke-width: 5px;
+                    }
+
+                    circle {
+                        fill: ${color};
+                        transition: fill ${colourDelay};
+                        stroke-width: ${sWidth}px;
+                        stroke: cornflowerblue;
+                    }
+
+                    text {
+                        fill: white;
+                    }
+                `}
+            </style>
         </svg>
     )
 }
