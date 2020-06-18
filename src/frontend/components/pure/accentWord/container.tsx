@@ -1,10 +1,7 @@
 import { range } from 'lodash'
-
-import * as O from 'fp-ts/lib/Option'
+import { isSome } from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
-
 import { useImmerReducer } from 'use-immer'
-
 import { useAccent } from './utils'
 
 import {
@@ -35,9 +32,8 @@ const Container = ({
     interactive,
     particle,
 }: Props) => {
-    const hasParticle = O.isSome(particle)
-
-    const combined = O.isSome(particle)
+    const hasParticle = isSome(particle)
+    const combined = isSome(particle)
         ? bundleCharacters(kana).concat([particle.value])
         : bundleCharacters(kana)
 
@@ -58,12 +54,6 @@ const Container = ({
     useEffect(() => {
         dispatch({ type: 'reset' })
     }, [kana, dirtyDS, particle, interactive])
-
-    // const color = !interactive
-    //     ? 'cornflowerblue'
-    //     : state.isCorrect
-    //     ? 'yellow'
-    //     : 'red'
 
     const columns = combined.map((x, i) => (
         <Col
@@ -137,7 +127,5 @@ const Container = ({
         </svg>
     )
 }
-
-// Container.whyDidYouRender = true
 
 export default Container
