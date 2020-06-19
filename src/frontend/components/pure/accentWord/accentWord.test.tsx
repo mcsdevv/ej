@@ -2,7 +2,7 @@
 import React from 'react'
 import { mount } from 'cypress-react-unit-test'
 import { none, some } from 'fp-ts/lib/Option'
-import AccentWord from './container'
+import AccentWord from './accentWord'
 
 describe('interactive', () => {
     it('renders', () => {

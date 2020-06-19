@@ -1,4 +1,4 @@
-import Accent from '../../accentWord/container'
+import Accent from '../../accentWord/accentWord'
 import { Button } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import css from 'styled-jsx/css'

@@ -1,4 +1,4 @@
-import Accent from '../../accentWord/container'
+import Accent from '../../accentWord/accentWord'
 import { Row } from 'react-bootstrap'
 import { DownStep, Particle } from '../../utils/common/wrapper'
 
