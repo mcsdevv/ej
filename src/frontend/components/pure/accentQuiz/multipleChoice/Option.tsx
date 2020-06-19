@@ -52,7 +52,7 @@ export default ({
                 onClick={() => setClicked(true)}
             >
                 <Accent
-                    kana={katakana}
+                    katakana={katakana}
                     downStep={downStep}
                     particle={particle}
                     interactive={false}

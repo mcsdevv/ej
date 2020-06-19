@@ -11,7 +11,7 @@ type Props = {
 export default ({ katakana, downStep, particle }: Props) => (
     <Row style={{ height: '65%' }}>
         <Accent
-            kana={katakana}
+            katakana={katakana}
             downStep={downStep}
             particle={particle}
             interactive={true}

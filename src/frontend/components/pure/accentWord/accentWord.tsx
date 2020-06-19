@@ -20,14 +20,14 @@ const height = 240
 const colourDelay = '200ms'
 
 type Props = {
-    kana: string
+    katakana: string
     downStep: DownStep
     interactive: boolean
     particle: Particle
 }
 
 const Container = ({
-    kana,
+    katakana: kana,
     downStep: dirtyDS,
     interactive,
     particle,
@@ -94,31 +94,31 @@ const Container = ({
             {columns}
             <style jsx>
                 {`
-                    text {
+                    :global(text) {
                         fill: white;
                     }
 
-                    line {
+                    :global(line) {
                         stroke: ${defaultColor};
                         transition: stroke ${colourDelay};
                         stroke-width: 5px;
                     }
 
-                    circle {
+                    :global(circle) {
                         fill: ${defaultColor};
                         transition: fill ${colourDelay};
                         stroke-width: ${sWidth}px;
                         stroke: cornflowerblue;
                     }
 
-                    .correct line,
-                    .correct circle {
+                    :global(.correct line),
+                    :global(.correct circle) {
                         stroke: ${correctColor};
                         fill: ${correctColor};
                     }
 
-                    .incorrect line,
-                    .incorrect circle {
+                    :global(.incorrect line),
+                    :global(.incorrect circle) {
                         stroke: ${incorrectColor};
                         fill: ${incorrectColor};
                     }

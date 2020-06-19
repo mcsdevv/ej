@@ -8,7 +8,7 @@ describe('interactive', () => {
     it('renders', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={none}
                 interactive={true}
                 particle={none}
@@ -22,7 +22,7 @@ describe('interactive', () => {
     it('responds to input', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={none}
                 interactive={true}
                 particle={none}
@@ -39,7 +39,7 @@ describe('interactive', () => {
     it('can be set to correct', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={none}
                 interactive={true}
                 particle={none}
@@ -57,7 +57,7 @@ describe('non interactive', () => {
     it('renders', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={none}
                 interactive={false}
                 particle={none}
@@ -71,7 +71,7 @@ describe('non interactive', () => {
     it('renders with a downstep', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={some(2)}
                 interactive={false}
                 particle={none}
@@ -84,7 +84,7 @@ describe('non interactive', () => {
     it('renders with a particle', () => {
         mount(
             <AccentWord
-                kana='ダイガク'
+                katakana='ダイガク'
                 downStep={none}
                 interactive={false}
                 particle={some('オ')}
