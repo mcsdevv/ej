@@ -49,7 +49,7 @@ const multiLoader = ({ audioType }: Props) => {
 
     return (
         <Loader wait={!word || state.wait}>
-            <ManualEntry
+            <Multiplechoice
                 {...word}
                 onClickNext={() => {
                     if (state.nsw.length) {

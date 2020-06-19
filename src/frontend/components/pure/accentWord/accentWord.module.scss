@@ -1,0 +1,42 @@
+$correct-color: green;
+$incorrect-color: red;
+$default-color: cornflowerblue;
+$duration: 300ms;
+
+.accentWord {
+    text {
+        fill: white;
+    }
+    line {
+        stroke-width: 5px;
+        transition: stroke $duration;
+    }
+    circle {
+        stroke-width: 0px;
+        transition: fill $duration;
+    }
+}
+
+.correct {
+    circle,
+    line {
+        stroke: $correct-color;
+        fill: $correct-color;
+    }
+}
+
+.incorrect {
+    circle,
+    line {
+        stroke: $incorrect-color;
+        fill: $incorrect-color;
+    }
+}
+
+.default {
+    circle,
+    line {
+        stroke: $default-color;
+        fill: $default-color;
+    }
+}

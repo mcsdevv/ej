@@ -1,8 +1,9 @@
-import { range } from 'lodash'
-import { isSome } from 'fp-ts/lib/Option'
+import React from 'react'
+import * as O from 'fp-ts/lib/Option'
 import { useEffect } from 'react'
 import { useImmerReducer } from 'use-immer'
 import { useAccent } from './utils'
+import { range } from 'fp-ts/lib/Array'
 
 import {
     bundleCharacters,
@@ -13,11 +14,11 @@ import {
 
 import Col from './col'
 import Line from './line'
-import { sWidth, radius } from './utils'
-import React from 'react'
+import { radius } from './utils'
+
+import styles from './accentWord.module.scss'
 
 const height = 240
-const colourDelay = '200ms'
 
 type Props = {
     katakana: string
@@ -27,17 +28,18 @@ type Props = {
 }
 
 const Container = ({
-    katakana: kana,
+    katakana,
     downStep: dirtyDS,
     interactive,
     particle,
 }: Props) => {
-    const hasParticle = isSome(particle)
-    const combined = isSome(particle)
-        ? bundleCharacters(kana).concat([particle.value])
-        : bundleCharacters(kana)
+    const hasParticle = O.isSome(particle)
 
-    const downStep = adjustDownstep(kana, dirtyDS)
+    const combined = O.isSome(particle)
+        ? bundleCharacters(katakana).concat([particle.value])
+        : bundleCharacters(katakana)
+
+    const downStep = adjustDownstep(katakana, dirtyDS)
 
     const { getInitialArray, reducer } = useAccent(
         hasParticle,
@@ -53,7 +55,7 @@ const Container = ({
 
     useEffect(() => {
         dispatch({ type: 'reset' })
-    }, [kana, dirtyDS, particle, interactive])
+    }, [katakana, dirtyDS, particle, interactive])
 
     const columns = combined.map((x, i) => (
         <Col
@@ -67,7 +69,7 @@ const Container = ({
         />
     ))
 
-    const lines = range(0, combined.length - 1).map((i) => {
+    const lines = range(0, combined.length - 2).map((i) => {
         return (
             <Line
                 key={i}
@@ -78,54 +80,25 @@ const Container = ({
         )
     })
 
-    const defaultColor = 'cornflowerblue'
-    const incorrectColor = 'red'
-    const correctColor = 'green'
-
     return (
         <svg
             viewBox={`${-radius} 0 ${radius * 4 * combined.length} ${height}`}
             width='100%'
             height='100%'
-            className={`
-            ${interactive && (state.isCorrect ? 'correct' : 'incorrect')}`}
+            className={`${styles.accentWord} ${
+                !interactive
+                    ? styles.default
+                    : state.isCorrect
+                    ? styles.correct
+                    : styles.incorrect
+            }`}
         >
             {lines}
             {columns}
-            <style jsx>
-                {`
-                    :global(text) {
-                        fill: white;
-                    }
-
-                    :global(line) {
-                        stroke: ${defaultColor};
-                        transition: stroke ${colourDelay};
-                        stroke-width: 5px;
-                    }
-
-                    :global(circle) {
-                        fill: ${defaultColor};
-                        transition: fill ${colourDelay};
-                        stroke-width: ${sWidth}px;
-                        stroke: cornflowerblue;
-                    }
-
-                    :global(.correct line),
-                    :global(.correct circle) {
-                        stroke: ${correctColor};
-                        fill: ${correctColor};
-                    }
-
-                    :global(.incorrect line),
-                    :global(.incorrect circle) {
-                        stroke: ${incorrectColor};
-                        fill: ${incorrectColor};
-                    }
-                `}
-            </style>
         </svg>
     )
 }
+
+// Container.whyDidYouRender = true
 
 export default Container
